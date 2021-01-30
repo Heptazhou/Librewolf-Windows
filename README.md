@@ -9,7 +9,7 @@
 
 ## Cloning the repo
 ```powershell
-git clone --recursive https://gitlab.com/brunoshiroma/windows.git 
+git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git
 ```
 
 ### Opensource Licences/Uses
