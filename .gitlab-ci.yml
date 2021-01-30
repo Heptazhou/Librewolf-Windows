@@ -1,0 +1,13 @@
+stages:
+  - build
+
+build_job:
+  stage: build
+  script:
+    - '& package.ps1'
+  artifacts:
+    expire_in: 1 yrs
+    paths:
+      - librewolf
+  tags:
+      - windows
