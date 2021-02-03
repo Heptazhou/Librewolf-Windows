@@ -1,2 +1,6 @@
-firefox.exe
-librewolf
+firefox-*
+librewolf-*
+megabar.patch
+remove_addons.patch
+unity-menubar.patch
+mozconfig
