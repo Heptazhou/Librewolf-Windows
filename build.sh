@@ -154,7 +154,7 @@ installer_win() {
 
     # there is just too much garbage in this installer function to
     # have it all here..
-    . installer-win.sh
+    . ../installer_win
 
     cd ..
 }
@@ -171,39 +171,29 @@ fi
 
 # process commandline arguments and do something
 done_something=0
-if [[ "$*" == *all* ]]; then
+if [[ "$*" == *fetch* ]]; then
     fetch
+    done_something=1
+fi
+if [[ "$*" == *prepare* ]]; then
     prepare
+    done_something=1
+fi
+if [[ "$*" == *build* ]]; then
     build
+    done_something=1
+fi
+if [[ "$*" == *package* ]]; then
     package
+    done_something=1
+fi
+if [[ "$*" == *installer_win* ]]; then
     installer_win
     done_something=1
-else
-    if [[ "$*" == *fetch* ]]; then
-	fetch
-	done_something=1
-    fi
-    if [[ "$*" == *prepare* ]]; then
-	prepare
-	done_something=1
-    fi
-    if [[ "$*" == *build* ]]; then
-	build
-	done_something=1
-    fi
-    if [[ "$*" == *package* ]]; then
-	package
-	done_something=1
-    fi
-    if [[ "$*" == *installer_win* ]]; then
-	installer_win
-	done_something=1
-    fi
 fi
 
 
 if (( done_something == 0 )); then
     echo "Usage: $0 fetch | prepare | build | package | installer_win"
-    echo "       use the parameter 'all' to just do everything."
     exit
 fi
