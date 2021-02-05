@@ -151,30 +151,13 @@ package() {
 
 installer_win() {
     cd firefox-$pkgver
-    
-    # apply the LibreWolf settings
-    cp -rv ../settings/* obj-x86_64-pc-mingw32/dist/librewolf
-    
-    # recreate the zip file..
-    cd obj-x86_64-pc-mingw32/dist
-    rm -f librewolf-$pkgver.en-US.win64.txt librewolf-$pkgver.en-US.win64.zip
-    zip -r9 librewolf-$pkgver.en-US.win64.zip librewolf
-    /c/mozilla-source/Git/usr/bin/sha256sum.exe librewolf-$pkgver.en-US.win64.zip > librewolf-$pkgver.en-US.win64.zip.sha256sum
-    rm -f ../../../librewolf-$pkgver.en-US.win64.zip*
-    cp librewolf-$pkgver.en-US.win64.zip* ../../..
-    cd ../..
+
+    # there is just too much garbage in this installer function to
+    # have it all here..
+    . installer-win.sh
 
     cd ..
 }
-
-installer_macos() {
-    cd firefox-$pkgver
-
-    # TODO: we want to apply the librewolf settings and make the .dmg file here.
-    echo 'build.sh: installer_macos() Not implemented yet.'
-    cd ..
-}
-
 
 
 # windows: change $PATH to find all the build tools in .mozbuild
@@ -188,32 +171,39 @@ fi
 
 # process commandline arguments and do something
 done_something=0
-if [[ "$*" == *fetch* ]]; then
+if [[ "$*" == *all* ]]; then
     fetch
-    done_something=1
-fi
-if [[ "$*" == *prepare* ]]; then
     prepare
-    done_something=1
-fi
-if [[ "$*" == *build* ]]; then
     build
-    done_something=1
-fi
-if [[ "$*" == *package* ]]; then
     package
-    done_something=1
-fi
-if [[ "$*" == *installer_win* ]]; then
     installer_win
     done_something=1
-fi
-if [[ "$*" == *installer_macos* ]]; then
-    installer_macos
-    done_something=1
+else
+    if [[ "$*" == *fetch* ]]; then
+	fetch
+	done_something=1
+    fi
+    if [[ "$*" == *prepare* ]]; then
+	prepare
+	done_something=1
+    fi
+    if [[ "$*" == *build* ]]; then
+	build
+	done_something=1
+    fi
+    if [[ "$*" == *package* ]]; then
+	package
+	done_something=1
+    fi
+    if [[ "$*" == *installer_win* ]]; then
+	installer_win
+	done_something=1
+    fi
 fi
 
+
 if (( done_something == 0 )); then
-    echo "Usage: $0 fetch | prepare | build | package | installer_win | installer_mac"
+    echo "Usage: $0 fetch | prepare | build | package | installer_win"
+    echo "       use the parameter 'all' to just do everything."
     exit
 fi
