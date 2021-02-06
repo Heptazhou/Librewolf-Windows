@@ -37,6 +37,7 @@ You can perform all the steps on one go, or perform the build steps individually
 To do:
 ------
 
+* Listing known issues in this README.md
 * Branding issues.
 * Improve this README.md to contain better, detailed instructions on how to build.
 * problem with old sed. does not recognize -z. using the one from Git might be a work around.
