@@ -4,3 +4,5 @@ megabar.patch
 remove_addons.patch
 unity-menubar.patch
 mozconfig
+Makefile
+librewolf

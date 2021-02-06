@@ -154,10 +154,11 @@ installer_win() {
 
     # there is just too much garbage in this installer function to
     # have it all here..
-    . ../installer_win
+    . ../installer_win.sh
 
     cd ..
 }
+
 
 
 # windows: change $PATH to find all the build tools in .mozbuild
@@ -192,8 +193,11 @@ if [[ "$*" == *installer_win* ]]; then
     done_something=1
 fi
 
-
+# by default, do the whole thing..
 if (( done_something == 0 )); then
-    echo "Usage: $0 fetch | prepare | build | package | installer_win"
-    exit
+    fetch
+    prepare
+    build
+    package
+    installer_win
 fi
