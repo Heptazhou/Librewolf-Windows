@@ -11,6 +11,8 @@ Download link to this prerelease is:
 
 Note: If your version of LibreWolf does _not_ run, an additional install of the [Microsoft Visual C++ 2010 Redistributable Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=14632) might be required.
 
+Please consult the file **KNOWN_ISSUES.md** above, to see if your issue is already reported.
+
 Building the package:
 ---------------------
 
