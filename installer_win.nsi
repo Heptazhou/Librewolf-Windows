@@ -2,12 +2,12 @@
 # Change these values to fit your application...
 #
 
-!define APPNAME "LibreWolf" # Full app name, like: Gtk+ 2.0 Hello World
-!define PROGNAME "librewolf" # executable name, like: gtk2hello
-!define PROG_VERSION "85.0" # the program version, like: 0.3.0
-!define ICON_NAME "librewolf.ico" # filename of icon to use for this app, this file should be in src/
-!define COMPANYNAME "LibreWolf" # Your name, or company (or just the program name)
-!define ESTIMATED_SIZE 190000 # Estimated size (in KB) of installed program for use in "add or remove programs" / 190 MB
+!define APPNAME "LibreWolf"       # Full app name, like: "Gtk+ 2.0 Hello World"
+!define PROGNAME "librewolf"      # executable name, like: gtk2hello
+!define PROG_VERSION "85.0.1"     # the program version, like: 0.3.0
+!define ICON_NAME "librewolf.ico" # filename of icon to use for this app
+!define COMPANYNAME "LibreWolf"   # Your name, or company (or just the program name)
+!define ESTIMATED_SIZE 190000     # Estimated size (in KB) of installed program for use in "add or remove programs" / 190 MB
 
 #
 # The actual installer/uninstaller, you should not need to change much here below

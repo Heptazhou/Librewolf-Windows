@@ -18,8 +18,14 @@ For now, if you want to attempt to build, this build does require you to:
 
 * First build the mozilla-unified as explained in the mozilla docs, using all the ./mach bootstrap stuff
 * You can delete this mozilla-unified thing to save some space (try ./mach run on it just for fun)
-* Then clone the windows repo
-* cd into it, and build with: **time bash build.sh**
+* Then clone the windows repo:
+```
+git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git
+```
+* cd into it, and build with:
+```
+bash build.sh
+```
 * You can perform each of the build steps individually and the overall script structure follows PKGBULD as used on Archlinux 
 * This will produce a **librewolf-85.0.en-US.win64.zip** in this windows folder.
 
@@ -32,7 +38,9 @@ build.sh
 --------
 
 You can perform all the steps on one go, or perform the build steps individually, to note:
-* build.sh fetch prepare build package installer_win
+```
+bash build.sh fetch prepare build package installer_win
+```
 
 To do:
 ------
@@ -43,8 +51,8 @@ To do:
 * problem with old sed. does not recognize -z. using the one from Git might be a work around.
 
 
-Branding issue: resource files
-------------------------------
+Branding issue(s): resource files
+---------------------------------
 
 * This section is just some notes.
 * Build fail on missing stubinstaller (might be a FF bug as it should just take missing
