@@ -3,9 +3,14 @@ Things to do:
 
 These are ordered by priority:
 
+* IPV6 issues, it's not working properly?
 * Create an HOW_TO_BUILD.md to contain better, detailed instructions on how to build.
 * Branding issues. We're going to need an MR with [LibreWolf / Browser / Common](https://gitlab.com/librewolf-community/browser/common) at some point.
 * problem with old sed. does not recognize -z. using the one from Git might be a work around.
+* What IP address does LW show on my sb site, and why does it show anything at all when Bing does show
+the ip address of my nginx? what header stuff is going on?
+* why does this anoying thing happen to my 'copy username' menu in lastpass (the local menu shows up)
+* Theme AspenGlow: why does the three buttons disapear when i use the underwater screen ctrl-shift-i
 
 Notes on the branding issue(s):
 -------------------------------
