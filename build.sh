@@ -121,7 +121,7 @@ END
     # FIXME: on windows: the stubinstaller folder is missing from the librewolf branding folder.
     # this might be a bug in FF however as it seems to take missing branding resources from
     # the nightly branding. We probably want this stuff merged into the 'common' submodule.
-    cp -r ../missing_branding_files/stubinstaller browser/branding/librewolf
+    cp -r ../missing_branding_files/* browser/branding/librewolf
 
     # just a straight copy for now..
     cp ../mozconfig .mozconfig
