@@ -9,12 +9,12 @@ pkgver=85.0.1
 
 
 fetch() {
-    rm -f firefox-$pkgver.source.tar.xz
+    rm -vf firefox-$pkgver.source.tar.xz
     wget https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
     
     # the settings and common submodules should be checked out to allow the build
 
-    rm -f megabar.patch remove_addons.patch unity-menubar.patch
+    rm -vf megabar.patch remove_addons.patch unity-menubar.patch
     wget https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
     wget https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
     wget https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
@@ -23,7 +23,9 @@ fetch() {
 
 
 prepare() {
+    echo "Deleting previous firefox-${pkgver} ..."
     rm -rf firefox-$pkgver
+    echo "Extracting firefox-$pkgver.source.tar.xz ..."
     tar xf firefox-$pkgver.source.tar.xz
 
     cd firefox-$pkgver
@@ -63,6 +65,9 @@ mk_add_options MOZ_CRASHREPORTER=0
 mk_add_options MOZ_DATA_REPORTING=0
 mk_add_options MOZ_SERVICES_HEALTHREPORT=0
 mk_add_options MOZ_TELEMETRY_REPORTING=0
+
+# first attempt to fix the win32 vcredist issue results in build errors..
+#WIN32_REDIST_DIR=$VCINSTALLDIR\redist\x86\Microsoft.VC141.CRT
 END
 
 
