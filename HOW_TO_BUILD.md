@@ -1,11 +1,13 @@
+Building the package means first getting FF itself to build:
+------------------------------------------------------------
 
-Building the package:
----------------------
+These instructions are for an _interactive_ build.
 
-For now, if you want to attempt to build, this build does require you to:
-
-* First build the mozilla-unified as explained in the mozilla docs, using all the ./mach bootstrap stuff
-* You can delete this mozilla-unified thing to save some space (try ./mach run on it just for fun)
+* Follow the guidelines in the [Building Firefox On Windows](https://firefox-source-docs.mozilla.org/setup/windows_build.html) documentation from mozilla.org. And I actually recommend to follow this documentation until you have a working |mach run|. I also recommend using Git, not Mercurial, as we're going to need it later in our build.sh.
+* Once you have built the entire mozilla-unified with all the mach bootstrap stuff (which will install the needed binaries in $HOME/.mozbuild), don't forget to copy the entire
+C:\Program Files\Git folder to /c/mozilla-source to get a sed.exe that understands the -z option,
+and to get sha256sum.exe.
+* You can now delete the mozilla-unified folder, or keep it, if you want to play with FF itself.
 * Then clone the windows repo:
 ```
 git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git
@@ -14,13 +16,7 @@ git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git
 ```
 bash build.sh
 ```
-* You can perform each of the build steps individually and the overall script structure follows PKGBULD as used on Archlinux 
-* This will produce a **librewolf-85.0.en-US.win64.zip** in this windows folder.
-
-Once you have built the entire mozilla-unified with all the mach bootstrap stuff (which will
-install the needed binaries in $HOME/.mozbuild), don't forget to copy the entire
-C:\Program Files\Git folder to /c/mozilla-source to get a sed.exe that understands the -z option,
-and to get sha256sum.exe.
+* This should produce a zip and installer exe in your top folder.
 
 build.sh
 --------
