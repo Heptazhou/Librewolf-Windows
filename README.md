@@ -9,4 +9,4 @@ But we have a zip file and an installer available for testing right now..
 
 Note: If your version of LibreWolf does _not_ run, an additional install of the [vc_redist.x64.exe](https://aka.ms/vs/16/release/VC_redist.x64.exe) component might be required.
 
-Please consult the file **KNOWN_ISSUES.md** above, to see if your issue is already reported.
+Please consult the file _KNOWN_ISSUES.md_ above, to see if your issue is already reported.

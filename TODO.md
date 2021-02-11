@@ -10,7 +10,7 @@ These are ordered by priority:
 * What IP address does LW show on my sb site, and why does it show anything at all when Bing does show
 the ip address of my nginx? what header stuff is going on?
 * why does this anoying thing happen to my 'copy username' menu in lastpass (the local menu shows up)
-* Theme AspenGlow: why does the three buttons disapear when i use the underwater screen ctrl-shift-i
+* Theme AspenGlow: why does the three buttons disapear when i use the underwater screen ctrl-shift-i / Looks like a windows issue for now.
 
 Notes on the branding issue(s):
 -------------------------------

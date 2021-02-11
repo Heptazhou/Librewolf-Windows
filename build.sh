@@ -9,15 +9,18 @@ pkgver=85.0.1
 
 
 fetch() {
+    # fetch the firefox source.
     rm -vf firefox-$pkgver.source.tar.xz
     wget https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
     
-    # the settings and common submodules should be checked out to allow the build
-
-    rm -vf megabar.patch remove_addons.patch unity-menubar.patch
-    wget https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
-    wget https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
-    wget https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
+    # the settings and common submodules should be checked out with --recursive to allow the build
+    
+    # get the patches
+    echo 'Getting patches..'
+    rm -f megabar.patch remove_addons.patch unity-menubar.patch
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
 }
 
 
@@ -42,8 +45,8 @@ ac_add_options --enable-hardening
 ac_add_options --enable-rust-simd
 
 
-# as suggested by Mental Outlaw in https://www.youtube.com/watch?v=L2otiFy4ADI
-ac_add_options --disable-webrtc
+# Does anybody even use webrtc? waiting for an issue on it..
+# ac_add_options --disable-webrtc
 
 
 # Branding
@@ -70,8 +73,9 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 #WIN32_REDIST_DIR=$VCINSTALLDIR\redist\x86\Microsoft.VC141.CRT
 END
 
+    echo 'Applying patches...'
 
-
+    # Apply patches..
     patch -p1 -i ../remove_addons.patch
     patch -p1 -i ../megabar.patch
     patch -p1 -i ../unity-menubar.patch
@@ -80,6 +84,7 @@ END
 
     # Disabling Pocket
     sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
+    
     # this one only to remove an annoying error message:
     sed -i 's#SaveToPocket.init();#// SaveToPocket.init();#g' browser/components/BrowserGlue.jsm
 
@@ -120,7 +125,7 @@ END
     cp -r ../common/source_files/* ./
 
     # FIXME: this 'mozconfig' file in the 'common' submodule should be removed
-    # this submodule is purely for the branding.
+    # this submodule is purely for the branding. (not removing this breaks the build)
     rm -f mozconfig
 
     # FIXME: on windows: the stubinstaller folder is missing from the librewolf branding folder.
@@ -138,9 +143,7 @@ END
 
 build() {
     cd firefox-$pkgver
-
     ./mach build
-
     cd ..
 }
 
@@ -148,11 +151,11 @@ build() {
 
 package() {
     cd firefox-$pkgver
-
     ./mach package
-
     cd ..
 }
+
+
 
 installer_win() {
     cd firefox-$pkgver
