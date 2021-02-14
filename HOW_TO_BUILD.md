@@ -7,6 +7,10 @@ These instructions are for an _interactive_ build.
 * Once you have built the entire mozilla-unified with all the mach bootstrap stuff (which will install the needed binaries in $HOME/.mozbuild), don't forget to copy the entire
 C:\Program Files\Git folder to /c/mozilla-source to get a sed.exe that understands the -z option,
 and to get sha256sum.exe.
+* I also had to download/install in my appdata, python 3, a recent version (just search it), I ended up with the following command line:
+```
+C:/Users/librewolf/AppData/Local/Programs/Python/Python39/python.exe ./bootstrap.py --vcs=git --application-choice browser --no-interactive --no-system-changes
+```
 * You can now delete the mozilla-unified folder, or keep it, if you want to play with FF itself.
 * Then clone the windows repo:
 ```
