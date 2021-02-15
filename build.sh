@@ -4,7 +4,7 @@
 pkgname=librewolf
 _pkgname=LibreWolf
 
-pkgver=85.0.1
+pkgver=85.0.2
 
 
 
