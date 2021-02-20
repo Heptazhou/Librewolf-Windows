@@ -121,20 +121,11 @@ END
     sed "$_settings_services_sed" -i toolkit/components/search/SearchUtils.jsm
 
 
-
+    # copy branding resources
     cp -r ../common/source_files/* ./
 
-    # FIXME: this 'mozconfig' file in the 'common' submodule should be removed
-    # this submodule is purely for the branding. (not removing this breaks the build)
-    rm -f mozconfig
-
-    # FIXME: on windows: the stubinstaller folder is missing from the librewolf branding folder.
-    # this might be a bug in FF however as it seems to take missing branding resources from
-    # the nightly branding. We probably want this stuff merged into the 'common' submodule.
-    cp -r ../missing_branding_files/* browser/branding/librewolf
-
     # just a straight copy for now..
-    cp ../mozconfig .mozconfig
+    cp ../mozconfig .
 
     cd ..
 }

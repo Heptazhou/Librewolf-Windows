@@ -111,7 +111,7 @@ END
 pushd ..
  rm -vrf librewolf
  unzip librewolf-$pkgver.en-US.win64.zip
- cp -v missing_branding_files/firefox.ico librewolf/librewolf.ico
+ cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
  makensis-3.01.exe installer_win.nsi
  /c/mozilla-source/Git/usr/bin/sha256sum.exe librewolf-$pkgver.en-US.win64-setup.exe > librewolf-$pkgver.en-US.win64-setup.exe.sha256sum
 popd

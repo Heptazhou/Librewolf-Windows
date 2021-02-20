@@ -3,9 +3,10 @@ Known Issues (2021-02-07)
 
 These issues are already reported, and sorted by priority:
 
-* Help > About LibreWolf: It is broken and is unreadable. ([issue #11](https://gitlab.com/librewolf-community/browser/windows/-/issues/11))
+* about:addons search not working (use [https://addons.mozilla.org/](https://addons.mozilla.org/) directly) ([issue #16](https://gitlab.com/librewolf-community/browser/windows/-/issues/16))
+* Unable to set as default browser ([issue #15](https://gitlab.com/librewolf-community/browser/windows/-/issues/15))
 * Automation builds. This seems to be a possibility mentioned [here](https://firefox-source-docs.mozilla.org/setup/windows_build.html#building-firefox-on-windows). ([issue #6](https://gitlab.com/librewolf-community/browser/windows/-/issues/6))
-* Is there any way to update? ([issue #12](https://gitlab.com/librewolf-community/browser/windows/-/issues/12))
+* Is there any way to update? (no, not soon) ([issue #12](https://gitlab.com/librewolf-community/browser/windows/-/issues/12))
 * Previous session tabs, doesn't restoring after restart, although option is enabled in settings. ([issue #11](https://gitlab.com/librewolf-community/browser/windows/-/issues/11))
 * There some issue with rendering. All looks a bit blurred, or if there no smoothing enabled. ([issue #11](https://gitlab.com/librewolf-community/browser/windows/-/issues/11))
 * Choosing a bookmark inside an empty tab loads the page in the same tab, else, if the tab is not empty, it loads in a new tab. Right-clicking on the bookmark, and selecting "Open" (which is bold) from the context menu correctly opens the link in the same tab. Essentially, unless the tab is empty, left-clicking on a link behaves as if middle-mouse-clicking on a link. ([issue #11](https://gitlab.com/librewolf-community/browser/windows/-/issues/11))
@@ -26,3 +27,10 @@ The following issues are considered closed:
 
 * [issue #2](https://gitlab.com/librewolf-community/browser/windows/-/issues/2)
 * [issue #4](https://gitlab.com/librewolf-community/browser/windows/-/issues/4)
+
+These don't have their own issue yet:
+
+* IPV6 issues, it's not working properly?
+* problem with old sed. does not recognize -z. using the one from Git might be a work around.
+* What IP address does LW show on my sb site, and why does it show anything at all when Bing does show the ip address of my nginx? what header stuff is going on?
+* why does this anoying thing happen to my 'copy username' menu in lastpass (the local menu shows up)
