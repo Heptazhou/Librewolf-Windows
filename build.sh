@@ -10,8 +10,9 @@ pkgver=85.0.2
 
 fetch() {
     # fetch the firefox source.
-    rm -vf firefox-$pkgver.source.tar.xz
+    rm -f firefox-$pkgver.source.tar.xz
     wget https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
+    if [ ! -f firefox-$pkgver.source.tar.xz ]; then exit 1; fi
     
     # the settings and common submodules should be checked out with --recursive to allow the build
     
@@ -19,8 +20,11 @@ fetch() {
     echo 'Getting patches..'
     rm -f megabar.patch remove_addons.patch unity-menubar.patch
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
+    if [ ! -f megabar.patch ]; then exit 1; fi
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
+    if [ ! -f remove_addons.patch ]; then exit 1; fi
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
+    if [ ! -f unity-menubar.patch ]; then exit 1; fi
 }
 
 
@@ -31,6 +35,7 @@ prepare() {
     echo "Extracting firefox-$pkgver.source.tar.xz ..."
     tar xf firefox-$pkgver.source.tar.xz
 
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     
     cat >../mozconfig <<END
@@ -133,22 +138,27 @@ END
 
 
 build() {
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     ./mach build
+    if [ $? -ne 0 ]; then exit 1; fi
     cd ..
 }
 
 
 
 package() {
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     ./mach package
+    if [ $? -ne 0 ]; then exit 1; fi
     cd ..
 }
 
 
 
 installer_win() {
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
 
     # there is just too much garbage in this installer function to

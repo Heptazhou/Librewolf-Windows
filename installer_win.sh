@@ -1,3 +1,6 @@
+# sanity checks
+if [ ! -d obj-x86_64-pc-mingw32/dist ]; then exit 1; fi
+
 # apply the LibreWolf settings
 cp -rv ../settings/* obj-x86_64-pc-mingw32/dist/librewolf
     
@@ -8,7 +11,9 @@ cd obj-x86_64-pc-mingw32/dist
  # be sure to remove the previous zip file..
  rm -vf librewolf-$pkgver.en-US.win64.txt librewolf-$pkgver.en-US.win64.zip
  zip -r9 librewolf-$pkgver.en-US.win64.zip librewolf
- /c/mozilla-source/Git/usr/bin/sha256sum.exe librewolf-$pkgver.en-US.win64.zip > librewolf-$pkgver.en-US.win64.zip.sha256sum
+ if [ $? -ne 0 ]; then exit 1; fi
+ sha256sum.exe librewolf-$pkgver.en-US.win64.zip > librewolf-$pkgver.en-US.win64.zip.sha256sum
+ if [ $? -ne 0 ]; then exit 1; fi
  # copy the resulting zip file
  rm -vf ../../../librewolf-$pkgver.en-US.win64.zip*
  cp -v librewolf-$pkgver.en-US.win64.zip* ../../..
@@ -111,7 +116,10 @@ END
 pushd ..
  rm -vrf librewolf
  unzip librewolf-$pkgver.en-US.win64.zip
+ if [ $? -ne 0 ]; then exit 1; fi
  cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
  makensis-3.01.exe installer_win.nsi
- /c/mozilla-source/Git/usr/bin/sha256sum.exe librewolf-$pkgver.en-US.win64-setup.exe > librewolf-$pkgver.en-US.win64-setup.exe.sha256sum
+ if [ $? -ne 0 ]; then exit 1; fi
+ sha256sum.exe librewolf-$pkgver.en-US.win64-setup.exe > librewolf-$pkgver.en-US.win64-setup.exe.sha256sum
+ if [ $? -ne 0 ]; then exit 1; fi
 popd
