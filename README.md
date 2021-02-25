@@ -1,7 +1,7 @@
 LibreWolf for Win64
 -------------------
 
-We have a zip file and an installer available now.. We're no longer consider this alpha quality, but it surely is not aout of beta. The main issue people encounter is that non-default themes don't work correctly.
+We have a zip file and an installer available now.. We're no longer consider this alpha quality, but it surely is not out of beta. The main issue people encounter is that _non-default themes don't work correctly_.
 
 This repository is for the windows installer, this repo is not for _librewolf.cfg_ issues, that goes [here](https://gitlab.com/librewolf-community/settings). These config file settings are system-wide for all users.
 
