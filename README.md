@@ -1,11 +1,9 @@
 LibreWolf for Win64
 -------------------
 
-This repository is still a work in progress.
+We have a zip file and an installer available now.. We're no longer consider this alpha quality, but it surely is not aout of beta. The main issue people encounter is that non-default themes don't work correctly.
 
-But we have a zip file and an installer available for testing right now..
-
-This repository is the windows installer only, this repo is not for _librewolf.cfg_ issues, that goes [here](https://gitlab.com/librewolf-community/settings). These config file settings are system-wide.
+This repository is for the windows installer, this repo is not for _librewolf.cfg_ issues, that goes [here](https://gitlab.com/librewolf-community/settings). These config file settings are system-wide for all users.
 
 **Downloads**: To get the installer, the zipped version, and the sha256sum checksums, head over to the **[releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)** page.
 

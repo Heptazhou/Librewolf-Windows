@@ -4,37 +4,49 @@
 pkgname=librewolf
 _pkgname=LibreWolf
 
-pkgver=85.0.2
+pkgver=86.0
 
 
 
 fetch() {
+    echo "fetch: begin."
     # fetch the firefox source.
     rm -f firefox-$pkgver.source.tar.xz
     wget https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
+    if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f firefox-$pkgver.source.tar.xz ]; then exit 1; fi
     
     # the settings and common submodules should be checked out with --recursive to allow the build
     
     # get the patches
     echo 'Getting patches..'
-    rm -f megabar.patch remove_addons.patch unity-menubar.patch
+    rm -f megabar.patch remove_addons.patch
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
+    if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f megabar.patch ]; then exit 1; fi
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
+    if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f remove_addons.patch ]; then exit 1; fi
-    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
-    if [ ! -f unity-menubar.patch ]; then exit 1; fi
+    echo "fetch: done."
 }
 
 
 
 prepare() {
+    echo "prepare: begin."
     echo "Deleting previous firefox-${pkgver} ..."
     rm -rf firefox-$pkgver
     echo "Extracting firefox-$pkgver.source.tar.xz ..."
     tar xf firefox-$pkgver.source.tar.xz
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    echo "prepare: done."
+}
 
+
+
+do_patches() {
+    echo "do_patches: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     
@@ -48,10 +60,7 @@ ac_add_options --disable-debug
 ac_add_options --enable-release
 ac_add_options --enable-hardening
 ac_add_options --enable-rust-simd
-
-
-# Does anybody even use webrtc? waiting for an issue on it..
-# ac_add_options --disable-webrtc
+ac_add_options --enable-optimize
 
 
 # Branding
@@ -77,24 +86,23 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 # first attempt to fix the win32 vcredist issue results in build errors..
 #WIN32_REDIST_DIR=$VCINSTALLDIR\redist\x86\Microsoft.VC141.CRT
 END
-
+	
     echo 'Applying patches...'
 
     # Apply patches..
     patch -p1 -i ../remove_addons.patch
+    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../megabar.patch
-    patch -p1 -i ../unity-menubar.patch
-
-
+    if [ $? -ne 0 ]; then exit 1; fi
 
     # Disabling Pocket
     sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
+    if [ $? -ne 0 ]; then exit 1; fi
     
     # this one only to remove an annoying error message:
     sed -i 's#SaveToPocket.init();#// SaveToPocket.init();#g' browser/components/BrowserGlue.jsm
-
-
-
+    if [ $? -ne 0 ]; then exit 1; fi
+	
     # Remove Internal Plugin Certificates
     _cert_sed='s#if (aCert.organizationalUnit == "Mozilla [[:alpha:]]\+") {\n'
     _cert_sed+='[[:blank:]]\+return AddonManager\.SIGNEDSTATE_[[:upper:]]\+;\n'
@@ -111,53 +119,63 @@ END
 	$mysed='sed'
     fi
     $mysed -z "$_cert_sed" -i toolkit/mozapps/extensions/internal/XPIInstall.jsm
-
+    if [ $? -ne 0 ]; then exit 1; fi
 
 
     # allow SearchEngines option in non-ESR builds
     sed -i 's#"enterprise_only": true,#"enterprise_only": false,#g' browser/components/enterprisepolicies/schemas/policies-schema.json
+    if [ $? -ne 0 ]; then exit 1; fi
 
     _settings_services_sed='s#firefox.settings.services.mozilla.com#f.s.s.m.c.qjz9zk#g'
-
+    
     # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
     sed "$_settings_services_sed" -i browser/components/newtab/data/content/activity-stream.bundle.js
+    if [ $? -ne 0 ]; then exit 1; fi
     sed "$_settings_services_sed" -i modules/libpref/init/all.js
+    if [ $? -ne 0 ]; then exit 1; fi
     sed "$_settings_services_sed" -i services/settings/Utils.jsm
+    if [ $? -ne 0 ]; then exit 1; fi
     sed "$_settings_services_sed" -i toolkit/components/search/SearchUtils.jsm
-
-
+    if [ $? -ne 0 ]; then exit 1; fi
+    
     # copy branding resources
     cp -r ../common/source_files/* ./
-
+    
     # just a straight copy for now..
     cp ../mozconfig .
-
+    
     cd ..
+    echo "do_patches: done."
 }
 
 
 
 build() {
+    echo "build: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     ./mach build
     if [ $? -ne 0 ]; then exit 1; fi
     cd ..
+    echo "build: done."
 }
 
 
 
 package() {
+    echo "package: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
     cd ..
+    echo "package: done."
 }
 
 
 
 installer_win() {
+    echo "installer_win: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
 
@@ -166,6 +184,7 @@ installer_win() {
     . ../installer_win.sh
 
     cd ..
+    echo "installer_win: done."
 }
 
 
@@ -189,6 +208,10 @@ if [[ "$*" == *prepare* ]]; then
     prepare
     done_something=1
 fi
+if [[ "$*" == *do_patches* ]]; then
+    do_patches
+    done_something=1
+fi
 if [[ "$*" == *build* ]]; then
     build
     done_something=1
@@ -206,6 +229,7 @@ fi
 if (( done_something == 0 )); then
     fetch
     prepare
+    do_patches
     build
     package
     installer_win
