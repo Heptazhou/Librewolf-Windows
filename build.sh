@@ -10,13 +10,36 @@ pkgver=86.0
 
 fetch() {
     echo "fetch: begin."
+
     # fetch the firefox source.
     rm -f firefox-$pkgver.source.tar.xz
     wget https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
     if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f firefox-$pkgver.source.tar.xz ]; then exit 1; fi
     
-    # the settings and common submodules should be checked out with --recursive to allow the build
+    echo "fetch: done."
+}
+
+
+
+extract() {
+    echo "extract: begin."
+    
+    echo "Deleting previous firefox-${pkgver} ..."
+    rm -rf firefox-$pkgver
+    
+    echo "Extracting firefox-$pkgver.source.tar.xz ..."
+    tar xf firefox-$pkgver.source.tar.xz
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    
+    echo "extract: done."
+}
+
+
+
+do_patches() {
+    echo "do_patches: begin."
     
     # get the patches
     echo 'Getting patches..'
@@ -27,26 +50,7 @@ fetch() {
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f remove_addons.patch ]; then exit 1; fi
-    echo "fetch: done."
-}
 
-
-
-prepare() {
-    echo "prepare: begin."
-    echo "Deleting previous firefox-${pkgver} ..."
-    rm -rf firefox-$pkgver
-    echo "Extracting firefox-$pkgver.source.tar.xz ..."
-    tar xf firefox-$pkgver.source.tar.xz
-    if [ $? -ne 0 ]; then exit 1; fi
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    echo "prepare: done."
-}
-
-
-
-do_patches() {
-    echo "do_patches: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     
@@ -154,8 +158,10 @@ build() {
     echo "build: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
+    
     ./mach build
     if [ $? -ne 0 ]; then exit 1; fi
+    
     cd ..
     echo "build: done."
 }
@@ -166,8 +172,10 @@ package() {
     echo "package: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
+    
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
+    
     cd ..
     echo "package: done."
 }
@@ -199,13 +207,15 @@ fi
 
 
 # process commandline arguments and do something
+
 done_something=0
+
 if [[ "$*" == *fetch* ]]; then
     fetch
     done_something=1
 fi
-if [[ "$*" == *prepare* ]]; then
-    prepare
+if [[ "$*" == *extract* ]]; then
+    extract
     done_something=1
 fi
 if [[ "$*" == *do_patches* ]]; then
@@ -225,12 +235,20 @@ if [[ "$*" == *installer_win* ]]; then
     done_something=1
 fi
 
-# by default, do the whole thing..
+# by default, give help..
 if (( done_something == 0 )); then
-    fetch
-    prepare
-    do_patches
-    build
-    package
-    installer_win
+    cat <<EOF
+Use: ./build.sh  fetch extract do_patches build package installer_win
+
+    fetch           - fetch the tarball
+    extract         - extract the tarball
+    do_patches      - create a mozconfig, and patch the source
+    build           - the actual build, takes about an hour for me.
+    package         - this builds the dist zip file we need.
+    installer_win   - build the windows NSIS setup.exe installer.
+
+If no parameters are given, it prints this help message.
+
+EOF
+    exit 1
 fi
