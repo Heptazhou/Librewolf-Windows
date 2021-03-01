@@ -69,8 +69,8 @@ ac_add_options --enable-optimize
 
 # Branding
 ac_add_options --enable-update-channel=release
-ac_add_options --with-app-name=${pkgname}
-ac_add_options --with-app-basename=${_pkgname}
+# suspect: ac_add_options --with-app-name=${pkgname}
+# suspect: ac_add_options --with-app-basename=${_pkgname}
 ac_add_options --with-branding=browser/branding/${pkgname}
 ac_add_options --with-distribution-id=io.gitlab.${pkgname}-community
 ac_add_options --with-unsigned-addon-scopes=app,system
@@ -147,7 +147,7 @@ END
     
     # just a straight copy for now..
     cp ../mozconfig .
-    
+
     cd ..
     echo "do_patches: done."
 }
@@ -168,31 +168,21 @@ build() {
 
 
 
-package() {
-    echo "package: begin."
+
+artifacts() {
+    echo "artifacts: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
-    
+
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
     
-    cd ..
-    echo "package: done."
-}
-
-
-
-installer_win() {
-    echo "installer_win: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
-
     # there is just too much garbage in this installer function to
     # have it all here..
     . ../installer_win.sh
 
     cd ..
-    echo "installer_win: done."
+    echo "artifacts: done."
 }
 
 
@@ -226,12 +216,8 @@ if [[ "$*" == *build* ]]; then
     build
     done_something=1
 fi
-if [[ "$*" == *package* ]]; then
-    package
-    done_something=1
-fi
-if [[ "$*" == *installer_win* ]]; then
-    installer_win
+if [[ "$*" == *artifacts* ]]; then
+    artifacts
     done_something=1
 fi
 
@@ -240,12 +226,11 @@ if (( done_something == 0 )); then
     cat <<EOF
 Use: ./build.sh  fetch extract do_patches build package installer_win
 
-    fetch           - fetch the tarball
-    extract         - extract the tarball
-    do_patches      - create a mozconfig, and patch the source
-    build           - the actual build, takes about an hour for me.
-    package         - this builds the dist zip file we need.
-    installer_win   - build the windows NSIS setup.exe installer.
+    fetch           - fetch the tarball.
+    extract         - extract the tarball.
+    do_patches      - create a mozconfig, and patch the source.
+    build           - the actual build.
+    artifacts       - build the .zip and NSIS setup.exe installer.
 
 If no parameters are given, it prints this help message.
 
