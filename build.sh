@@ -144,6 +144,8 @@ END
     
     # copy branding resources
     cp -r ../common/source_files/* ./
+    # new branding stuff
+    cp ../branding_files/configure.sh browser/branding/librewolf
     
     # just a straight copy for now..
     cp ../mozconfig .
