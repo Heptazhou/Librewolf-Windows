@@ -7,8 +7,10 @@ fi
 rm -rf ../firefox ../librewolf
 cp -r obj-x86_64-pc-mingw32/dist/firefox ..
 
+
 pushd ..
 mv firefox librewolf
+
 
 # apply the LibreWolf settings
 cp -rv settings/* librewolf
@@ -23,6 +25,7 @@ cd librewolf ; rm -rf maintenanceservice* pingsender.exe firefox.*.xml precomple
 
 # be sure to remove the previous zip file..
 rm -f librewolf-$pkgver.en-US.win64.zip*
+
 zip -r9 librewolf-$pkgver.en-US.win64.zip librewolf
 if [ $? -ne 0 ]; then exit 1; fi
 sha256sum.exe librewolf-$pkgver.en-US.win64.zip > librewolf-$pkgver.en-US.win64.zip.sha256sum
@@ -30,7 +33,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 
 
 
-
+function generate_installer() {
 # generate the .nsi intaller file.
 cat >installer_win.nsi <<END
 #
@@ -115,15 +118,14 @@ section "uninstall"
 
 sectionEnd
 END
-
+}
 
 # now to try to make the installer.
- if [ $? -ne 0 ]; then exit 1; fi
- cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
- makensis-3.01.exe installer_win.nsi
- if [ $? -ne 0 ]; then exit 1; fi
- sha256sum.exe librewolf-$pkgver.en-US.win64-setup.exe > librewolf-$pkgver.en-US.win64-setup.exe.sha256sum
- if [ $? -ne 0 ]; then exit 1; fi
- 
- rm -f installer_win.nsi
+cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
+
+makensis-3.01.exe installer_win.nsi
+if [ $? -ne 0 ]; then exit 1; fi
+sha256sum.exe librewolf-$pkgver.en-US.win64-setup.exe > librewolf-$pkgver.en-US.win64-setup.exe.sha256sum
+if [ $? -ne 0 ]; then exit 1; fi
+
 popd

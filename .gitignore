@@ -6,4 +6,4 @@ unity-menubar.patch
 mozconfig
 Makefile
 librewolf
-installer_win.nsi
+
