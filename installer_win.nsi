@@ -61,7 +61,7 @@ Section "${PROGNAME}"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf" "" "LibreWolf"	
 
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationDescription" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationIcon" "C:\Program Files\LibreWolf\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationName" "LibreWolf"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".htm" "LibreWolfHTM"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".html" "LibreWolfHTM"
@@ -69,20 +69,20 @@ Section "${PROGNAME}"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\URLAssociations" "http" "LibreWolfHTM"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\URLAssociations" "https" "LibreWolfHTM"
 
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\DefaultIcon" "" "C:\Program Files\LibreWolf\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\shell\open\command" "" "C:\Program Files\LibreWolf\librewolf.exe"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\shell\open\command" "" "$INSTDIR\librewolf.exe"
 	
 	WriteRegStr HKLM "Software\RegisteredApplications" "LibreWolf" "Software\Clients\StartMenuInternet\LibreWolf\Capabilities"
 	
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "" "LibreWolf Handler"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "AppUserModelId" "LibreWolf"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "AppUserModelId" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationIcon" "C:\Program Files\LibreWolf\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationName" "LibreWolf"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationDescription" "Howling to Freedom"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "C:\Program Files\LibreWolf\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "C:\Program Files\LibreWolf\librewolf.exe %1"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$INSTDIR\librewolf.exe %1"
 
 SectionEnd
 
