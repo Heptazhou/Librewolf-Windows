@@ -2,12 +2,12 @@
 # Change these values to fit your application...
 #
 
-!define APPNAME "LibreWolf"       # Full app name, like: "Gtk+ 2.0 Hello World"
-!define PROGNAME "librewolf"      # executable name, like: gtk2hello
-!define PROG_VERSION "86.0"     # the program version, like: 0.3.0
-!define ICON_NAME "librewolf.ico" # filename of icon to use for this app
-!define COMPANYNAME "LibreWolf"   # Your name, or company (or just the program name)
-!define ESTIMATED_SIZE 190000     # Estimated size (in KB) of installed program for use in "add or remove programs" / 190 MB
+!define APPNAME "LibreWolf"        # Full app name, like: "Gtk+ 2.0 Hello World"
+!define PROGNAME "librewolf"       # executable name, like: gtk2hello
+!define PROG_VERSION "pkg_version" # the program version, like: 0.3.0
+!define ICON_NAME "librewolf.ico"  # filename of icon to use for this app
+!define COMPANYNAME "LibreWolf"    # Your name, or company (or just the program name)
+!define ESTIMATED_SIZE 190000      # Estimated size (in KB) of installed program for use in "add or remove programs" / 190 MB
 
 #
 # The actual installer/uninstaller, you should not need to change much here below
@@ -52,6 +52,33 @@ Section "${PROGNAME}"
 	# Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${ESTIMATED_SIZE}
 
+
+	#
+	# Registry information to let Windows pick us up in the list of available browsers
+	#
+	
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf" "" "LibreWolf"	
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationDescription" "LibreWolf"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationIcon" "C:\Program Files\LibreWolf\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationName" "LibreWolf"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".htm" "LibreWolfHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".html" "LibreWolfHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\Startmenu" "StartMenuInternet" "LibreWolf"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\DefaultIcon" "" "C:\Program Files\LibreWolf\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\shell\open\command" "" "C:\Program Files\LibreWolf\librewolf.exe"
+	
+	WriteRegStr HKLM "Software\RegisteredApplications" "LibreWolf" "Software\Clients\StartMenuInternet\LibreWolf\Capabilities"
+	
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "" "LibreWolf Handler"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "AppUserModelId" "LibreWolf"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "AppUserModelId" "LibreWolf"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationIcon" "C:\Program Files\LibreWolf\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationName" "LibreWolf"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationDescription" "Howling to Freedom"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "C:\Program Files\LibreWolf\librewolf.exe,0"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "C:\Program Files\LibreWolf\librewolf.exe %1"
+
 SectionEnd
 
 # Before uninstall, ask for confirmation
@@ -77,5 +104,13 @@ section "uninstall"
 
 	# Remove uninstaller information from the registry
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
+	
+	#
+	# Windows default browser integration
+	#
+	
+	DeleteRegKey HKLM "Software\Clients\StartMenuInternet\LibreWolf"
+	DeleteRegKey HKLM "Software\RegisteredApplications"
+	DeleteRegKey HKLM "Software\Classes\LibreWolfHTM"
 
 sectionEnd
