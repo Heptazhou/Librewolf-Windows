@@ -101,6 +101,7 @@ section "uninstall"
 
 	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk"
+	delete "$SMPROGRAMS\${COMPANYNAME}\Uninstall.lnk"
 	# Try to remove the Start Menu folder - this will only happen if it is empty
 	rmDir "$SMPROGRAMS\${COMPANYNAME}"
  
