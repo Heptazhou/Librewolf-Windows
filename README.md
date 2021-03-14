@@ -9,4 +9,9 @@ Note: If your version of LibreWolf does _not_ run, an additional install of the 
 
 This repository is for the windows installer, this repo is not for _librewolf.cfg_ issues, that goes [here](https://gitlab.com/librewolf-community/settings). These config file settings are system-wide for all users.
 
-Please consult the file _KNOWN_ISSUES.md_ above, to see if your issue is already reported.
+## .plan
+
+1. Make LibreWolf compile better and squash the bugs related to building Firefox correctly. (with our current and future patches)
+2. Transfer this build process to Gitlab public shared linux runners so the entire build process is transparent. (for windows, cross-compilation)
+3. Keep up to date with the best hardening/security/privacy practices and/or patches, keeping in mind usability. (the fun part!)
+4. Goto 3
