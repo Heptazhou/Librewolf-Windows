@@ -7,6 +7,29 @@ _pkgname=LibreWolf
 pkgver=86.0.1
 
 
+deps_apt() {
+    echo "deps_apt: begin."
+    $deps=
+    apt -y install $(deps)
+    echo "deps_apt: done."
+}
+
+deps_rpm() {
+    echo "deps_rpm: begin."
+    $deps=
+    dnf -y install $(deps)
+    echo "deps_rpm: done."
+}
+
+mach_env() {
+    echo "mach_env: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+    ./mach create-mach-environment
+    if [ $? -ne 0 ]; then exit 1; fi
+    cd ..
+    echo "mach_env: done."    
+}
 
 fetch() {
     echo "fetch: begin."
@@ -69,8 +92,8 @@ ac_add_options --enable-optimize
 
 # Branding
 ac_add_options --enable-update-channel=release
-# suspect: ac_add_options --with-app-name=${pkgname}
-# suspect: ac_add_options --with-app-basename=${_pkgname}
+# theming bugs: ac_add_options --with-app-name=${pkgname}
+# theming bugs: ac_add_options --with-app-basename=${_pkgname}
 ac_add_options --with-branding=browser/branding/${pkgname}
 ac_add_options --with-distribution-id=io.gitlab.${pkgname}-community
 ac_add_options --with-unsigned-addon-scopes=app,system
@@ -143,12 +166,13 @@ END
     if [ $? -ne 0 ]; then exit 1; fi
     
     # copy branding resources
-    cp -r ../common/source_files/* ./
+    cp -vr ../common/source_files/* ./
     # new branding stuff
-    cp ../branding_files/configure.sh browser/branding/librewolf
+    cp -v ../branding_files/configure.sh browser/branding/librewolf
+    cp -v ../branding_files/confvars.sh browser/confvars.sh
     
     # just a straight copy for now..
-    cp ../mozconfig .
+    cp -v ../mozconfig .
 
     cd ..
     echo "do_patches: done."
@@ -214,6 +238,10 @@ if [[ "$*" == *do_patches* ]]; then
     do_patches
     done_something=1
 fi
+if [[ "$*" == *mach_env* ]]; then
+    mach_env
+    done_something=1
+fi
 if [[ "$*" == *build* ]]; then
     build
     done_something=1
@@ -231,6 +259,7 @@ Use: ./build.sh  fetch extract do_patches build package installer_win
     fetch           - fetch the tarball.
     extract         - extract the tarball.
     do_patches      - create a mozconfig, and patch the source.
+    mach_env        - *create mach build environment.
     build           - the actual build.
     artifacts       - build the .zip and NSIS setup.exe installer.
 

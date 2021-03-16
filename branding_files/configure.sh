@@ -5,7 +5,7 @@
 MOZ_APP_NAME=librewolf
 MOZ_APP_BASENAME=LibreWolf
 MOZ_APP_PROFILE=LibreWolf
-MOZ_APP_VENDOR="LibreWolf community"
+MOZ_APP_VENDOR="LibreWolf Community"
 MOZ_APP_DISPLAYNAME=LibreWolf
 MOZ_APP_REMOTINGNAME=librewolf
 MOZ_DEV_EDITION=1
