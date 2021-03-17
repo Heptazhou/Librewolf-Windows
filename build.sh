@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 # build.sh - build librewolf on windows
 # derived from https://gitlab.com/librewolf-community/browser/linux/-/blob/master/PKGBUILD
 
@@ -9,15 +10,21 @@ pkgver=86.0.1
 
 deps_apt() {
     echo "deps_apt: begin."
-    $deps=
-    apt -y install $(deps)
+    deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
+    apt -y install $deps
+}
+rustup() {
+    # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
+    curl https://sh.rustup.rs -sSf | sh
+    source $HOME/.cargo/env
+    cargo install cbindgen
     echo "deps_apt: done."
 }
 
 deps_rpm() {
     echo "deps_rpm: begin."
-    $deps=
-    dnf -y install $(deps)
+    deps=""
+    dnf -y install $deps
     echo "deps_rpm: done."
 }
 
@@ -143,7 +150,7 @@ END
 	    exit
 	fi
     else
-	$mysed='sed'
+	mysed='sed'
     fi
     $mysed -z "$_cert_sed" -i toolkit/mozapps/extensions/internal/XPIInstall.jsm
     if [ $? -ne 0 ]; then exit 1; fi
@@ -220,12 +227,26 @@ if [ -f '/c/mozilla-build/start-shell.bat' ]; then
     export PATH=$TPATH:$PATH
 fi
 
-
+if [ -f $HOME/.cargo/env ]; then
+    source $HOME/.cargo/env
+fi
 
 # process commandline arguments and do something
 
 done_something=0
 
+if [[ "$*" == *deps_apt* ]]; then
+    deps_apt
+    done_something=1
+fi
+if [[ "$*" == *deps_rpm* ]]; then
+    deps_rpm
+    done_something=1
+fi
+if [[ "$*" == *rustup* ]]; then
+    rustup
+    done_something=1
+fi
 if [[ "$*" == *fetch* ]]; then
     fetch
     done_something=1
@@ -259,9 +280,13 @@ Use: ./build.sh  fetch extract do_patches build package installer_win
     fetch           - fetch the tarball.
     extract         - extract the tarball.
     do_patches      - create a mozconfig, and patch the source.
-    mach_env        - *create mach build environment.
     build           - the actual build.
     artifacts       - build the .zip and NSIS setup.exe installer.
+
+    mach_env        - * create mach build environment.
+    rustup	    - * perform a rustup for this user.
+    deps_rpm	    - * install dependencies with rpm.
+    deps_apt	    - * install dependencies with apt.
 
 If no parameters are given, it prints this help message.
 
