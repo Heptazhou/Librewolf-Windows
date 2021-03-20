@@ -11,9 +11,9 @@ This repository is for the windows installer, this repo is not for _librewolf.cf
 
 # download locations
 
-* [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - 
-* [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - 
-* [[windows releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)] -
+* [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [AUR(en)](https://aur.archlinux.org/packages/librewolf/)
+* [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
+* [[windows releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)] - (this repository)
 
 # settings repository
 
