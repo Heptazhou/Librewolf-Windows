@@ -8,17 +8,20 @@ _pkgname=LibreWolf
 pkgver=86.0.1
 
 
-deps_apt() {
-    echo "deps_apt: begin."
+deps_deb() {
+    echo "deps_deb: begin."
     deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
     apt -y install $deps
+    echo "deps_deb: done."
 }
+
 rustup() {
     # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
+    echo "rustup: begin."
     curl https://sh.rustup.rs -sSf | sh
     source $HOME/.cargo/env
     cargo install cbindgen
-    echo "deps_apt: done."
+    echo "rustup: done."
 }
 
 deps_rpm() {
@@ -202,8 +205,8 @@ build() {
 
 
 
-artifacts() {
-    echo "artifacts: begin."
+artifacts_win() {
+    echo "artifacts_win: begin."
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
 
@@ -215,7 +218,22 @@ artifacts() {
     . ../installer_win.sh
 
     cd ..
-    echo "artifacts: done."
+    echo "artifacts_win: done."
+}
+
+artifacts_deb()
+{
+    echo "artifacts_deb: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+
+    ./mach package
+    if [ $? -ne 0 ]; then exit 1; fi
+    
+    . ../artifacts_deb.sh
+
+    cd ..
+    echo "artifacts_deb: done."
 }
 
 
@@ -235,8 +253,8 @@ fi
 
 done_something=0
 
-if [[ "$*" == *deps_apt* ]]; then
-    deps_apt
+if [[ "$*" == *deps_deb* ]]; then
+    deps_deb
     done_something=1
 fi
 if [[ "$*" == *deps_rpm* ]]; then
@@ -267,8 +285,12 @@ if [[ "$*" == *build* ]]; then
     build
     done_something=1
 fi
-if [[ "$*" == *artifacts* ]]; then
-    artifacts
+if [[ "$*" == *artifacts_win* ]]; then
+    artifacts_win
+    done_something=1
+fi
+if [[ "$*" == *artifacts_deb* ]]; then
+    artifacts_deb
     done_something=1
 fi
 
@@ -281,15 +303,21 @@ Use: ./build.sh  fetch extract do_patches build package installer_win
     extract         - extract the tarball.
     do_patches      - create a mozconfig, and patch the source.
     build           - the actual build.
-    artifacts       - build the .zip and NSIS setup.exe installer.
+    artifacts_win   - build the .zip and NSIS setup.exe installer.
 
-    mach_env        - * create mach build environment.
-    rustup	    - * perform a rustup for this user.
-    deps_rpm	    - * install dependencies with rpm.
-    deps_apt	    - * install dependencies with apt.
+Linux related functions:
+
+    mach_env        - create mach build environment.
+    rustup	    - perform a rustup for this user.
+    deps_rpm	    - install dependencies with rpm.
+    deps_deb	    - install dependencies with apt.
+    artifacts_deb   - create a dist zip file (for debian).
 
 If no parameters are given, it prints this help message.
 
+For debian: I used: 
+$ sudo ./build.sh deps_deb 
+$ ./build.sh rustup mach_env fetch extract do_patches build artifacts_deb
 EOF
     exit 1
 fi

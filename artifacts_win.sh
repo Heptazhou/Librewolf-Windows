@@ -1,6 +1,6 @@
 # sanity checks
 if [ ! -d obj-x86_64-pc-mingw32/dist/firefox ]; then
-    echo "installer_win.sh: directory obj-x86_64-pc-mingw32/dist/firefox not found."
+    echo "artifacts_win.sh: directory obj-x86_64-pc-mingw32/dist/firefox not found."
     exit 1;
 fi
 
@@ -35,7 +35,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 
 function generate_installer() {
 # generate the .nsi intaller file.
-cat >installer_win.nsi <<END
+cat >artifacts_win.nsi <<END
 #
 # Change these values to fit your application...
 #
@@ -123,7 +123,7 @@ END
 # now to try to make the installer.
 cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
 
-sed "s/pkg_version/$pkgver/g" < installer_win.nsi > tmp.nsi
+sed "s/pkg_version/$pkgver/g" < artifacts_win.nsi > tmp.nsi
 makensis-3.01.exe tmp.nsi
 if [ $? -ne 0 ]; then exit 1; fi
 sha256sum.exe librewolf-$pkgver.en-US.win64-setup.exe > librewolf-$pkgver.en-US.win64-setup.exe.sha256sum

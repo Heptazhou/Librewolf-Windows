@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Do not (try to) connect to the session manager
+unset SESSION_MANAGER
+
+# If XAUTHORITY is unset, set it to its default value of $HOME/.Xauthority
+# before we change HOME below.  (See xauth(1) and #1945.)  XDM and KDM rely
+# on applications using this default value.
+if [ -z "$XAUTHORITY" ]; then
+    XAUTHORITY=~/.Xauthority
+    export XAUTHORITY
+fi
+
+# Try to be agnostic to where we're being started from, chdir to where
+# the script is.
+mydir="`dirname "$0"`"
+test -d "$mydir" && cd "$mydir"
+
+#./librewolf --class "LibreWolf" -profile TorBrowser/Data/Browser/profile.default "${@}" > "$logfile" 2>&1 </dev/null &
+./librewolf --detach --class "LibreWolf" > /dev/null 2>&1 </dev/null &
+
+exit $?
