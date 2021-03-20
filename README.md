@@ -33,5 +33,5 @@ We have a zip file and an installer available for download.. We no longer consid
 # community links
 
 * If at all possible, pleasse go to the relevant 'issues' link and start discussing thing there.
-* [[reddit](https://www.reddit.com/r/LibreWolf/)]
+* [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
 * [[gitter](https://gitter.im/librewolf-community/librewolf)]
