@@ -13,22 +13,22 @@ We have a zip file and an installer available for download.. We no longer consid
 
 # settings repository
 
-* [[settings repository](https://gitlab.com/librewolf-community/settings)] - all _librewolf.cfg_ stuff.. ([issues](https://gitlab.com/librewolf-community/settings/-/issues))
+* [[settings repository](https://gitlab.com/librewolf-community/settings)] - all _librewolf.cfg_ stuff.. _([issues](https://gitlab.com/librewolf-community/settings/-/issues))_
 
 # browser repositories
 
-* [[common](https://gitlab.com/librewolf-community/browser/commons)] -> ([issues](https://gitlab.com/librewolf-community/browser/common/-/issues))
-* [[flatpack](https://gitlab.com/librewolf-community/browser/flatpak)] -> ([issues](https://gitlab.com/librewolf-community/browser/flatpak/-/issues))
-* [[linux](https://gitlab.com/librewolf-community/browser/linux)] -> ([issues](https://gitlab.com/librewolf-community/browser/linux/-/issues))
-* [[website](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io)] - ([issues](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io/-/issues))
+* [[common](https://gitlab.com/librewolf-community/browser/commons)] -> _([issues](https://gitlab.com/librewolf-community/browser/common/-/issues))_
+* [[flatpack](https://gitlab.com/librewolf-community/browser/flatpak)] -> _([issues](https://gitlab.com/librewolf-community/browser/flatpak/-/issues))_
+* [[linux](https://gitlab.com/librewolf-community/browser/linux)] -> _([issues](https://gitlab.com/librewolf-community/browser/linux/-/issues))_
+* [[website](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io)] - _([issues](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io/-/issues))_
 
 # distro repositories
 
-* [[arch](https://gitlab.com/librewolf-community/browser/arch)] -> ([issues](https://gitlab.com/librewolf-community/browser/arch/-/issues))
-* [[debian](https://gitlab.com/librewolf-community/browser/debian)] -> ([issues](https://gitlab.com/librewolf-community/browser/debian/-/issues))
-* [[gentoo](https://gitlab.com/librewolf-community/browser/gentoo)] -> ([issues](https://gitlab.com/librewolf-community/browser/gentoo/-/issues))
-* [[macos](https://gitlab.com/librewolf-community/browser/macos)] -> ([issues](https://gitlab.com/librewolf-community/browser/macos/-/issues))
-* [[windows](https://gitlab.com/librewolf-community/browser/windows)] -> ([issues](https://gitlab.com/librewolf-community/browser/windows/-/issues))
+* [[arch](https://gitlab.com/librewolf-community/browser/arch)] -> _([issues](https://gitlab.com/librewolf-community/browser/arch/-/issues))_
+* [[debian](https://gitlab.com/librewolf-community/browser/debian)] -> _([issues](https://gitlab.com/librewolf-community/browser/debian/-/issues))_
+* [[gentoo](https://gitlab.com/librewolf-community/browser/gentoo)] -> _([issues](https://gitlab.com/librewolf-community/browser/gentoo/-/issues))_
+* [[macos](https://gitlab.com/librewolf-community/browser/macos)] -> _([issues](https://gitlab.com/librewolf-community/browser/macos/-/issues))_
+* [[windows](https://gitlab.com/librewolf-community/browser/windows)] -> _([issues](https://gitlab.com/librewolf-community/browser/windows/-/issues))_
 
 # community links
 
