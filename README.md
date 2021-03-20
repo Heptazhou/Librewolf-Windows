@@ -5,7 +5,7 @@ We have a zip file and an installer available for download.. We no longer consid
 
 **Downloads**: To get the installer, head over to the **[releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)** page.
 
-# other download locations
+# other LibreWolf download locations
 
 * [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [AUR(en)](https://aur.archlinux.org/packages/librewolf/)
 * [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
