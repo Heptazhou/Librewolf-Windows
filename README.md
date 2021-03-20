@@ -5,11 +5,7 @@ We have a zip file and an installer available for download.. We no longer consid
 
 **Downloads**: To get the installer, head over to the **[releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)** page.
 
-Note: If your version of LibreWolf does _not_ run, an additional install of the [vc_redist.x64.exe](https://aka.ms/vs/16/release/VC_redist.x64.exe) component might be required.
-
-This repository is for the windows installer, this repo is not for _librewolf.cfg_ issues, that goes [here](https://gitlab.com/librewolf-community/settings). These config file settings are system-wide for all users.
-
-# download locations
+# other download locations
 
 * [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [AUR(en)](https://aur.archlinux.org/packages/librewolf/)
 * [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
