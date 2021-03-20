@@ -215,7 +215,7 @@ artifacts_win() {
     
     # there is just too much garbage in this installer function to
     # have it all here..
-    . ../installer_win.sh
+    . ../artifacts_win.sh
 
     cd ..
     echo "artifacts_win: done."
@@ -297,7 +297,7 @@ fi
 # by default, give help..
 if (( done_something == 0 )); then
     cat <<EOF
-Use: ./build.sh  fetch extract do_patches build package installer_win
+Use: ./build.sh  fetch extract do_patches build package artifacts_win
 
     fetch           - fetch the tarball.
     extract         - extract the tarball.
