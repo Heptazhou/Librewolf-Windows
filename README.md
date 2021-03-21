@@ -1,17 +1,44 @@
-LibreWolf for Win64
--------------------
+# LibreWolf for windows
 
-We have a zip file and an installer available for download.. We no longer consider these builds alpha quality, but it is not out of beta yet either.
+* [download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases).
+* [issue tracker](https://gitlab.com/librewolf-community/browser/windows/-/issues).
 
-**Downloads**: To get the installer, head over to the **[releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)** page.
+# download locations
 
-Note: If your version of LibreWolf does _not_ run, an additional install of the [vc_redist.x64.exe](https://aka.ms/vs/16/release/VC_redist.x64.exe) component might be required.
+* [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [AUR(en)](https://aur.archlinux.org/packages/librewolf/)
+* [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
+* [[windows releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)] - (this repository)
+* On [OBS](https://openbuildservice.org/), we have [ubuntu and debian builds](https://build.opensuse.org/project/show/home:bgstack15:aftermozilla).
 
-This repository is for the windows installer, this repo is not for _librewolf.cfg_ issues, that goes [here](https://gitlab.com/librewolf-community/settings). These config file settings are system-wide for all users.
+# settings repository
 
-## .plan
+* [[settings repository](https://gitlab.com/librewolf-community/settings)] - all _librewolf.cfg_ stuff.. _([issues](https://gitlab.com/librewolf-community/settings/-/issues))_
 
-1. Make LibreWolf compile better and squash the bugs related to building Firefox correctly. (with our current and future patches)
-2. Transfer this build process to Gitlab public shared linux runners so the entire build process is transparent. (for windows, this means cross-compilation)
-3. Keep up to date with the best hardening/fingerprinting/security/privacy practices and/or patches, _keeping in mind usability_. (the fun part!)
-4. Goto 3
+# librewolf repositories
+
+* [[common](https://gitlab.com/librewolf-community/browser/commons)] -> _([issues](https://gitlab.com/librewolf-community/browser/common/-/issues))_
+* [[flatpack](https://gitlab.com/librewolf-community/browser/flatpak)] -> _([issues](https://gitlab.com/librewolf-community/browser/flatpak/-/issues))_
+* [[linux](https://gitlab.com/librewolf-community/browser/linux)] -> _([issues](https://gitlab.com/librewolf-community/browser/linux/-/issues))_
+* [[website](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io)] - _([issues](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io/-/issues))_
+
+# distro repositories
+
+* [[arch](https://gitlab.com/librewolf-community/browser/arch)] -> _([issues](https://gitlab.com/librewolf-community/browser/arch/-/issues))_
+* [[debian](https://gitlab.com/librewolf-community/browser/debian)] -> _([issues](https://gitlab.com/librewolf-community/browser/debian/-/issues))_
+* [[gentoo](https://gitlab.com/librewolf-community/browser/gentoo)] -> _([issues](https://gitlab.com/librewolf-community/browser/gentoo/-/issues))_
+* [[macos](https://gitlab.com/librewolf-community/browser/macos)] -> _([issues](https://gitlab.com/librewolf-community/browser/macos/-/issues))_
+* [[windows](https://gitlab.com/librewolf-community/browser/windows)] -> _([issues](https://gitlab.com/librewolf-community/browser/windows/-/issues))_
+
+# community links
+
+* If at all possible, pleasse go to the relevant 'issues' link and start discussing thing there.
+* [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
+* [[gitter](https://gitter.im/librewolf-community/librewolf)]
+
+# hardening firefox
+
+* eff.org: [surveillance self-defense](https://ssd.eff.org/en).
+* mozilla: [Firefox](https://www.mozilla.org/en-US/firefox/new/), [Thunderbird](https://www.thunderbird.net/en-US/); ...
+* news: [ghacks](https://www.ghacks.net/)
+* wikipedia: [Browser fingerprinting](https://en.wikipedia.org/wiki/Device_fingerprint).
+* wikipedia: [Browser security](https://en.wikipedia.org/wiki/Browser_security), [browser exploit](https://en.wikipedia.org/wiki/Browser_exploit).
