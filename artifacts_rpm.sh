@@ -2,7 +2,7 @@
 
 # sanity checks
 if [ ! -d obj-x86_64-pc-linux-gnu/dist/firefox ]; then
-    echo "installer_deb.sh: directory obj-x86_64-pc-linux-gnu/dist/firefox not found."
+    echo "installer_rpm.sh: directory obj-x86_64-pc-linux-gnu/dist/firefox not found."
     exit 1;
 fi
 
@@ -27,11 +27,11 @@ cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete 
 cp -v branding_files/register-librewolf branding_files/start-librewolf* librewolf
 
 # be sure to remove the previous zip file..
-rm -f librewolf-$pkgver.en-US.deb.zip*
+rm -f librewolf-$pkgver.en-US.rpm.zip*
 
-zip -r9 librewolf-$pkgver.en-US.deb.zip librewolf
+zip -r9 librewolf-$pkgver.en-US.rpm.zip librewolf
 if [ $? -ne 0 ]; then exit 1; fi
-sha256sum librewolf-$pkgver.en-US.deb.zip > librewolf-$pkgver.en-US.deb.zip.sha256sum
+sha256sum librewolf-$pkgver.en-US.rpm.zip > librewolf-$pkgver.en-US.rpm.zip.sha256sum
 if [ $? -ne 0 ]; then exit 1; fi
 
 

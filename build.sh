@@ -15,6 +15,13 @@ deps_deb() {
     echo "deps_deb: done."
 }
 
+deps_rpm() {
+    echo "deps_rpm: begin."
+    deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
+    dnf -y install $deps
+    echo "deps_rpm: done."
+}
+
 rustup() {
     # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
     echo "rustup: begin."
@@ -22,13 +29,6 @@ rustup() {
     source $HOME/.cargo/env
     cargo install cbindgen
     echo "rustup: done."
-}
-
-deps_rpm() {
-    echo "deps_rpm: begin."
-    deps=""
-    dnf -y install $deps
-    echo "deps_rpm: done."
 }
 
 mach_env() {
@@ -237,6 +237,21 @@ artifacts_deb()
 }
 
 
+artifacts_rpm()
+{
+    echo "artifacts_rpm: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+
+    ./mach package
+    if [ $? -ne 0 ]; then exit 1; fi
+    
+    . ../artifacts_rpm.sh
+
+    cd ..
+    echo "artifacts_rpm: done."
+}
+
 
 # windows: change $PATH to find all the build tools in .mozbuild
 # this might do the trick on macos aswell?
@@ -293,6 +308,15 @@ if [[ "$*" == *artifacts_deb* ]]; then
     artifacts_deb
     done_something=1
 fi
+
+if [[ "$*" == *artifacts_rpm* ]]; then
+    artifacts_rpm
+    done_something=1
+fi
+
+
+
+
 
 # by default, give help..
 if (( done_something == 0 )); then
