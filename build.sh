@@ -353,6 +353,7 @@ if (( done_something == 0 )); then
     cat <<EOF
 Use: ./build.sh  fetch extract do_patches build package artifacts_win
 
+    git_subs        - update git submodules
     fetch           - fetch the tarball.
     extract         - extract the tarball.
     do_patches      - create a mozconfig, and patch the source.
