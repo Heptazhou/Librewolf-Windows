@@ -3,6 +3,8 @@ librewolf-*
 megabar.patch
 remove_addons.patch
 unity-menubar.patch
+context-menu.patch
+mozilla-vpn-ad.patch
 mozconfig
 Makefile
 librewolf

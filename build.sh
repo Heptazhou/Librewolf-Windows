@@ -76,14 +76,27 @@ do_patches() {
     
     # get the patches
     echo 'Getting patches..'
-    rm -f megabar.patch remove_addons.patch
+    rm -f context-menu.patch megabar.patch mozilla-vpn-ad.patch remove_addons.patch unity-menubar.patch
+    
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/context-menu.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f context-menu.patch ]; then exit 1; fi
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
     if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f megabar.patch ]; then exit 1; fi
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/mozilla-vpn-ad.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f mozilla-vpn-ad.patch ]; then exit 1; fi
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f remove_addons.patch ]; then exit 1; fi
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f unity-menubar.patch ]; then exit 1; fi
+    
 
+    # create mozconfig..
+    
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
     
@@ -127,11 +140,19 @@ END
     echo 'Applying patches...'
 
     # Apply patches..
-    patch -p1 -i ../remove_addons.patch
+    # context-menu.patch megabar.patch mozilla-vpn-ad.patch remove_addons.patch unity-menubar.patch
+    patch -p1 -i ../context-menu.patch
     if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../megabar.patch
     if [ $? -ne 0 ]; then exit 1; fi
+    patch -p1 -i ../mozilla-vpn-ad.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    patch -p1 -i ../remove_addons.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    patch -p1 -i ../unity-menubar.patch
+    if [ $? -ne 0 ]; then exit 1; fi
 
+    
     # Disabling Pocket
     sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
     if [ $? -ne 0 ]; then exit 1; fi
