@@ -8,7 +8,6 @@
 * [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [AUR(en)](https://aur.archlinux.org/packages/librewolf/)
 * [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
 * [[windows releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)] - (this repository)
-* On [OBS](https://openbuildservice.org/), we have [ubuntu and debian builds](https://build.opensuse.org/project/show/home:bgstack15:aftermozilla).
 
 # settings repository
 
@@ -37,6 +36,7 @@
 
 # hardening firefox
 
+* **tools**: [[deviceinfo.me](https://www.deviceinfo.me/)], [[coveryourtracks](https://coveryourtracks.eff.org/learn)], [[privacytools.io](https://privacytools.io/)], 
 * eff.org: [surveillance self-defense](https://ssd.eff.org/en).
 * mozilla: [Firefox](https://www.mozilla.org/en-US/firefox/new/), [Thunderbird](https://www.thunderbird.net/en-US/); ...
 * news: [ghacks](https://www.ghacks.net/)
