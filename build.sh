@@ -41,6 +41,11 @@ mach_env() {
     echo "mach_env: done."    
 }
 
+git_subs() {
+    git submodule update --recursive
+    git submodule foreach git merge origin master
+}
+
 fetch() {
     echo "fetch: begin."
 
@@ -289,6 +294,10 @@ fi
 
 done_something=0
 
+if [[ "$*" == *git_subs* ]]; then
+    git_subs
+    done_something=1
+fi
 if [[ "$*" == *deps_deb* ]]; then
     deps_deb
     done_something=1
