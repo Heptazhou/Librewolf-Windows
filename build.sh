@@ -17,7 +17,7 @@ deps_deb() {
 
 deps_rpm() {
     echo "deps_rpm: begin."
-    deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
+    deps="python3 python3-distutils-extra clang pkg-config gcc curl wget nodejs nasm yasm zip m4 python3-zstandard python-zstandard python-devel python3-devel gtk3-devel llvm gtk2-devel dbus-glib-devel libXt-devel"
     dnf -y install $deps
     echo "deps_rpm: done."
 }
@@ -113,6 +113,7 @@ export MOZ_REQUIRE_SIGNING=0
 # Features
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
+ac_add_options --disable-pulseaudio
 
 # Disables crash reporting, telemetry and other data gathering tools
 mk_add_options MOZ_CRASHREPORTER=0
@@ -335,13 +336,14 @@ Linux related functions:
     rustup	    - perform a rustup for this user.
     deps_rpm	    - install dependencies with rpm.
     deps_deb	    - install dependencies with apt.
-    artifacts_deb   - create a dist zip file (for debian).
+    artifacts_deb   - create a dist zip file (for debian10).
+    artifacts_rpm   - create a dist zip file (for fedora33).
 
 If no parameters are given, it prints this help message.
 
-For debian: I used: 
-$ sudo ./build.sh deps_deb 
-$ ./build.sh rustup mach_env fetch extract do_patches build artifacts_deb
+For debian, use: 
+  $ sudo ./build.sh deps_deb 
+  $ ./build.sh rustup mach_env fetch extract do_patches build artifacts_deb
 EOF
     exit 1
 fi
