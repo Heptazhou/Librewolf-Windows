@@ -17,7 +17,7 @@ deps_deb() {
 
 deps_rpm() {
     echo "deps_rpm: begin."
-    deps="python3 python3-distutils-extra clang pkg-config gcc curl wget nodejs nasm yasm zip m4 python3-zstandard python-zstandard python-devel python3-devel gtk3-devel llvm gtk2-devel dbus-glib-devel libXt-devel"
+    deps="python3 python3-distutils-extra clang pkg-config gcc curl wget nodejs nasm yasm zip m4 python3-zstandard python-zstandard python-devel python3-devel gtk3-devel llvm gtk2-devel dbus-glib-devel libXt-devel pulseaudio-libs-devel"
     dnf -y install $deps
     echo "deps_rpm: done."
 }
@@ -113,7 +113,6 @@ export MOZ_REQUIRE_SIGNING=0
 # Features
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
-ac_add_options --disable-pulseaudio
 
 # Disables crash reporting, telemetry and other data gathering tools
 mk_add_options MOZ_CRASHREPORTER=0
