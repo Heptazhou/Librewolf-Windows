@@ -171,15 +171,19 @@ END
 
 
     # on freebsd we're called gsed..
+    set +e
     sed=sed
-    which gsed
+    gsed --version > /dev/null
     if [ $? -eq 0 ]; then
 	sed=gsed;
+	# while we're at it, disable webrtc
     cat>>../mozconfig <<END
 # disable webrtc on freebsd
 ac_add_options --disable-webrtc
 END
     fi
+    set -e
+
     
     # Disabling Pocket
     $sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
