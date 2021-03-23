@@ -2,10 +2,9 @@
 # build.sh - build librewolf on windows
 # derived from https://gitlab.com/librewolf-community/browser/linux/-/blob/master/PKGBUILD
 
-pkgname=librewolf
-_pkgname=LibreWolf
+set -e
 
-pkgver=86.0.1
+pkgver=87.0
 
 
 deps_deb() {
@@ -120,10 +119,10 @@ ac_add_options --enable-optimize
 
 # Branding
 ac_add_options --enable-update-channel=release
-# theming bugs: ac_add_options --with-app-name=${pkgname}
-# theming bugs: ac_add_options --with-app-basename=${_pkgname}
-ac_add_options --with-branding=browser/branding/${pkgname}
-ac_add_options --with-distribution-id=io.gitlab.${pkgname}-community
+# theming bugs: ac_add_options --with-app-name=librewolf
+# theming bugs: ac_add_options --with-app-basename=LibreWolf
+ac_add_options --with-branding=browser/branding/librewolf
+ac_add_options --with-distribution-id=io.gitlab.librewolf-community
 ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZ_REQUIRE_SIGNING=0
@@ -146,16 +145,21 @@ END
 
     # Apply patches..
     # context-menu.patch megabar.patch mozilla-vpn-ad.patch remove_addons.patch unity-menubar.patch
+    echo 'context-menu.patch:'
     patch -p1 -i ../context-menu.patch
     if [ $? -ne 0 ]; then exit 1; fi
+    echo 'megabar.patch:'
     patch -p1 -i ../megabar.patch
     if [ $? -ne 0 ]; then exit 1; fi
+    echo 'mozilla-vpn-ad.patch:'
     patch -p1 -i ../mozilla-vpn-ad.patch
     if [ $? -ne 0 ]; then exit 1; fi
+    echo 'remove_addons.patch:'
     patch -p1 -i ../remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../unity-menubar.patch
-    if [ $? -ne 0 ]; then exit 1; fi
+    echo 'unity-menubar.patch: (skipped)'
+    #patch -p1 -i ../unity-menubar.patch
+    #if [ $? -ne 0 ]; then exit 1; fi
 
     
     # Disabling Pocket
