@@ -23,7 +23,7 @@ deps_rpm() {
 
 deps_pkg() {
     echo "deps_pkg: begin."
-    deps="wget gsed"
+    deps="wget gsed gmake python3 py37-sqlite3"
     pkg install $deps
     echo "deps_pkg: done."
 }
