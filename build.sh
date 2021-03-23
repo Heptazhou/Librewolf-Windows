@@ -21,6 +21,14 @@ deps_rpm() {
     echo "deps_rpm: done."
 }
 
+deps_pkg() {
+    echo "deps_pkg: begin."
+    deps="wget gsed"
+    pkg install $deps
+    echo "deps_pkg: done."
+}
+
+
 rustup() {
     # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
     echo "rustup: begin."
@@ -161,13 +169,17 @@ END
     #patch -p1 -i ../unity-menubar.patch
     #if [ $? -ne 0 ]; then exit 1; fi
 
+    # on freebsd we're called gsed..
+    sed=sed
+    which gsed
+    if [ $? -eq 0 ]; then sed=gsed; fi
     
     # Disabling Pocket
-    sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
+    $sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
     if [ $? -ne 0 ]; then exit 1; fi
     
     # this one only to remove an annoying error message:
-    sed -i 's#SaveToPocket.init();#// SaveToPocket.init();#g' browser/components/BrowserGlue.jsm
+    $sed -i 's#SaveToPocket.init();#// SaveToPocket.init();#g' browser/components/BrowserGlue.jsm
     if [ $? -ne 0 ]; then exit 1; fi
 	
     # Remove Internal Plugin Certificates
@@ -183,26 +195,26 @@ END
 	    exit
 	fi
     else
-	mysed='sed'
+	mysed=$sed
     fi
     $mysed -z "$_cert_sed" -i toolkit/mozapps/extensions/internal/XPIInstall.jsm
     if [ $? -ne 0 ]; then exit 1; fi
 
 
     # allow SearchEngines option in non-ESR builds
-    sed -i 's#"enterprise_only": true,#"enterprise_only": false,#g' browser/components/enterprisepolicies/schemas/policies-schema.json
+    $sed -i 's#"enterprise_only": true,#"enterprise_only": false,#g' browser/components/enterprisepolicies/schemas/policies-schema.json
     if [ $? -ne 0 ]; then exit 1; fi
 
     _settings_services_sed='s#firefox.settings.services.mozilla.com#f.s.s.m.c.qjz9zk#g'
     
     # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
-    sed "$_settings_services_sed" -i browser/components/newtab/data/content/activity-stream.bundle.js
+    $sed "$_settings_services_sed" -i browser/components/newtab/data/content/activity-stream.bundle.js
     if [ $? -ne 0 ]; then exit 1; fi
-    sed "$_settings_services_sed" -i modules/libpref/init/all.js
+    $sed "$_settings_services_sed" -i modules/libpref/init/all.js
     if [ $? -ne 0 ]; then exit 1; fi
-    sed "$_settings_services_sed" -i services/settings/Utils.jsm
+    $sed "$_settings_services_sed" -i services/settings/Utils.jsm
     if [ $? -ne 0 ]; then exit 1; fi
-    sed "$_settings_services_sed" -i toolkit/components/search/SearchUtils.jsm
+    $sed "$_settings_services_sed" -i toolkit/components/search/SearchUtils.jsm
     if [ $? -ne 0 ]; then exit 1; fi
     
     # copy branding resources
@@ -310,6 +322,10 @@ if [[ "$*" == *deps_rpm* ]]; then
     deps_rpm
     done_something=1
 fi
+if [[ "$*" == *deps_pkg* ]]; then
+    deps_pkg
+    done_something=1
+fi
 if [[ "$*" == *rustup* ]]; then
     rustup
     done_something=1
@@ -368,8 +384,9 @@ Linux related functions:
 
     mach_env        - create mach build environment.
     rustup	    - perform a rustup for this user.
-    deps_rpm	    - install dependencies with rpm.
     deps_deb	    - install dependencies with apt.
+    deps_rpm	    - install dependencies with dnf.
+    deps_pkg	    - install dependencies with pkg.
     artifacts_deb   - create a dist zip file (for debian10).
     artifacts_rpm   - create a dist zip file (for fedora33).
 
