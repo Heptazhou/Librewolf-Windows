@@ -15,8 +15,7 @@
 
 # librewolf repositories
 
-* [[common](https://gitlab.com/librewolf-community/browser/commons)] -> _([issues](https://gitlab.com/librewolf-community/browser/common/-/issues))_
-* [[flatpack](https://gitlab.com/librewolf-community/browser/flatpak)] -> _([issues](https://gitlab.com/librewolf-community/browser/flatpak/-/issues))_
+* [[common](https://gitlab.com/librewolf-community/browser/common)] -> _([issues](https://gitlab.com/librewolf-community/browser/common/-/issues))_
 * [[linux](https://gitlab.com/librewolf-community/browser/linux)] -> _([issues](https://gitlab.com/librewolf-community/browser/linux/-/issues))_
 * [[website](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io)] - _([issues](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io/-/issues))_
 
@@ -24,6 +23,7 @@
 
 * [[arch](https://gitlab.com/librewolf-community/browser/arch)] -> _([issues](https://gitlab.com/librewolf-community/browser/arch/-/issues))_
 * [[debian](https://gitlab.com/librewolf-community/browser/debian)] -> _([issues](https://gitlab.com/librewolf-community/browser/debian/-/issues))_
+* [[flatpack](https://gitlab.com/librewolf-community/browser/flatpak)] -> _([issues](https://gitlab.com/librewolf-community/browser/flatpak/-/issues))_
 * [[gentoo](https://gitlab.com/librewolf-community/browser/gentoo)] -> _([issues](https://gitlab.com/librewolf-community/browser/gentoo/-/issues))_
 * [[macos](https://gitlab.com/librewolf-community/browser/macos)] -> _([issues](https://gitlab.com/librewolf-community/browser/macos/-/issues))_
 * [[windows](https://gitlab.com/librewolf-community/browser/windows)] -> _([issues](https://gitlab.com/librewolf-community/browser/windows/-/issues))_
