@@ -23,7 +23,7 @@ deps_rpm() {
 
 deps_pkg() {
     echo "deps_pkg: begin."
-    deps="wget gsed gmake python3 py37-sqlite3"
+    deps="wget gsed gmake m4 python3 py37-sqlite3 pkgconf llvm node nasm zip unzip yasm"
     pkg install $deps
     echo "deps_pkg: done."
 }
@@ -169,10 +169,17 @@ END
     #patch -p1 -i ../unity-menubar.patch
     #if [ $? -ne 0 ]; then exit 1; fi
 
+
     # on freebsd we're called gsed..
     sed=sed
     which gsed
-    if [ $? -eq 0 ]; then sed=gsed; fi
+    if [ $? -eq 0 ]; then
+	sed=gsed;
+    cat>>../mozconfig <<END
+# disable webrtc on freebsd
+ac_add_options --disable-webrtc
+END
+    fi
     
     # Disabling Pocket
     $sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
