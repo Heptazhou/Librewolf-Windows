@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 # build.sh - build librewolf on windows
 # derived from https://gitlab.com/librewolf-community/browser/linux/-/blob/master/PKGBUILD
 
@@ -49,8 +49,33 @@ mach_env() {
 }
 
 git_subs() {
+    echo "git_subs: begin."
     git submodule update --recursive
     git submodule foreach git merge origin master
+    echo "git_subs: done."
+}
+
+clean() {
+    echo "clean: begin."
+    
+    echo "Deleting previous firefox-${pkgver} ..."
+    rm -rf firefox-$pkgver
+    
+    echo "Deleting other cruft ..."
+    rm -rf librewolf
+    rm -f firefox-$pkgver.source.tar.xz
+    rm -f *.patch
+    
+    # windows
+    rm -f librewolf-$pkgver.en-US.win64.zip*
+    rm -f librewolf-$pkgver.en-US.win64-setup.exe*
+    rm -f tmp.nsi
+    
+    # linux
+    rm -f librewolf-$pkgver.en-US.deb.zip*
+    rm -f librewolf-$pkgver.en-US.rpm.zip*
+
+    echo "clean: done."
 }
 
 fetch() {
@@ -321,6 +346,10 @@ fi
 
 done_something=0
 
+if [[ "$*" == *clean* ]]; then
+    clean
+    done_something=1
+fi
 if [[ "$*" == *git_subs* ]]; then
     git_subs
     done_something=1
@@ -384,28 +413,37 @@ if (( done_something == 0 )); then
     cat <<EOF
 Use: ./build.sh  fetch extract do_patches build package artifacts_win
 
-    git_subs        - update git submodules
     fetch           - fetch the tarball.
     extract         - extract the tarball.
     do_patches      - create a mozconfig, and patch the source.
     build           - the actual build.
-    artifacts_win   - build the .zip and NSIS setup.exe installer.
+    artifacts_win   - apply .cfg, build the zip file and NSIS setup.exe installer.
 
 Linux related functions:
 
-    mach_env        - create mach build environment.
-    rustup	    - perform a rustup for this user.
     deps_deb	    - install dependencies with apt.
     deps_rpm	    - install dependencies with dnf.
     deps_pkg	    - install dependencies with pkg.
-    artifacts_deb   - create a dist zip file (for debian10).
-    artifacts_rpm   - create a dist zip file (for fedora33).
+    artifacts_deb   - apply .cfg, create a dist zip file (for debian10).
+    artifacts_rpm   - apply .cfg, create a dist zip file (for fedora33).
 
-If no parameters are given, it prints this help message.
+Generic utility functionality:
 
-For debian, use: 
-  $ sudo ./build.sh deps_deb 
-  $ ./build.sh rustup mach_env fetch extract do_patches build artifacts_deb
+    clean           - remove generated cruft.
+    git_subs        - update git submodules.
+    mach_env        - create mach build environment.
+    rustup	    - perform a rustup for this user.
+
+Examples:
+  
+    For windows, use:
+      ./build.sh fetch extract do_patches build artifacts_win
+
+    For debian, use: 
+      sudo ./build.sh deps_deb 
+      ./build.sh rustup mach_env
+      ./build.sh fetch extract do_patches build artifacts_deb
+
 EOF
     exit 1
 fi
