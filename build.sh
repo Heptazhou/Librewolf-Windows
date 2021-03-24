@@ -1,6 +1,10 @@
 #!/bin/sh
 # build.sh - build librewolf on windows
 # derived from https://gitlab.com/librewolf-community/browser/linux/-/blob/master/PKGBUILD
+#
+# This script is set up like a Makefile, it's a list of functions that perform a
+# certain sub-task, that function can be called as a commandline argument to the script.
+#
 
 set -e
 
@@ -28,55 +32,32 @@ deps_pkg() {
     echo "deps_pkg: done."
 }
 
-
-rustup() {
-    # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
-    echo "rustup: begin."
-    curl https://sh.rustup.rs -sSf | sh
-    source $HOME/.cargo/env
-    cargo install cbindgen
-    echo "rustup: done."
-}
-
-mach_env() {
-    echo "mach_env: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
-    ./mach create-mach-environment
-    if [ $? -ne 0 ]; then exit 1; fi
-    cd ..
-    echo "mach_env: done."    
-}
-
-git_subs() {
-    echo "git_subs: begin."
-    git submodule update --recursive
-    git submodule foreach git merge origin master
-    echo "git_subs: done."
-}
-
 clean() {
     echo "clean: begin."
     
-    echo "Deleting previous firefox-${pkgver} ..."
+    echo "Deleting firefox-${pkgver} ..."
     rm -rf firefox-$pkgver
     
     echo "Deleting other cruft ..."
     rm -rf librewolf
     rm -f firefox-$pkgver.source.tar.xz
+    rm -f mozconfig
     rm -f *.patch
     
     # windows
-    rm -f librewolf-$pkgver.en-US.win64.zip*
-    rm -f librewolf-$pkgver.en-US.win64-setup.exe*
-    rm -f tmp.nsi
+    rm -f librewolf-$pkgver.en-US.win64.zip
+    rm -f librewolf-$pkgver.en-US.win64-setup.exe
+    rm -f librewolf-$pkgver.en-US.win64-experimental.zip
+    rm -f librewolf-$pkgver.en-US.win64-experimental-setup.exe
+    rm -f tmp.nsi tmp-experimental.nsi
     
     # linux
-    rm -f librewolf-$pkgver.en-US.deb.zip*
-    rm -f librewolf-$pkgver.en-US.rpm.zip*
+    rm -f librewolf-$pkgver.en-US.deb.zip
+    rm -f librewolf-$pkgver.en-US.rpm.zip
 
     echo "clean: done."
 }
+
 
 fetch() {
     echo "fetch: begin."
@@ -190,7 +171,7 @@ END
     echo 'remove_addons.patch:'
     patch -p1 -i ../remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    echo 'unity-menubar.patch: (skipped)'
+    #echo 'unity-menubar.patch:'
     #patch -p1 -i ../unity-menubar.patch
     #if [ $? -ne 0 ]; then exit 1; fi
 
@@ -201,7 +182,7 @@ END
     gsed --version > /dev/null
     if [ $? -eq 0 ]; then
 	sed=gsed;
-	# while we're at it, disable webrtc
+	# disable webrtc, build errors
     cat>>../mozconfig <<END
 # disable webrtc on freebsd
 ac_add_options --disable-webrtc
@@ -291,12 +272,37 @@ artifacts_win() {
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
     
+    echo ""
+    echo "artifacts_win: Creating final artifacts."
+    echo ""
+    
     # there is just too much garbage in this installer function to
     # have it all here..
     . ../artifacts_win.sh
 
     cd ..
     echo "artifacts_win: done."
+}
+
+artifacts_exp() {
+    echo "artifacts_exp: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+
+    ./mach package
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    echo ""
+    echo "artifacts_exp: Creating final artifacts."
+    echo ""
+    
+    # enable artifacts_win.sh to apply patches
+    experimental=experimental
+    
+    . ../artifacts_win.sh
+
+    cd ..
+    echo "artifacts_exp: done."
 }
 
 artifacts_deb()
@@ -307,6 +313,10 @@ artifacts_deb()
 
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
+    
+    echo ""
+    echo "artifacts_deb: Creating final artifacts."
+    echo ""
     
     . ../artifacts_deb.sh
 
@@ -324,11 +334,69 @@ artifacts_rpm()
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
     
+    echo ""
+    echo "artifacts_rpm: Creating final artifacts."
+    echo ""
+    
     . ../artifacts_rpm.sh
 
     cd ..
     echo "artifacts_rpm: done."
 }
+
+
+
+rustup() {
+    # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
+    echo "rustup: begin."
+    curl https://sh.rustup.rs -sSf | sh
+    source $HOME/.cargo/env
+    cargo install cbindgen
+    echo "rustup: done."
+}
+
+mach_env() {
+    echo "mach_env: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+    ./mach create-mach-environment
+    if [ $? -ne 0 ]; then exit 1; fi
+    cd ..
+    echo "mach_env: done."    
+}
+
+git_subs() {
+    echo "git_subs: begin."
+    git submodule update --recursive
+    git submodule foreach git merge origin master
+    echo "git_subs: done."
+}
+
+#
+# Experimental configuration options
+#
+
+config_diff() {
+    pushd settings > /dev/null
+      cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
+      git diff librewolf.cfg > ../patches/librewolf-config.patch
+      git diff librewolf.cfg
+      git checkout librewolf.cfg > /dev/null 2>&1
+    popd > /dev/null
+}
+
+policies_diff() {
+    pushd settings/distribution > /dev/null
+      cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
+      git diff policies.json > ../../patches/librewolf-policies.patch
+      git diff policies.json
+      git checkout policies.json > /dev/null 2>&1 
+    popd > /dev/null
+}
+
+
+
+
 
 
 # windows: change $PATH to find all the build tools in .mozbuild
@@ -342,10 +410,23 @@ if [ -f $HOME/.cargo/env ]; then
     source $HOME/.cargo/env
 fi
 
+
+
+
+
+
 # process commandline arguments and do something
 
 done_something=0
 
+if [[ "$*" == *config_diff* ]]; then
+    config_diff
+    done_something=1
+fi
+if [[ "$*" == *policies_diff* ]]; then
+    policies_diff
+    done_something=1
+fi
 if [[ "$*" == *clean* ]]; then
     clean
     done_something=1
@@ -394,6 +475,10 @@ if [[ "$*" == *artifacts_win* ]]; then
     artifacts_win
     done_something=1
 fi
+if [[ "$*" == *artifacts_exp* ]]; then
+    artifacts_exp
+    done_something=1
+fi
 if [[ "$*" == *artifacts_deb* ]]; then
     artifacts_deb
     done_something=1
@@ -418,6 +503,7 @@ Use: ./build.sh  fetch extract do_patches build package artifacts_win
     do_patches      - create a mozconfig, and patch the source.
     build           - the actual build.
     artifacts_win   - apply .cfg, build the zip file and NSIS setup.exe installer.
+    artifacts_exp   - same as above, but apply experimental config/policy patches.
 
 Linux related functions:
 
@@ -429,10 +515,13 @@ Linux related functions:
 
 Generic utility functionality:
 
-    clean           - remove generated cruft.
-    git_subs        - update git submodules.
     mach_env        - create mach build environment.
     rustup	    - perform a rustup for this user.
+
+    clean           - remove generated cruft.
+    git_subs        - update git submodules.
+    config_diff     - diff between my .cfg and dist .cfg file. (win10)
+    policies_diff   - diff between my policies and the dist policies. (win10)
 
 Examples:
   

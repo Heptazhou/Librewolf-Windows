@@ -6,6 +6,6 @@ unity-menubar.patch
 context-menu.patch
 mozilla-vpn-ad.patch
 mozconfig
-Makefile
 librewolf
 tmp.nsi
+tmp-experimental.nsi

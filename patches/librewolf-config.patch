@@ -1,0 +1,22 @@
+diff --git a/librewolf.cfg b/librewolf.cfg
+index 1ad0cea..ed4cadd 100644
+--- a/librewolf.cfg
++++ b/librewolf.cfg
+@@ -389,7 +389,7 @@ defaultPref("extensions.ui.experiment.hidden", false);
+ lockPref("dom.indexedDB.enabled", true); //default true
+ //lockPref("dom.indexedDB.logging.details", false); //default true
+ //lockPref("dom.indexedDB.logging.enabled", false); //default true
+-lockPref("dom.w3c_pointer_events.enabled", false);
++lockPref("dom.w3c_pointer_events.enabled", true);
+ //lockPref("network.http.spdy.enabled", false);
+ //lockPref("network.http.spdy.enabled.deps", false);
+ //lockPref("network.http.spdy.enabled.http2", false);
+@@ -1804,7 +1804,7 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
+ lockPref("datareporting.policy.dataSubmissionEnabled", false);
+ 
+ // Pref : Disable right-click menu manipulation via JavaScript (disabled)
+-defaultPref("dom.event.contextmenu.enabled", false);
++defaultPref("dom.event.contextmenu.enabled", true);
+ 
+ // Pref : Disable clipboard event detection (onCut/onCopy/onPaste) via Javascript
+ // Disabling clipboard events breaks Ctrl+C/X/V copy/cut/paste functionaility in
