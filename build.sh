@@ -108,9 +108,6 @@ do_patches() {
     wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f remove_addons.patch ]; then exit 1; fi
-    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/unity-menubar.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    if [ ! -f unity-menubar.patch ]; then exit 1; fi
     
 
     # create mozconfig..
@@ -503,7 +500,7 @@ Use: ./build.sh  fetch extract do_patches build package artifacts_win
     do_patches      - create a mozconfig, and patch the source.
     build           - the actual build.
     artifacts_win   - apply .cfg, build the zip file and NSIS setup.exe installer.
-    artifacts_exp   - same as above, but apply experimental config/policy patches.
+    artifacts_exp   - same as above, but also build with experimental config/policy.
 
 Linux related functions:
 
