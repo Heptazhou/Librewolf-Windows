@@ -32,7 +32,8 @@
 
 * If at all possible, pleasse go to the relevant 'issues' link and start discussing thing there.
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
-* [[gitter](https://gitter.im/librewolf-community/librewolf)]
+* [readthedocs.io](https://librewolf.readthedocs.io/en/latest/).
+* [[gitter](https://gitter.im/librewolf-community/librewolf)].
 
 # hardening firefox
 
