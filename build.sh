@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # build.sh - build librewolf on windows
 # derived from https://gitlab.com/librewolf-community/browser/linux/-/blob/master/PKGBUILD
 #
@@ -53,6 +53,7 @@ clean() {
     
     # linux
     rm -f librewolf-$pkgver.en-US.deb.zip
+    rm -f librewolf-$pkgver.en-US.deb-experimental.zip
     rm -f librewolf-$pkgver.en-US.rpm.zip
 
     echo "clean: done."
@@ -281,27 +282,6 @@ artifacts_win() {
     echo "artifacts_win: done."
 }
 
-artifacts_exp() {
-    echo "artifacts_exp: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
-
-    ./mach package
-    if [ $? -ne 0 ]; then exit 1; fi
-
-    echo ""
-    echo "artifacts_exp: Creating final artifacts."
-    echo ""
-    
-    # enable artifacts_win.sh to apply patches
-    experimental=experimental
-    
-    . ../artifacts_win.sh
-
-    cd ..
-    echo "artifacts_exp: done."
-}
-
 artifacts_deb()
 {
     echo "artifacts_deb: begin."
@@ -347,7 +327,7 @@ rustup() {
     # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
     echo "rustup: begin."
     curl https://sh.rustup.rs -sSf | sh
-    source $HOME/.cargo/env
+    . $HOME/.cargo/env
     cargo install cbindgen
     echo "rustup: done."
 }
@@ -404,7 +384,7 @@ if [ -f '/c/mozilla-build/start-shell.bat' ]; then
 fi
 
 if [ -f $HOME/.cargo/env ]; then
-    source $HOME/.cargo/env
+    . $HOME/.cargo/env
 fi
 
 
@@ -424,6 +404,9 @@ if [[ "$*" == *policies_diff* ]]; then
     policies_diff
     done_something=1
 fi
+
+#
+
 if [[ "$*" == *clean* ]]; then
     clean
     done_something=1
@@ -432,6 +415,13 @@ if [[ "$*" == *git_subs* ]]; then
     git_subs
     done_something=1
 fi
+if [[ "$*" == *rustup* ]]; then
+    rustup
+    done_something=1
+fi
+
+#
+
 if [[ "$*" == *deps_deb* ]]; then
     deps_deb
     done_something=1
@@ -444,10 +434,9 @@ if [[ "$*" == *deps_pkg* ]]; then
     deps_pkg
     done_something=1
 fi
-if [[ "$*" == *rustup* ]]; then
-    rustup
-    done_something=1
-fi
+
+#
+
 if [[ "$*" == *fetch* ]]; then
     fetch
     done_something=1
@@ -468,26 +457,33 @@ if [[ "$*" == *build* ]]; then
     build
     done_something=1
 fi
-if [[ "$*" == *artifacts_win* ]]; then
-    artifacts_win
-    done_something=1
-fi
+
+#
+
 if [[ "$*" == *artifacts_exp* ]]; then
+    experimental=experimental
     artifacts_exp
     done_something=1
+else
+    if [[ "$*" == *artifacts_win* ]]; then
+	artifacts_win
+	done_something=1
+    fi
 fi
-if [[ "$*" == *artifacts_deb* ]]; then
+if [[ "$*" == *artifacts_deb_exp* ]]; then
+    experimental=experimental
     artifacts_deb
     done_something=1
+else
+    if [[ "$*" == *artifacts_deb* ]]; then
+	artifacts_deb
+	done_something=1
+    fi
 fi
-
 if [[ "$*" == *artifacts_rpm* ]]; then
     artifacts_rpm
     done_something=1
 fi
-
-
-
 
 
 # by default, give help..
@@ -508,6 +504,7 @@ Linux related functions:
     deps_rpm	    - install dependencies with dnf.
     deps_pkg	    - install dependencies with pkg.
     artifacts_deb   - apply .cfg, create a dist zip file (for debian10).
+    artifacts_deb_exp  - include experimental build
     artifacts_rpm   - apply .cfg, create a dist zip file (for fedora33).
 
 Generic utility functionality:

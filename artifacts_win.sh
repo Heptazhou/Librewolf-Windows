@@ -1,5 +1,6 @@
 exe=.exe
 objdir=obj-x86_64-pc-mingw32/dist/firefox
+ospkg=win64
 
 # sanity checks
 if [ ! -d $objdir ]; then
@@ -23,8 +24,8 @@ cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete 
 cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
 
 # create the final zip artifact
-rm -f librewolf-$pkgver.en-US.win64.zip
-zip -qr9 librewolf-$pkgver.en-US.win64.zip librewolf
+rm -f librewolf-$pkgver.en-US.$ospkg.zip
+zip -qr9 librewolf-$pkgver.en-US.$ospkg.zip librewolf
 if [ $? -ne 0 ]; then exit 1; fi
 
 # now to try to make the installer
@@ -44,8 +45,8 @@ if [ ! -z $experimental ]; then
     popd
 
     # create the final zip artifact
-    rm -f librewolf-$pkgver.en-US.win64-experimental.zip
-    zip -qr9 librewolf-$pkgver.en-US.win64-experimental.zip librewolf
+    rm -f librewolf-$pkgver.en-US.$ospkg-experimental.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg-experimental.zip librewolf
     if [ $? -ne 0 ]; then exit 1; fi
 
     # now to try to make the installer

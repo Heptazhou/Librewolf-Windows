@@ -1,38 +1,53 @@
-#!/usr/bin/bash
+exe=
+objdir=obj-x86_64-pc-linux-gnu/dist/firefox
+ospkg=deb
 
 # sanity checks
-if [ ! -d obj-x86_64-pc-linux-gnu/dist/firefox ]; then
-    echo "installer_deb.sh: directory obj-x86_64-pc-linux-gnu/dist/firefox not found."
+if [ ! -d $objdir ]; then
+    echo "artifacts_win.sh: directory $objdir not found. did you run './build.sh build'?"
     exit 1;
 fi
 
 rm -rf ../firefox ../librewolf
-cp -r obj-x86_64-pc-linux-gnu/dist/firefox ..
-
+cp -r $objdir ..
 
 pushd ..
-mv firefox librewolf
 
+mv firefox librewolf
 # apply the LibreWolf settings
 cp -rv settings/* librewolf
 # rename the executable manually
-cd librewolf ; mv -v firefox librewolf ; cd ..
-    
-# recreate the zip file..
-
+pushd librewolf ; mv -v firefox$exe librewolf$exe ; popd
 # clean garbage files
 cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete removed-files ; cd ..
+# copy the windows icon
+cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
 
-# copy the files to register LibreWolf as local app.
-cp -v branding_files/register-librewolf branding_files/start-librewolf* librewolf
-
-# be sure to remove the previous zip file..
-rm -f librewolf-$pkgver.en-US.deb.zip*
-
-zip -r9 librewolf-$pkgver.en-US.deb.zip librewolf
-if [ $? -ne 0 ]; then exit 1; fi
-sha256sum librewolf-$pkgver.en-US.deb.zip > librewolf-$pkgver.en-US.deb.zip.sha256sum
+# create the final zip artifact
+rm -f librewolf-$pkgver.en-US.$ospkg.zip
+zip -qr9 librewolf-$pkgver.en-US.$ospkg.zip librewolf
 if [ $? -ne 0 ]; then exit 1; fi
 
+# now to try to make the installer
+# (create a .deb here)
+
+# patch to experimental config
+if [ ! -z $experimental ]; then
+    pushd librewolf
+    echo "Applying experimental patches..."
+    patch -p1 -i ../patches/librewolf-config.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    patch -p1 -i ../patches/librewolf-policies.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    popd
+
+    # create the final zip artifact
+    rm -f librewolf-$pkgver.en-US.$ospkg-experimental.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg-experimental.zip librewolf
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    # now to try to make the installer
+    # (create a .deb here)
+fi
 
 popd
