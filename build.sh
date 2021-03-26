@@ -480,9 +480,15 @@ else
 	done_something=1
     fi
 fi
-if [[ "$*" == *artifacts_rpm* ]]; then
+if [[ "$*" == *artifacts_rpm_exp* ]]; then
+    experimental=experimental
     artifacts_rpm
     done_something=1
+else
+    if [[ "$*" == *artifacts_rpm* ]]; then
+	artifacts_rpm
+	done_something=1
+    fi
 fi
 
 
@@ -500,12 +506,13 @@ Use: ./build.sh  fetch extract do_patches build package artifacts_win
 
 Linux related functions:
 
-    deps_deb	    - install dependencies with apt.
-    deps_rpm	    - install dependencies with dnf.
-    deps_pkg	    - install dependencies with pkg.
-    artifacts_deb   - apply .cfg, create a dist zip file (for debian10).
+    deps_deb	       - install dependencies with apt.
+    deps_rpm	       - install dependencies with dnf.
+    deps_pkg	       - install dependencies with pkg.
+    artifacts_deb      - apply .cfg, create a dist zip file (for debian10).
     artifacts_deb_exp  - include experimental build
-    artifacts_rpm   - apply .cfg, create a dist zip file (for fedora33).
+    artifacts_rpm      - apply .cfg, create a dist zip file (for fedora33).
+    artifacts_rpm_exp  - include experimental build
 
 Generic utility functionality:
 
