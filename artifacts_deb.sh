@@ -20,8 +20,9 @@ cp -rv settings/* librewolf
 pushd librewolf ; mv -v firefox$exe librewolf$exe ; popd
 # clean garbage files
 cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete removed-files ; cd ..
-# copy the windows icon
-cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
+
+# linux: copy app icon stuff
+cp branding_files/register-librewolf branding_files/start-librewolf branding_files/start-librewolf.desktop.in librewolf
 
 # create the final zip artifact
 rm -f librewolf-$pkgver.en-US.$ospkg.zip

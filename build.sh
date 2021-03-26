@@ -65,7 +65,8 @@ fetch() {
 
     # fetch the firefox source.
     rm -f firefox-$pkgver.source.tar.xz
-    wget https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
+    echo "Downloading firefox-$pkgver.source.tar.xz ..."
+    wget -q https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
     if [ $? -ne 0 ]; then exit 1; fi
     if [ ! -f firefox-$pkgver.source.tar.xz ]; then exit 1; fi
     
@@ -89,33 +90,7 @@ extract() {
 }
 
 
-
-do_patches() {
-    echo "do_patches: begin."
-    
-    # get the patches
-    echo 'Getting patches..'
-    rm -f context-menu.patch megabar.patch mozilla-vpn-ad.patch remove_addons.patch unity-menubar.patch
-    
-    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/context-menu.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    if [ ! -f context-menu.patch ]; then exit 1; fi
-    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    if [ ! -f megabar.patch ]; then exit 1; fi
-    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/mozilla-vpn-ad.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    if [ ! -f mozilla-vpn-ad.patch ]; then exit 1; fi
-    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    if [ ! -f remove_addons.patch ]; then exit 1; fi
-    
-
-    # create mozconfig..
-    
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
-    
+create_mozconfig() {
     cat >../mozconfig <<END
 ac_add_options --enable-application=browser
 
@@ -152,6 +127,32 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 # first attempt to fix the win32 vcredist issue results in build errors..
 #WIN32_REDIST_DIR=$VCINSTALLDIR\redist\x86\Microsoft.VC141.CRT
 END
+}
+
+do_patches() {
+    echo "do_patches: begin."
+    
+    # get the patches
+    echo 'Getting patches...'
+    rm -f context-menu.patch megabar.patch mozilla-vpn-ad.patch remove_addons.patch unity-menubar.patch
+    
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/context-menu.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f context-menu.patch ]; then exit 1; fi
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/megabar.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f megabar.patch ]; then exit 1; fi
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/mozilla-vpn-ad.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f mozilla-vpn-ad.patch ]; then exit 1; fi
+    wget -q https://gitlab.com/librewolf-community/browser/linux/-/raw/master/remove_addons.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -f remove_addons.patch ]; then exit 1; fi
+    
+
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+
 	
     echo 'Applying patches...'
 
@@ -169,11 +170,14 @@ END
     echo 'remove_addons.patch:'
     patch -p1 -i ../remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    #echo 'unity-menubar.patch:'
-    #patch -p1 -i ../unity-menubar.patch
-    #if [ $? -ne 0 ]; then exit 1; fi
 
+    
+    # create mozconfig..    
+    create_mozconfig
+    # just a straight copy for now..
+    cp -v ../mozconfig .
 
+    
     # on freebsd we're called gsed..
     set +e
     sed=sed
@@ -236,11 +240,14 @@ END
     cp -vr ../common/source_files/* ./
     # new branding stuff
     cp -v ../branding_files/configure.sh browser/branding/librewolf
-    cp -v ../branding_files/confvars.sh browser/confvars.sh
-    
-    # just a straight copy for now..
-    cp -v ../mozconfig .
 
+    # local patches
+    echo 'Local patches...'
+    
+    echo 'browser-confvars.patch:'
+    patch -p1 -i ../patches/browser-confvars.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    
     cd ..
     echo "do_patches: done."
 }
@@ -371,6 +378,25 @@ policies_diff() {
     popd > /dev/null
 }
 
+git_init() {
+    echo "git_init: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+
+    echo "Removing old .git folder..."
+    rm -rf .git
+
+    echo "Creating new .git folder..."
+    git init
+    git config core.safecrlf false
+    git config commit.gpgsign false
+    git add -f * .[a-z]*
+    git commit -am 'Initial commit'
+    
+    cd ..
+    echo "git_init: done."
+}
+
 
 
 
@@ -396,16 +422,7 @@ fi
 
 done_something=0
 
-if [[ "$*" == *config_diff* ]]; then
-    config_diff
-    done_something=1
-fi
-if [[ "$*" == *policies_diff* ]]; then
-    policies_diff
-    done_something=1
-fi
-
-#
+# various administrative actions...
 
 if [[ "$*" == *clean* ]]; then
     clean
@@ -419,8 +436,12 @@ if [[ "$*" == *rustup* ]]; then
     rustup
     done_something=1
 fi
+if [[ "$*" == *mach_env* ]]; then
+    mach_env
+    done_something=1
+fi
 
-#
+# dependencies on various platforms...
 
 if [[ "$*" == *deps_deb* ]]; then
     deps_deb
@@ -435,7 +456,7 @@ if [[ "$*" == *deps_pkg* ]]; then
     done_something=1
 fi
 
-#
+# main building actions...
 
 if [[ "$*" == *fetch* ]]; then
     fetch
@@ -449,8 +470,8 @@ if [[ "$*" == *do_patches* ]]; then
     do_patches
     done_something=1
 fi
-if [[ "$*" == *mach_env* ]]; then
-    mach_env
+if [[ "$*" == *git_init* ]]; then
+    git_init
     done_something=1
 fi
 if [[ "$*" == *build* ]]; then
@@ -458,7 +479,7 @@ if [[ "$*" == *build* ]]; then
     done_something=1
 fi
 
-#
+# creating the artifacts...
 
 if [[ "$*" == *artifacts_exp* ]]; then
     experimental=experimental
@@ -491,18 +512,34 @@ else
     fi
 fi
 
+# librewolf.cfg and policies.json differences
+
+if [[ "$*" == *config_diff* ]]; then
+    config_diff
+    done_something=1
+fi
+if [[ "$*" == *policies_diff* ]]; then
+    policies_diff
+    done_something=1
+fi
+if [[ "$*" == *mach_run_config* ]]; then
+    cp -r settings/* $(echo firefox-$pkgver/obj-*)/dist/bin
+    done_something=1
+fi
+
+
 
 # by default, give help..
 if (( done_something == 0 )); then
-    cat <<EOF
-Use: ./build.sh  fetch extract do_patches build package artifacts_win
+    cat << EOF
+Use: ./build.sh  fetch extract do_patches build artifacts_win
 
     fetch           - fetch the tarball.
     extract         - extract the tarball.
     do_patches      - create a mozconfig, and patch the source.
     build           - the actual build.
     artifacts_win   - apply .cfg, build the zip file and NSIS setup.exe installer.
-    artifacts_exp   - same as above, but also build with experimental config/policy.
+    artifacts_exp   - package as above, but use the experimental config/policies.
 
 Linux related functions:
 
@@ -510,9 +547,9 @@ Linux related functions:
     deps_rpm	       - install dependencies with dnf.
     deps_pkg	       - install dependencies with pkg.
     artifacts_deb      - apply .cfg, create a dist zip file (for debian10).
-    artifacts_deb_exp  - include experimental build
+    artifacts_deb_exp  - include experimental build.
     artifacts_rpm      - apply .cfg, create a dist zip file (for fedora33).
-    artifacts_rpm_exp  - include experimental build
+    artifacts_rpm_exp  - include experimental build.
 
 Generic utility functionality:
 
@@ -523,6 +560,8 @@ Generic utility functionality:
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)
+    git_init        - create .git folder in firefox-$pkgver for creating patches.
+    mach_run_config - copy librewolf config/policies to enable 'mach run'.
 
 Examples:
   
