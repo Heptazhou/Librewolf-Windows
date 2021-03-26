@@ -5,7 +5,7 @@
 
 # download locations
 
-* [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [AUR(en)](https://aur.archlinux.org/packages/librewolf/)
+* [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [librewolf-bin AUR(en)](https://aur.archlinux.org/packages/librewolf-bin/), [librewolf AUR(en)](https://aur.archlinux.org/packages/librewolf/)
 * [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
 * [[windows releases](https://gitlab.com/librewolf-community/browser/windows/-/releases)] - (this repository)
 
@@ -32,7 +32,8 @@
 
 * If at all possible, pleasse go to the relevant 'issues' link and start discussing thing there.
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
-* [[gitter](https://gitter.im/librewolf-community/librewolf)]
+* [readthedocs.io](https://librewolf.readthedocs.io/en/latest/).
+* [[gitter](https://gitter.im/librewolf-community/librewolf)].
 
 # hardening firefox
 
