@@ -483,7 +483,7 @@ fi
 
 if [[ "$*" == *artifacts_exp* ]]; then
     experimental=experimental
-    artifacts_exp
+    artifacts_win
     done_something=1
 else
     if [[ "$*" == *artifacts_win* ]]; then
