@@ -410,7 +410,7 @@ if [ -f '/c/mozilla-build/start-shell.bat' ]; then
 fi
 
 if [ -f "$HOME/.cargo/env" ]; then
-    . $HOME/.cargo/env
+    . "$HOME/.cargo/env"
 fi
 
 
