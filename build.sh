@@ -409,7 +409,7 @@ if [ -f '/c/mozilla-build/start-shell.bat' ]; then
     export PATH=$TPATH:$PATH
 fi
 
-if [ -f $HOME/.cargo/env ]; then
+if [ -f "$HOME/.cargo/env" ]; then
     . $HOME/.cargo/env
 fi
 
