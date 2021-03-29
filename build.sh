@@ -30,7 +30,7 @@ deps_rpm() {
 
 deps_pkg() {
     echo "deps_pkg: begin."
-    deps="wget gsed gmake m4 python3 py37-sqlite3 pkgconf llvm node nasm zip unzip yasm"
+    deps="wget gmake m4 python3 py37-sqlite3 pkgconf llvm node nasm zip unzip yasm"
     pkg install $deps
     echo "deps_pkg: done."
 }
@@ -166,98 +166,47 @@ do_patches() {
     if [ ! -d firefox-$pkgver ]; then exit 1; fi
     cd firefox-$pkgver
 
-	
     echo 'Applying patches...'
-
-    # Apply patches..
+    
     # context-menu.patch megabar.patch mozilla-vpn-ad.patch remove_addons.patch unity-menubar.patch
-    echo 'context-menu.patch:'
     patch -p1 -i ../context-menu.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    echo 'megabar.patch:'
     patch -p1 -i ../megabar.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    echo 'mozilla-vpn-ad.patch:'
     patch -p1 -i ../mozilla-vpn-ad.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    echo 'remove_addons.patch:'
     patch -p1 -i ../remove_addons.patch
     if [ $? -ne 0 ]; then exit 1; fi
 
     
-    # create mozconfig..    
+    echo 'Creating mozconfig...'
+    
     create_mozconfig
     # just a straight copy for now..
     cp -v ../mozconfig .
 
-    # on freebsd we're called gsed..
-    set +e
-    sed=sed
-    gsed --version > /dev/null
-    if [ $? -eq 0 ]; then
-	sed=gsed;
-	# disable webrtc, build errors
-    cat>>../mozconfig <<END
-# disable webrtc on freebsd
-ac_add_options --disable-webrtc
-END
-    fi
-    set -e
-
+    echo 'GNU sed patches...'
     
-    # Disabling Pocket
-    $sed -i "s/'pocket'/#'pocket'/g" browser/components/moz.build
+    patch -p1 -i ../patches/sed-patches/allow-searchengines-non-esr.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    
-    # this one only to remove an annoying error message:
-    $sed -i 's#SaveToPocket.init();#// SaveToPocket.init();#g' browser/components/BrowserGlue.jsm
+    patch -p1 -i ../patches/sed-patches/disable-pocket.patch
     if [ $? -ne 0 ]; then exit 1; fi
-	
-    # Remove Internal Plugin Certificates
-    _cert_sed='s#if (aCert.organizationalUnit == "Mozilla [[:alpha:]]\+") {\n'
-    _cert_sed+='[[:blank:]]\+return AddonManager\.SIGNEDSTATE_[[:upper:]]\+;\n'
-    _cert_sed+='[[:blank:]]\+}#'
-    _cert_sed+='// NOTE: removed#g'
-    # on windows: the sed.exe in MozBuild is too old, no -z, using the one from Git instead.
-    if [ -f '/c/mozilla-build/start-shell.bat' ]; then
-	mysed='/c/mozilla-source/Git/usr/bin/sed.exe'
-	if [ ! -f $mysed ]; then
-	    echo 'build.sh: For the build to work, copy "c:\program files\Git" folder into "c:\mozilla-source".'
-	    exit
-	fi
-    else
-	mysed=$sed
-    fi
-    $mysed -z "$_cert_sed" -i toolkit/mozapps/extensions/internal/XPIInstall.jsm
+    patch -p1 -i ../patches/sed-patches/remove-internal-plugin-certs.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+    patch -p1 -i ../patches/sed-patches/stop-undesired-requests.patch
     if [ $? -ne 0 ]; then exit 1; fi
 
-
-    # allow SearchEngines option in non-ESR builds
-    $sed -i 's#"enterprise_only": true,#"enterprise_only": false,#g' browser/components/enterprisepolicies/schemas/policies-schema.json
-    if [ $? -ne 0 ]; then exit 1; fi
-
-    _settings_services_sed='s#firefox.settings.services.mozilla.com#f.s.s.m.c.qjz9zk#g'
-    
-    # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
-    $sed "$_settings_services_sed" -i browser/components/newtab/data/content/activity-stream.bundle.js
-    if [ $? -ne 0 ]; then exit 1; fi
-    $sed "$_settings_services_sed" -i modules/libpref/init/all.js
-    if [ $? -ne 0 ]; then exit 1; fi
-    $sed "$_settings_services_sed" -i services/settings/Utils.jsm
-    if [ $? -ne 0 ]; then exit 1; fi
-    $sed "$_settings_services_sed" -i toolkit/components/search/SearchUtils.jsm
-    if [ $? -ne 0 ]; then exit 1; fi
+    echo 'Copy librewolf branding files...'
     
     # copy branding resources
     cp -vr ../common/source_files/* ./
     # new branding stuff
     cp -v ../branding_files/configure.sh browser/branding/librewolf
 
-    # local patches
     echo 'Local patches...'
     
-    echo 'browser-confvars.patch:'
-    patch -p1 -i ../patches/browser-confvars.patch
+    # local patches
+    patch -p1 -i ../patches/browser-confvars.patch # not sure about this one yet!
     if [ $? -ne 0 ]; then exit 1; fi
     
     cd ..
