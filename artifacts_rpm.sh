@@ -37,9 +37,9 @@ if [ $? -ne 0 ]; then exit 1; fi
 if [ ! -z $experimental ]; then
     pushd librewolf
     echo "Applying experimental patches..."
-    patch -p1 -i ../patches/librewolf-config.patch
+    patch -p1 -i ../patches/experimental/librewolf-config.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../patches/librewolf-policies.patch
+    patch -p1 -i ../patches/experimental/librewolf-policies.patch
     if [ $? -ne 0 ]; then exit 1; fi
     popd
 

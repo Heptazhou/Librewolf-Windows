@@ -10,6 +10,9 @@ set -e
 
 pkgver=87.0
 
+#
+# Dependencies for linux/freebsd.
+#
 
 deps_deb() {
     echo "deps_deb: begin."
@@ -31,6 +34,10 @@ deps_pkg() {
     pkg install $deps
     echo "deps_pkg: done."
 }
+
+#
+# Basic functionality
+#
 
 clean() {
     echo "clean: begin."
@@ -90,6 +97,11 @@ extract() {
 }
 
 
+#
+# LibreWolf specific mozconfig and patches
+#
+
+
 create_mozconfig() {
     cat >../mozconfig <<END
 ac_add_options --enable-application=browser
@@ -128,6 +140,7 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 #WIN32_REDIST_DIR=$VCINSTALLDIR\redist\x86\Microsoft.VC141.CRT
 END
 }
+
 
 do_patches() {
     echo "do_patches: begin."
@@ -177,7 +190,6 @@ do_patches() {
     # just a straight copy for now..
     cp -v ../mozconfig .
 
-    
     # on freebsd we're called gsed..
     set +e
     sed=sed
@@ -363,7 +375,8 @@ git_subs() {
 config_diff() {
     pushd settings > /dev/null
       cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
-      git diff librewolf.cfg > ../patches/librewolf-config.patch
+      if [ $? -ne 0 ]; then exit 1; fi
+      git diff librewolf.cfg > ../patches/experimental/librewolf-config.patch
       git diff librewolf.cfg
       git checkout librewolf.cfg > /dev/null 2>&1
     popd > /dev/null
@@ -372,7 +385,8 @@ config_diff() {
 policies_diff() {
     pushd settings/distribution > /dev/null
       cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
-      git diff policies.json > ../../patches/librewolf-policies.patch
+      if [ $? -ne 0 ]; then exit 1; fi
+      git diff policies.json > ../../patches/experimental/librewolf-policies.patch
       git diff policies.json
       git checkout policies.json > /dev/null 2>&1 
     popd > /dev/null
@@ -402,6 +416,8 @@ git_init() {
 
 
 
+
+
 # windows: change $PATH to find all the build tools in .mozbuild
 # this might do the trick on macos aswell?
 if [ -f '/c/mozilla-build/start-shell.bat' ]; then
@@ -418,7 +434,10 @@ fi
 
 
 
+#
 # process commandline arguments and do something
+#
+
 
 done_something=0
 
