@@ -1,5 +1,5 @@
 diff --git a/librewolf.cfg b/librewolf.cfg
-index 1ad0cea..8fe76be 100644
+index 1ad0cea..c6907b4 100644
 --- a/librewolf.cfg
 +++ b/librewolf.cfg
 @@ -389,7 +389,7 @@ defaultPref("extensions.ui.experiment.hidden", false);
@@ -11,47 +11,15 @@ index 1ad0cea..8fe76be 100644
  //lockPref("network.http.spdy.enabled", false);
  //lockPref("network.http.spdy.enabled.deps", false);
  //lockPref("network.http.spdy.enabled.http2", false);
-@@ -1132,7 +1132,7 @@ lockPref("prio.publicKeyB", "");
- // >>>>>>>>>>>>>>>>>>>>
+@@ -932,7 +932,7 @@ lockPref("browser.newtabpage.activity-stream.fxaccounts.endpoint", "");
+ // https://accounts.firefox.com/
  
- // Pref : Other webGl [WINDOWS]
--lockPref("webgl.dxgl.enabled", false);
-+//lockkPref("webgl.dxgl.enabled", false);
- 
- // Pref : disable scanning for plugins [WINDOWS]
- lockPref("plugin.scan.plid.all", false);
-@@ -1365,7 +1365,7 @@ defaultPref("layout.frame_rate.precise", true);
- // It's likely your browser is already set to use these features.
- // May introduce instability on some hardware.
- // Tor compatibility - have inverted values in tor.
--defaultPref("webgl.force-enabled", true);
-+//defaultPref("webgl.force-enabled", true);
- defaultPref("layers.acceleration.force-enabled", true);
- 
- // Pref : 2508: disable hardware acceleration to reduce graphics fingerprinting
-@@ -1432,16 +1432,16 @@ defaultPref("browser.tabs.animate", false);
- // WebGL introduces high fingerprinting (WebGL is a js API for directly accessing hardware)
- defaultPref("webgl.disabled", false); // Tor have it false but the rest is the same (webgl)
- // This does not leak
--lockPref("webgl.enable-webgl2", false);
--lockPref("webgl.min_capability_mode", true);
-+//lockPref("webgl.enable-webgl2", false);
-+//lockPref("webgl.min_capability_mode", true);
- 
- // Bench Diff : 0/5000
- // Pref : Disable webGL II/II
- // WebGL introduces high fingerprinting (WebGL is a js API for directly accessing hardware)
--lockPref("pdfjs.enableWebGL", false);
--lockPref("webgl.disable-extensions", true);
--lockPref("webgl.disable-fail-if-major-performance-caveat", true);
--lockPref("webgl.enable-debug-renderer-info", false); //Deprecated Active
-+//lockPref("pdfjs.enableWebGL", false);
-+//lockPref("webgl.disable-extensions", true);
-+//lockPref("webgl.disable-fail-if-major-performance-caveat", true);
-+//lockPref("webgl.enable-debug-renderer-info", false); //Deprecated Active
- 
- // Bench Diff : -1500/5000
- // Pref : Disable asm.js
+ // Pref :
+-defaultPref("extensions.update.url", "");
++//defaultPref("extensions.update.url", "");
+ // Default Value
+ // https://versioncheck.addons.mozilla.org/update/VersionCheck.php?reqVersion=
+ // %REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=
 @@ -1804,7 +1804,7 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
  lockPref("datareporting.policy.dataSubmissionEnabled", false);
  
