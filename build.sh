@@ -396,6 +396,15 @@ if [[ "$*" == *clean* ]]; then
     clean
     done_something=1
 fi
+if [[ "$*" == *all* ]]; then
+    fetch
+    extract
+    do_patches
+    build
+    experimental=experimental
+    artifacts_win
+    done_something=1
+fi
 if [[ "$*" == *git_subs* ]]; then
     git_subs
     done_something=1
@@ -525,6 +534,7 @@ Generic utility functionality:
     rustup	    - perform a rustup for this user.
 
     clean           - remove generated cruft.
+    all             - build all, produce all artifacts including -experimental.
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)

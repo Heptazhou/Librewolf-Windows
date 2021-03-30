@@ -1,5 +1,5 @@
 diff --git a/librewolf.cfg b/librewolf.cfg
-index 1ad0cea..c6907b4 100644
+index 1ad0cea..0d9df09 100644
 --- a/librewolf.cfg
 +++ b/librewolf.cfg
 @@ -389,7 +389,7 @@ defaultPref("extensions.ui.experiment.hidden", false);
@@ -29,3 +29,14 @@ index 1ad0cea..c6907b4 100644
  
  // Pref : Disable clipboard event detection (onCut/onCopy/onPaste) via Javascript
  // Disabling clipboard events breaks Ctrl+C/X/V copy/cut/paste functionaility in
+@@ -2773,3 +2773,10 @@ defaultPref("devtools.selfxss.count", 0);
+ // enable HTTPS only mode by default
+ defaultPref("dom.security.https_only_mode", true);
+ defaultPref("dom.security.https_only_mode_ever_enabled", true);
++
++
++// attempting new cookie behavior (use Settings > Cookies and Site Data > Manage Exceptions)
++// (please not that after you added a site, you must close LibreWolf before the cookies/etc are actually saved.)
++defaultPref("privacy.clearOnShutdown.cookies", false);
++defaultPref("privacy.clearOnShutdown.offlineApps", false);
++defaultPref("network.cookie.lifetimePolicy", 2);
