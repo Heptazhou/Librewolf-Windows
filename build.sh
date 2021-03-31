@@ -54,13 +54,13 @@ clean() {
     # windows
     rm -f librewolf-$pkgver.en-US.win64.zip
     rm -f librewolf-$pkgver.en-US.win64-setup.exe
-    rm -f librewolf-$pkgver.en-US.win64-experimental.zip
-    rm -f librewolf-$pkgver.en-US.win64-experimental-setup.exe
-    rm -f tmp.nsi tmp-experimental.nsi
+    rm -f librewolf-$pkgver.en-US.win64-permissive.zip
+    rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe
+    rm -f tmp.nsi tmp-permissive.nsi
     
     # linux
     rm -f librewolf-$pkgver.en-US.deb.zip
-    rm -f librewolf-$pkgver.en-US.deb-experimental.zip
+    rm -f librewolf-$pkgver.en-US.deb-permissive.zip
     rm -f librewolf-$pkgver.en-US.rpm.zip
 
     echo "clean: done."
@@ -318,14 +318,14 @@ git_subs() {
 }
 
 #
-# Experimental configuration options
+# Permissive configuration options
 #
 
 config_diff() {
     pushd settings > /dev/null
       cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
       if [ $? -ne 0 ]; then exit 1; fi
-      git diff librewolf.cfg > ../patches/experimental/librewolf-config.patch
+      git diff librewolf.cfg > ../patches/permissive/librewolf-config.patch
       git diff librewolf.cfg
       git checkout librewolf.cfg > /dev/null 2>&1
     popd > /dev/null
@@ -335,7 +335,7 @@ policies_diff() {
     pushd settings/distribution > /dev/null
       cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
       if [ $? -ne 0 ]; then exit 1; fi
-      git diff policies.json > ../../patches/experimental/librewolf-policies.patch
+      git diff policies.json > ../../patches/permissive/librewolf-policies.patch
       git diff policies.json
       git checkout policies.json > /dev/null 2>&1 
     popd > /dev/null
@@ -370,8 +370,8 @@ git_init() {
 # windows: change $PATH to find all the build tools in .mozbuild
 # this might do the trick on macos aswell?
 if [ -f '/c/mozilla-build/start-shell.bat' ]; then
-    export TPATH=$HOME/.mozbuild/clang/bin:$HOME/.mozbuild/cbindgen:$HOME/.mozbuild/node:$HOME/.mozbuild/nasm
-    export PATH=$TPATH:$PATH
+    export TPATH="$HOME/.mozbuild/clang/bin:$HOME/.mozbuild/cbindgen:$HOME/.mozbuild/node:$HOME/.mozbuild/nasm"
+    export PATH="$TPATH:$PATH"
 fi
 
 if [ -f "$HOME/.cargo/env" ]; then
@@ -401,7 +401,7 @@ if [[ "$*" == *all* ]]; then
     extract
     do_patches
     build
-    experimental=experimental
+    permissive=permissive
     artifacts_win
     done_something=1
 fi
@@ -458,8 +458,8 @@ fi
 
 # creating the artifacts...
 
-if [[ "$*" == *artifacts_exp* ]]; then
-    experimental=experimental
+if [[ "$*" == *artifacts_perm* ]]; then
+    permissive=permissive
     artifacts_win
     done_something=1
 else
@@ -468,8 +468,8 @@ else
 	done_something=1
     fi
 fi
-if [[ "$*" == *artifacts_deb_exp* ]]; then
-    experimental=experimental
+if [[ "$*" == *artifacts_deb_perm* ]]; then
+    permissive=permissive
     artifacts_deb
     done_something=1
 else
@@ -478,8 +478,8 @@ else
 	done_something=1
     fi
 fi
-if [[ "$*" == *artifacts_rpm_exp* ]]; then
-    experimental=experimental
+if [[ "$*" == *artifacts_rpm_perm* ]]; then
+    permissive=permissive
     artifacts_rpm
     done_something=1
 else
@@ -511,22 +511,24 @@ if (( done_something == 0 )); then
     cat << EOF
 Use: ./build.sh  fetch extract do_patches build artifacts_win
 
-    fetch           - fetch the tarball.
-    extract         - extract the tarball.
-    do_patches      - create a mozconfig, and patch the source.
-    build           - the actual build.
-    artifacts_win   - apply .cfg, build the zip file and NSIS setup.exe installer.
-    artifacts_exp   - package as above, but use the experimental config/policies.
+    fetch            - fetch the tarball.
+    extract          - extract the tarball.
+    do_patches       - create a mozconfig, and patch the source.
+    build            - the actual build.
+
+    artifacts_win    - apply .cfg, build the zip file and NSIS setup.exe installer.
+    artifacts_perm   - package as above, but use the permissive config/policies.
 
 Linux related functions:
 
-    deps_deb	       - install dependencies with apt.
-    deps_rpm	       - install dependencies with dnf.
-    deps_pkg	       - install dependencies with pkg.
-    artifacts_deb      - apply .cfg, create a dist zip file (for debian10).
-    artifacts_deb_exp  - include experimental build.
-    artifacts_rpm      - apply .cfg, create a dist zip file (for fedora33).
-    artifacts_rpm_exp  - include experimental build.
+    deps_deb	        - install dependencies with apt.
+    deps_rpm	        - install dependencies with dnf.
+    deps_pkg	        - install dependencies with pkg. (freebsd)
+
+    artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
+    artifacts_deb_perm  - include permissive build.
+    artifacts_rpm       - apply .cfg, create a dist zip file (for fedora33).
+    artifacts_rpm_perm  - include permissive build.
 
 Generic utility functionality:
 
@@ -534,7 +536,7 @@ Generic utility functionality:
     rustup	    - perform a rustup for this user.
 
     clean           - remove generated cruft.
-    all             - build all, produce all artifacts including -experimental.
+    all             - build all, produce all artifacts including -permissive.
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)

@@ -35,25 +35,25 @@ sed "s/pkg_version/$pkgver/g" < artifacts_win.nsi > tmp.nsi
 makensis-3.01.exe -V1 tmp.nsi
 if [ $? -ne 0 ]; then exit 1; fi
 
-# patch to experimental config
-if [ ! -z $experimental ]; then
+# patch to permissive config
+if [ ! -z $permissive ]; then
     pushd librewolf
-    echo "Applying experimental patches..."
-    patch -p1 -i ../patches/experimental/librewolf-config.patch
+    echo "Applying permissive patches..."
+    patch -p1 -i ../patches/permissive/librewolf-config.patch
     if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../patches/experimental/librewolf-policies.patch
+    patch -p1 -i ../patches/permissive/librewolf-policies.patch
     if [ $? -ne 0 ]; then exit 1; fi
     popd
 
     # create the final zip artifact
-    rm -f librewolf-$pkgver.en-US.$ospkg-experimental.zip
-    zip -qr9 librewolf-$pkgver.en-US.$ospkg-experimental.zip librewolf
+    rm -f librewolf-$pkgver.en-US.$ospkg-permissive.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg-permissive.zip librewolf
     if [ $? -ne 0 ]; then exit 1; fi
 
     # now to try to make the installer
-    rm -f librewolf-$pkgver.en-US.win64-experimental-setup.exe tmp-experimental.nsi
-    sed "s/win64-setup/win64-experimental-setup/g" < tmp.nsi > tmp-experimental.nsi
-    makensis-3.01.exe -V1 tmp-experimental.nsi
+    rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe tmp-permissive.nsi
+    sed "s/win64-setup/win64-permissive-setup/g" < tmp.nsi > tmp-permissive.nsi
+    makensis-3.01.exe -V1 tmp-permissive.nsi
     if [ $? -ne 0 ]; then exit 1; fi
 fi
 

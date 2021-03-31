@@ -8,4 +8,4 @@ mozilla-vpn-ad.patch
 mozconfig
 librewolf
 tmp.nsi
-tmp-experimental.nsi
+tmp-permissive.nsi
