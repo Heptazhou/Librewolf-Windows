@@ -39,7 +39,4 @@
 
 * **tools**: [[deviceinfo.me](https://www.deviceinfo.me/)], [[coveryourtracks](https://coveryourtracks.eff.org/learn)], [[privacytools.io](https://privacytools.io/)], 
 * eff.org: [surveillance self-defense](https://ssd.eff.org/en).
-* mozilla: [Firefox](https://www.mozilla.org/en-US/firefox/new/), [Thunderbird](https://www.thunderbird.net/en-US/); ...
-* news: [ghacks](https://www.ghacks.net/)
-* wikipedia: [Browser fingerprinting](https://en.wikipedia.org/wiki/Device_fingerprint).
-* wikipedia: [Browser security](https://en.wikipedia.org/wiki/Browser_security), [browser exploit](https://en.wikipedia.org/wiki/Browser_exploit).
+* Interesting wikipedia articles: [Browser fingerprinting](https://en.wikipedia.org/wiki/Device_fingerprint), [Browser security](https://en.wikipedia.org/wiki/Browser_security), [Browser exploit](https://en.wikipedia.org/wiki/Browser_exploit), [Anonymous web browsing](https://en.wikipedia.org/wiki/Anonymous_web_browsing), [Internet privacy](https://en.wikipedia.org/wiki/Internet_privacy).
