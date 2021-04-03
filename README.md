@@ -7,7 +7,7 @@ _What is it then?_ It's a **_hardened_** _version_ of Firefox. (See bottom of fi
 
 # LibreWolf for windows
 
-* [download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases).
+* **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**.
 * [issue tracker](https://gitlab.com/librewolf-community/browser/windows/-/issues).
 
 # download locations
