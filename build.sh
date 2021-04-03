@@ -153,7 +153,7 @@ build() {
 }
 
 
-
+. ./artifacts_all.sh
 
 artifacts_win() {
     echo "artifacts_win: begin."
@@ -167,7 +167,7 @@ artifacts_win() {
     echo "artifacts_win: Creating final artifacts."
     echo ""
     
-    . ../artifacts_win.sh
+    artifacts_win_details
 
     cd ..
     echo "artifacts_win: done."
@@ -186,7 +186,7 @@ artifacts_deb()
     echo "artifacts_deb: Creating final artifacts."
     echo ""
     
-    . ../artifacts_deb.sh
+    artifacts_deb_details
 
     cd ..
     echo "artifacts_deb: done."
@@ -206,7 +206,7 @@ artifacts_rpm()
     echo "artifacts_rpm: Creating final artifacts."
     echo ""
     
-    . ../artifacts_rpm.sh
+    artifacts_rpm_details
 
     cd ..
     echo "artifacts_rpm: done."
