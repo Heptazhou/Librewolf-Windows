@@ -61,6 +61,7 @@ clean() {
     rm -f librewolf-$pkgver.en-US.deb.zip
     rm -f librewolf-$pkgver.en-US.deb-permissive.zip
     rm -f librewolf-$pkgver.en-US.rpm.zip
+    rm -f librewolf-$pkgver.en-US.rpm-permissive.zip
 
     echo "clean: done."
 }
@@ -342,27 +343,6 @@ git_init() {
 
 
 
-
-
-
-
-
-# windows: change $PATH to find all the build tools in .mozbuild
-# this might do the trick on macos aswell?
-if [ -f '/c/mozilla-build/start-shell.bat' ]; then
-    export TPATH="$HOME/.mozbuild/clang/bin:$HOME/.mozbuild/cbindgen:$HOME/.mozbuild/node:$HOME/.mozbuild/nasm"
-    export PATH="$TPATH:$PATH"
-fi
-
-if [ -f "$HOME/.cargo/env" ]; then
-    . "$HOME/.cargo/env"
-fi
-
-
-
-
-
-
 #
 # process commandline arguments and do something
 #
@@ -512,11 +492,11 @@ Linux related functions:
 
 Generic utility functionality:
 
+    all             - build all, produce all artifacts including -permissive.
+    clean           - remove generated cruft.
+
     mach_env        - create mach build environment.
     rustup	    - perform a rustup for this user.
-
-    clean           - remove generated cruft.
-    all             - build all, produce all artifacts including -permissive.
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)
