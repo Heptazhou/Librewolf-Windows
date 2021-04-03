@@ -10,7 +10,6 @@ set -e
 
 pkgver=87.0
 
-
 #
 # Basic functionality
 #
@@ -236,6 +235,12 @@ deps_pkg() {
     echo "deps_pkg: done."
 }
 
+deps_mac() {
+    echo "deps_mac: begin."
+    deps="yasm nasm ffmpeg node@14 gcc dbus nss"
+    brew install $deps
+    echo "deps_mac: done."
+}
 
 # these utilities should work everywhere
 clean() {
@@ -384,6 +389,10 @@ if [[ "$*" == *deps_pkg* ]]; then
     deps_pkg
     done_something=1
 fi
+if [[ "$*" == *deps_mac* ]]; then
+    deps_mac
+    done_something=1
+fi
 
 # main building actions...
 
@@ -476,6 +485,7 @@ Linux related functions:
     deps_deb	        - install dependencies with apt.
     deps_rpm	        - install dependencies with dnf.
     deps_pkg	        - install dependencies with pkg. (freebsd)
+    deps_mac	        - install dependencies with brew. (macOS)
 
     artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
     artifacts_deb_perm  - include permissive build.
@@ -495,10 +505,21 @@ Generic utility functionality:
     git_init        - create .git folder in firefox-$pkgver for creating patches.
     mach_run_config - copy librewolf config/policies to enable 'mach run'.
 
+Installation from linux zip file:
+
+Copy the zip file in your \$HOME folder, then:
+``
+unzip librewolf-*.zip
+cd librewolf
+./register-librewolf
+``
+That should give an app icon. You can have it elsewhere and it will work.
+
 Examples:
   
     For windows, use:
       ./build.sh fetch extract do_patches build artifacts_win
+      ./build.sh all
 
     For debian, use: 
       sudo ./build.sh deps_deb 
