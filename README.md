@@ -1,3 +1,8 @@
+# What LibreWolf is not
+
+* LibreWolf does **not** provide _[Anonymity](https://en.wikipedia.org/wiki/Anonymous_web_browsing)_, for that, use:
+> [Tor Browser](https://www.torproject.org/).
+
 # LibreWolf for windows
 
 * [download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases).
