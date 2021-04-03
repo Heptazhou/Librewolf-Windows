@@ -3,6 +3,8 @@
 * LibreWolf does **not** provide _[Anonymity](https://en.wikipedia.org/wiki/Anonymous_web_browsing)_, for that, use:
 > [Tor Browser](https://www.torproject.org/).
 
+_What is it then?_ It's a **_hardened_** _version_ of Firefox. (See bottom of file.)
+
 # LibreWolf for windows
 
 * [download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases).
