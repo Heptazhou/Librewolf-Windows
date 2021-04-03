@@ -10,62 +10,10 @@ set -e
 
 pkgver=87.0
 
-#
-# Dependencies for linux/freebsd.
-#
-
-deps_deb() {
-    echo "deps_deb: begin."
-    deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
-    apt -y install $deps
-    echo "deps_deb: done."
-}
-
-deps_rpm() {
-    echo "deps_rpm: begin."
-    deps="python3 python3-distutils-extra clang pkg-config gcc curl wget nodejs nasm yasm zip m4 python3-zstandard python-zstandard python-devel python3-devel gtk3-devel llvm gtk2-devel dbus-glib-devel libXt-devel pulseaudio-libs-devel"
-    dnf -y install $deps
-    echo "deps_rpm: done."
-}
-
-deps_pkg() {
-    echo "deps_pkg: begin."
-    deps="wget gmake m4 python3 py37-sqlite3 pkgconf llvm node nasm zip unzip yasm"
-    pkg install $deps
-    echo "deps_pkg: done."
-}
 
 #
 # Basic functionality
 #
-
-clean() {
-    echo "clean: begin."
-    
-    echo "Deleting firefox-${pkgver} ..."
-    rm -rf firefox-$pkgver
-    
-    echo "Deleting other cruft ..."
-    rm -rf librewolf
-    rm -f firefox-$pkgver.source.tar.xz
-    rm -f mozconfig
-    
-    # windows
-    rm -f librewolf-$pkgver.en-US.win64.zip
-    rm -f librewolf-$pkgver.en-US.win64-setup.exe
-    rm -f librewolf-$pkgver.en-US.win64-permissive.zip
-    rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe
-    rm -f tmp.nsi tmp-permissive.nsi
-    
-    # linux
-    rm -f librewolf-$pkgver.en-US.deb.zip
-    rm -f librewolf-$pkgver.en-US.deb-permissive.zip
-    rm -f librewolf-$pkgver.en-US.rpm.zip
-    rm -f librewolf-$pkgver.en-US.rpm-permissive.zip
-
-    echo "clean: done."
-}
-
 
 fetch() {
     echo "fetch: begin."
@@ -97,11 +45,7 @@ extract() {
 }
 
 
-#
 # LibreWolf specific mozconfig and patches
-#
-
-
 create_mozconfig() {
     cat >../mozconfig <<END
 ac_add_options --enable-application=browser
@@ -223,8 +167,6 @@ artifacts_win() {
     echo "artifacts_win: Creating final artifacts."
     echo ""
     
-    # there is just too much garbage in this installer function to
-    # have it all here..
     . ../artifacts_win.sh
 
     cd ..
@@ -272,6 +214,58 @@ artifacts_rpm()
 
 
 
+# Dependencies for linux/freebsd.
+deps_deb() {
+    echo "deps_deb: begin."
+    deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
+    apt -y install $deps
+    echo "deps_deb: done."
+}
+
+deps_rpm() {
+    echo "deps_rpm: begin."
+    deps="python3 python3-distutils-extra clang pkg-config gcc curl wget nodejs nasm yasm zip m4 python3-zstandard python-zstandard python-devel python3-devel gtk3-devel llvm gtk2-devel dbus-glib-devel libXt-devel pulseaudio-libs-devel"
+    dnf -y install $deps
+    echo "deps_rpm: done."
+}
+
+deps_pkg() {
+    echo "deps_pkg: begin."
+    deps="wget gmake m4 python3 py37-sqlite3 pkgconf llvm node nasm zip unzip yasm"
+    pkg install $deps
+    echo "deps_pkg: done."
+}
+
+
+# these utilities should work everywhere
+clean() {
+    echo "clean: begin."
+    
+    echo "Deleting firefox-${pkgver} ..."
+    rm -rf firefox-$pkgver
+    
+    echo "Deleting other cruft ..."
+    rm -rf librewolf
+    rm -f firefox-$pkgver.source.tar.xz
+    rm -f mozconfig
+    
+    # windows
+    rm -f librewolf-$pkgver.en-US.win64.zip
+    rm -f librewolf-$pkgver.en-US.win64-setup.exe
+    rm -f librewolf-$pkgver.en-US.win64-permissive.zip
+    rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe
+    rm -f tmp.nsi tmp-permissive.nsi
+    
+    # linux
+    rm -f librewolf-$pkgver.en-US.deb.zip
+    rm -f librewolf-$pkgver.en-US.deb-permissive.zip
+    rm -f librewolf-$pkgver.en-US.rpm.zip
+    rm -f librewolf-$pkgver.en-US.rpm-permissive.zip
+
+    echo "clean: done."
+}
+
+
 rustup() {
     # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
     echo "rustup: begin."
@@ -298,9 +292,27 @@ git_subs() {
     echo "git_subs: done."
 }
 
-#
-# Permissive configuration options
-#
+git_init() {
+    echo "git_init: begin."
+    if [ ! -d firefox-$pkgver ]; then exit 1; fi
+    cd firefox-$pkgver
+
+    echo "Removing old .git folder..."
+    rm -rf .git
+
+    echo "Creating new .git folder..."
+    git init
+    git config core.safecrlf false
+    git config commit.gpgsign false
+    git add -f * .[a-z]*
+    git commit -am 'Initial commit'
+    
+    cd ..
+    echo "git_init: done."
+}
+
+
+# Permissive configuration options (win10 only at the moment)
 
 config_diff() {
     pushd settings > /dev/null
@@ -322,31 +334,11 @@ policies_diff() {
     popd > /dev/null
 }
 
-git_init() {
-    echo "git_init: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
-
-    echo "Removing old .git folder..."
-    rm -rf .git
-
-    echo "Creating new .git folder..."
-    git init
-    git config core.safecrlf false
-    git config commit.gpgsign false
-    git add -f * .[a-z]*
-    git commit -am 'Initial commit'
-    
-    cd ..
-    echo "git_init: done."
-}
-
 
 
 #
 # process commandline arguments and do something
 #
-
 
 done_something=0
 
