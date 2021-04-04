@@ -125,7 +125,7 @@ do_patches() {
     # copy branding resources
     cp -vr ../common/source_files/* ./
     # new branding stuff
-    cp -v ../branding_files/configure.sh browser/branding/librewolf
+    cp -v ../files/configure.sh browser/branding/librewolf
 
     echo 'Local patches...'
     
@@ -470,7 +470,7 @@ fi
 # by default, give help..
 if (( done_something == 0 )); then
     cat << EOF
-Use: ./build.sh  fetch extract do_patches build artifacts_win
+Use: ./build.sh clean | all | [other stuff...]
 
     fetch            - fetch the tarball.
     extract          - extract the tarball.
@@ -480,7 +480,7 @@ Use: ./build.sh  fetch extract do_patches build artifacts_win
     artifacts_win    - apply .cfg, build the zip file and NSIS setup.exe installer.
     artifacts_perm   - package as above, but use the permissive config/policies.
 
-Linux related functions:
+# Linux related functions:
 
     deps_deb	        - install dependencies with apt.
     deps_rpm	        - install dependencies with dnf.
@@ -492,7 +492,7 @@ Linux related functions:
     artifacts_rpm       - apply .cfg, create a dist zip file (for fedora33).
     artifacts_rpm_perm  - include permissive build.
 
-Generic utility functionality:
+# Generic utility functionality:
 
     all             - build all, produce all artifacts including -permissive.
     clean           - remove generated cruft.
@@ -505,7 +505,17 @@ Generic utility functionality:
     git_init        - create .git folder in firefox-$pkgver for creating patches.
     mach_run_config - copy librewolf config/policies to enable 'mach run'.
 
-Installation from linux zip file:
+# Cross-compile from linux:
+
+   linux_patches    - the 'do_patches' for linux->win crosscompile.
+   linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
+   
+Documentation is in the build-howto.md. In a docker situation, we'd like
+to run something like: 
+
+  ./build.sh fetch extract linux_patches build linux_artifacts
+
+# Installation from linux zip file:
 
 Copy the zip file in your \$HOME folder, then:
 ``
@@ -515,7 +525,7 @@ cd librewolf
 ``
 That should give an app icon. You can have it elsewhere and it will work.
 
-Examples:
+# Examples:
   
     For windows, use:
       ./build.sh fetch extract do_patches build artifacts_win

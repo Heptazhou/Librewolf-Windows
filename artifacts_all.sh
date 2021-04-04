@@ -94,7 +94,7 @@ pushd librewolf ; mv -v firefox$exe librewolf$exe ; popd
 cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete removed-files ; cd ..
 
 # linux: copy app icon stuff
-cp branding_files/register-librewolf branding_files/start-librewolf branding_files/start-librewolf.desktop.in librewolf
+cp files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf
 
 # create the final zip artifact
 rm -f librewolf-$pkgver.en-US.$ospkg.zip
@@ -161,7 +161,7 @@ pushd librewolf ; mv -v firefox$exe librewolf$exe ; popd
 cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete removed-files ; cd ..
 
 # linux: copy app icon stuff
-cp branding_files/register-librewolf branding_files/start-librewolf branding_files/start-librewolf.desktop.in librewolf
+cp files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf
 
 
 # create the final zip artifact
