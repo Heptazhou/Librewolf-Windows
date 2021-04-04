@@ -8,7 +8,7 @@
 
 set -e
 
-pkgver=87.0
+. ./version.sh
 
 #
 # Basic functionality
