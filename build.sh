@@ -347,6 +347,46 @@ policies_diff() {
 
 done_something=0
 
+
+
+# cross-compile actions...
+#
+#   linux_patches    - the 'do_patches' for linux->win crosscompile.
+#   linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
+#   setup_deb_root   - setup compile environment (root stuff)
+#   setup_deb_user   - setup compile environmnet (build user)
+#   setup_rpm_root   - setup compile environment (root stuff)
+#   setup_rpm_user   - setup compile environmnet (build user)
+
+. ./linux_xcompile.sh
+
+if [[ "$*" == *linux_patches* ]]; then
+    linux_patches
+    done_something=1
+fi
+if [[ "$*" == *linux_artifacts* ]]; then
+    linux_artifacts
+    done_something=1
+fi
+if [[ "$*" == *setup_deb_root* ]]; then
+    setup_deb_root
+    done_something=1
+fi
+if [[ "$*" == *setup_deb_user* ]]; then
+    setup_deb_user
+    done_something=1
+fi
+if [[ "$*" == *setup_rpm_root* ]]; then
+    setup_rpm_root
+    done_something=1
+fi
+if [[ "$*" == *setup_rpm_user* ]]; then
+    setup_rpm_user
+    done_something=1
+fi
+
+
+
 # various administrative actions...
 
 if [[ "$*" == *clean* ]]; then
@@ -509,6 +549,10 @@ Use: ./build.sh clean | all | [other stuff...]
 
    linux_patches    - the 'do_patches' for linux->win crosscompile.
    linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
+   setup_deb_root   - setup compile environment (root stuff)
+   setup_deb_user   - setup compile environmnet (build user)
+   setup_rpm_root   - setup compile environment (root stuff)
+   setup_rpm_user   - setup compile environmnet (build user)
    
 Documentation is in the build-howto.md. In a docker situation, we'd like
 to run something like: 
