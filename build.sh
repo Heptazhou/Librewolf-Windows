@@ -216,8 +216,8 @@ artifacts_rpm()
 # Dependencies for linux/freebsd.
 deps_deb() {
     echo "deps_deb: begin."
-    deps="python3 python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
-    apt -y install $deps
+    deps="python python-dev python3 python3-dev python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
+    apt install -y $deps
     echo "deps_deb: done."
 }
 
