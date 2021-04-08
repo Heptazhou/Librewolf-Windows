@@ -1,4 +1,4 @@
-firefox-*
+/firefox-*
 librewolf-*
 megabar.patch
 remove_addons.patch
@@ -9,3 +9,5 @@ mozconfig
 librewolf
 tmp.nsi
 tmp-permissive.nsi
+/mozilla-unified
+bootstrap.py

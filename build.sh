@@ -10,6 +10,8 @@ set -e
 
 . ./version.sh
 
+srcdir=firefox-$pkgver
+
 #
 # Basic functionality
 #
@@ -32,7 +34,7 @@ fetch() {
 extract() {
     echo "extract: begin."
     
-    echo "Deleting previous firefox-${pkgver} ..."
+    echo "Deleting previous firefox-$pkgver ..."
     rm -rf firefox-$pkgver
     
     echo "Extracting firefox-$pkgver.source.tar.xz ..."
@@ -86,28 +88,27 @@ END
 
 
 do_patches() {
-    echo "do_patches: begin."
+    echo "do_patches: begin. (srcdir=$srcdir)"
 
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
 
-    echo 'Applying patches...'
-    
-    patch -p1 -i ../linux/context-menu.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../linux/megabar.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../linux/mozilla-vpn-ad.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../linux/remove_addons.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-
-    
     echo 'Creating mozconfig...'
     
     create_mozconfig
     # just a straight copy for now..
     cp -v ../mozconfig .
+
+    echo 'Applying patches...'
+    
+#!    patch -p1 -i ../linux/context-menu.patch
+#!    if [ $? -ne 0 ]; then exit 1; fi
+#!    patch -p1 -i ../linux/megabar.patch
+#!    if [ $? -ne 0 ]; then exit 1; fi
+    patch -p1 -i ../linux/mozilla-vpn-ad.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+#!    patch -p1 -i ../linux/remove_addons.patch
+#!    if [ $? -ne 0 ]; then exit 1; fi
 
     echo 'GNU sed patches...'
     
@@ -141,8 +142,8 @@ do_patches() {
 
 build() {
     echo "build: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
     
     ./mach build
     if [ $? -ne 0 ]; then exit 1; fi
@@ -156,8 +157,8 @@ build() {
 
 artifacts_win() {
     echo "artifacts_win: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
 
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
@@ -175,8 +176,8 @@ artifacts_win() {
 artifacts_deb()
 {
     echo "artifacts_deb: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
 
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
@@ -195,8 +196,8 @@ artifacts_deb()
 artifacts_rpm()
 {
     echo "artifacts_rpm: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
 
     ./mach package
     if [ $? -ne 0 ]; then exit 1; fi
@@ -253,6 +254,7 @@ clean() {
     rm -rf librewolf
     rm -f firefox-$pkgver.source.tar.xz
     rm -f mozconfig
+    rm -f bootstrap.py
     
     # windows
     rm -f librewolf-$pkgver.en-US.win64.zip
@@ -275,15 +277,15 @@ rustup() {
     # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
     echo "rustup: begin."
     curl https://sh.rustup.rs -sSf | sh
-    . $HOME/.cargo/env
+    . "$HOME/.cargo/env"
     cargo install cbindgen
     echo "rustup: done."
 }
 
 mach_env() {
     echo "mach_env: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
     ./mach create-mach-environment
     if [ $? -ne 0 ]; then exit 1; fi
     cd ..
@@ -299,8 +301,8 @@ git_subs() {
 
 git_init() {
     echo "git_init: begin."
-    if [ ! -d firefox-$pkgver ]; then exit 1; fi
-    cd firefox-$pkgver
+    if [ ! -d $srcdir ]; then exit 1; fi
+    cd $srcdir
 
     echo "Removing old .git folder..."
     rm -rf .git
@@ -339,7 +341,13 @@ policies_diff() {
     popd > /dev/null
 }
 
-
+init_mozilla_unified() {
+    wget https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py
+    python3 bootstrap.py --vcs=git
+}
+set_mozilla_unified() {
+    srcdir=mozilla-unified
+}
 
 #
 # process commandline arguments and do something
@@ -388,6 +396,15 @@ fi
 
 
 # various administrative actions...
+
+if [[ "$*" == *init_mozilla_unified* ]]; then
+    init_mozilla_unified
+    done_something=1
+fi
+if [[ "$*" == *set_mozilla_unified* ]]; then
+    set_mozilla_unified
+    done_something=1
+fi
 
 if [[ "$*" == *clean* ]]; then
     clean
@@ -501,7 +518,7 @@ if [[ "$*" == *policies_diff* ]]; then
     done_something=1
 fi
 if [[ "$*" == *mach_run_config* ]]; then
-    cp -r settings/* $(echo firefox-$pkgver/obj-*)/dist/bin
+    cp -r settings/* $(echo $srcdir/obj-*)/dist/bin
     done_something=1
 fi
 
@@ -542,7 +559,7 @@ Use: ./build.sh clean | all | [other stuff...]
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)
-    git_init        - create .git folder in firefox-$pkgver for creating patches.
+    git_init        - create .git folder in $srcdir for creating patches.
     mach_run_config - copy librewolf config/policies to enable 'mach run'.
 
 # Cross-compile from linux:
@@ -553,6 +570,11 @@ Use: ./build.sh clean | all | [other stuff...]
    setup_deb_user   - setup compile environmnet (build user)
    setup_rpm_root   - setup compile environment (root stuff)
    setup_rpm_user   - setup compile environmnet (build user)
+
+# Nightly:
+
+   init_mozilla_central - use bootstrap.py to grab the latest mozilla-source 
+   set_mozilla_central  - use mozilla-source instead of $srcdir source
    
 Documentation is in the build-howto.md. In a docker situation, we'd like
 to run something like: 
