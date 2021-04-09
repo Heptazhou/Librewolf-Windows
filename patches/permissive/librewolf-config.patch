@@ -1,5 +1,5 @@
 diff --git a/librewolf.cfg b/librewolf.cfg
-index 1ad0cea..0d9df09 100644
+index 1ad0cea..7aa8d33 100644
 --- a/librewolf.cfg
 +++ b/librewolf.cfg
 @@ -389,7 +389,7 @@ defaultPref("extensions.ui.experiment.hidden", false);
@@ -11,6 +11,36 @@ index 1ad0cea..0d9df09 100644
  //lockPref("network.http.spdy.enabled", false);
  //lockPref("network.http.spdy.enabled.deps", false);
  //lockPref("network.http.spdy.enabled.http2", false);
+@@ -882,12 +882,12 @@ lockPref("extensions.getAddons.compatOverides.url", "");
+ // https://services.addons.mozilla.org/api/v3/addons/compat-override/?guid=%IDS%&lang=%LOCALE%
+ 
+ // Pref :
+-defaultPref("extensions.getAddons.get.url", "");
++defaultPref("extensions.getAddons.get.url", "https://services.addons.mozilla.org/api/v3/addons/search/?guid=%IDS%&lang=%LOCALE%");
+ // Default Value
+ // https://services.addons.mozilla.org/api/v3/addons/search/?guid=%IDS%&lang=%LOCALE%
+ 
+ // Pref :
+-defaultPref("extensions.getAddons.langpacks.url", "");
++defaultPref("extensions.getAddons.langpacks.url", "https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%");
+ // Default Value
+ // https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%
+ 
+@@ -897,12 +897,12 @@ defaultPref("extensions.getAddons.link.url", "");
+ // https://addons.mozilla.org/%LOCALE%/firefox/
+ 
+ // Pref :
+-defaultPref("extensions.getAddons.search.browseURL", "");
++defaultPref("extensions.getAddons.search.browseURL", "https://addons.mozilla.org/%LOCALE%/firefox/search?q=%TERMS%&platform=%OS%&appver=%VERSION%");
+ // Default Value
+ // https://addons.mozilla.org/%LOCALE%/firefox/search?q=%TERMS%&platform=%OS%&appver=%VERSION%
+ 
+ // Pref :
+-lockPref("extensions.getAddons.themes.browseURL", "");
++lockPref("extensions.getAddons.themes.browseURL", "https://addons.mozilla.org/%LOCALE%/firefox/themes/?src=firefox");
+ // Default Value
+ // https://addons.mozilla.org/%LOCALE%/firefox/themes/?src=firefox
+ 
 @@ -932,7 +932,7 @@ lockPref("browser.newtabpage.activity-stream.fxaccounts.endpoint", "");
  // https://accounts.firefox.com/
  

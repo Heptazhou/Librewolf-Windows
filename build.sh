@@ -105,19 +105,18 @@ do_patches() {
     if [ $? -ne 0 ]; then exit 1; fi
 
     if [ "$srcdir" == "mozilla-unified" ]; then
-	echo "(todo)"
-#!    patch -p1 -i ../linux/context-menu.patch
-#!    if [ $? -ne 0 ]; then exit 1; fi
-#!    patch -p1 -i ../linux/megabar.patch
-#!    if [ $? -ne 0 ]; then exit 1; fi
-#!    patch -p1 -i ../linux/remove_addons.patch
-#!    if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../patches/nightly/context-menu2.patch
+	if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../patches/nightly/report-site-issue.patch
+	if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../patches/nightly/megabar2.patch
+	if [ $? -ne 0 ]; then exit 1; fi
     else
 	patch -p1 -i ../linux/context-menu.patch
 	if [ $? -ne 0 ]; then exit 1; fi
-	patch -p1 -i ../linux/megabar.patch
-	if [ $? -ne 0 ]; then exit 1; fi
 	patch -p1 -i ../linux/remove_addons.patch
+	if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../linux/megabar.patch
 	if [ $? -ne 0 ]; then exit 1; fi
     fi
 
