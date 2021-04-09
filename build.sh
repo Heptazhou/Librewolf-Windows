@@ -101,14 +101,25 @@ do_patches() {
 
     echo 'Applying patches...'
     
+    patch -p1 -i ../linux/mozilla-vpn-ad.patch
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    if [ "$srcdir" == "mozilla-unified" ]; then
+	echo "(todo)"
 #!    patch -p1 -i ../linux/context-menu.patch
 #!    if [ $? -ne 0 ]; then exit 1; fi
 #!    patch -p1 -i ../linux/megabar.patch
 #!    if [ $? -ne 0 ]; then exit 1; fi
-    patch -p1 -i ../linux/mozilla-vpn-ad.patch
-    if [ $? -ne 0 ]; then exit 1; fi
 #!    patch -p1 -i ../linux/remove_addons.patch
 #!    if [ $? -ne 0 ]; then exit 1; fi
+    else
+	patch -p1 -i ../linux/context-menu.patch
+	if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../linux/megabar.patch
+	if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../linux/remove_addons.patch
+	if [ $? -ne 0 ]; then exit 1; fi
+    fi
 
     echo 'GNU sed patches...'
     
@@ -341,12 +352,34 @@ policies_diff() {
     popd > /dev/null
 }
 
+#
+# Nightly builds
+#
+
 init_mozilla_unified() {
-    wget https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py
-    python3 bootstrap.py --vcs=git
+    rm -f bootstrap.py
+    wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py
+    python3 bootstrap.py
 }
 set_mozilla_unified() {
     srcdir=mozilla-unified
+}
+reset_mozilla_unified() {
+    echo "reset_mozilla_unified: begin."
+    if [ ! -d mozilla-unified ]; then
+	echo "Error: mozilla-unified folder not found. use init_mozilla_unified() to create one"
+	exit 1;
+    fi
+    cd mozilla-unified
+
+    echo "Resetting mozilla-unified..."
+    hg up -C
+    hg purge
+    echo "Mercurial pull..."
+    hg pull -u
+    
+    cd ..
+    echo "reset_mozilla_unified: done."
 }
 
 #
@@ -405,6 +438,16 @@ if [[ "$*" == *set_mozilla_unified* ]]; then
     set_mozilla_unified
     done_something=1
 fi
+if [[ "$*" == *reset_mozilla_unified* ]]; then
+    reset_mozilla_unified
+    done_something=1
+fi
+
+
+
+
+
+
 
 if [[ "$*" == *clean* ]]; then
     clean
@@ -419,6 +462,9 @@ if [[ "$*" == *all* ]]; then
     artifacts_win
     done_something=1
 fi
+
+
+
 if [[ "$*" == *git_subs* ]]; then
     git_subs
     done_something=1
@@ -573,9 +619,10 @@ Use: ./build.sh clean | all | [other stuff...]
 
 # Nightly:
 
-   init_mozilla_central - use bootstrap.py to grab the latest mozilla-source 
-   set_mozilla_central  - use mozilla-source instead of $srcdir source
-   
+   init_mozilla_unified   - use bootstrap.py to grab the latest mozilla-unified.
+   set_mozilla_unified    - use mozilla-unified instead of $srcdir source.
+   reset_mozilla_unified  - clean mozilla-unified and pull latest git changes.
+
 Documentation is in the build-howto.md. In a docker situation, we'd like
 to run something like: 
 
