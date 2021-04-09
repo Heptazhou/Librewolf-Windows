@@ -26,7 +26,7 @@ Use: ./build.sh clean | all | [other stuff...]
     clean           - remove generated cruft.
 
     mach_env        - create mach build environment.
-    rustup	    - perform a rustup for this user.
+    rustup	        - perform a rustup for this user.
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)
@@ -35,31 +35,31 @@ Use: ./build.sh clean | all | [other stuff...]
 
 # Cross-compile from linux:
 
-   linux_patches    - the 'do_patches' for linux->win crosscompile.
-   linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
-   setup_deb_root   - setup compile environment (root stuff)
-   setup_deb_user   - setup compile environmnet (build user)
-   setup_rpm_root   - setup compile environment (root stuff)
-   setup_rpm_user   - setup compile environmnet (build user)
+    linux_patches    - the 'do_patches' for linux->win crosscompile.
+    linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
+    setup_deb_root   - setup compile environment (root stuff)
+    setup_deb_user   - setup compile environmnet (build user)
+    setup_rpm_root   - setup compile environment (root stuff)
+    setup_rpm_user   - setup compile environmnet (build user)
 
 # Nightly:
 
-   init_mozilla_unified   - use bootstrap.py to grab the latest mozilla-unified.
-   set_mozilla_unified    - use mozilla-unified instead of firefox-87.0 source.
-   reset_mozilla_unified  - clean mozilla-unified and pull latest git changes.
+    init_mozilla_unified   - use bootstrap.py to grab the latest mozilla-unified.
+    set_mozilla_unified    - use mozilla-unified instead of firefox-87.0 source.
+    reset_mozilla_unified  - clean mozilla-unified and pull latest git changes.
 
 Documentation is in the build-howto.md. In a docker situation, we'd like
 to run something like: 
 
-  ./build.sh fetch extract linux_patches build linux_artifacts
+    ./build.sh fetch extract linux_patches build linux_artifacts
 
 # Installation from linux zip file:
 
 Copy the zip file in your $HOME folder, then:
 
-unzip librewolf-*.zip
-cd librewolf
-./register-librewolf
+    unzip librewolf-*.zip
+    cd librewolf
+    ./register-librewolf
 
 That should give an app icon. You can have it elsewhere and it will work.
 
