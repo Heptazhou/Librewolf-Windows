@@ -227,8 +227,12 @@ artifacts_rpm()
 # Dependencies for linux/freebsd.
 deps_deb() {
     echo "deps_deb: begin."
-    deps="python python-dev python3 python3-dev python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev python3-pip mercurial"
-    apt install -y $deps
+    deps1="python python-dev python3 python3-dev python3-distutils clang pkg-config libpulse-dev gcc"
+    deps2="curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev"
+    deps3="libxt-dev python3-pip mercurial automake autoconf libtool m4"
+    apt install -y $deps1
+    apt install -y $deps2
+    apt install -y $deps3
     echo "deps_deb: done."
 }
 
@@ -380,6 +384,19 @@ reset_mozilla_unified() {
     cd ..
     echo "reset_mozilla_unified: done."
 }
+# tor.. experimental
+init_tor_browser() {
+    git clone https://git.torproject.org/tor-browser.git
+    cd tor-browser
+    git checkout tor-browser-78.8.0esr-10.0-1
+    cd ..
+}
+set_tor_browser() {
+    srcdir=tor-browser
+}
+reset_tor_browser() {
+    echo "(todo)"
+}
 
 #
 # process commandline arguments and do something
@@ -439,6 +456,18 @@ if [[ "$*" == *set_mozilla_unified* ]]; then
 fi
 if [[ "$*" == *reset_mozilla_unified* ]]; then
     reset_mozilla_unified
+    done_something=1
+fi
+if [[ "$*" == *init_tor_browser* ]]; then
+    init_tor_browser
+    done_something=1
+fi
+if [[ "$*" == *set_tor_browser* ]]; then
+    set_tor_browser
+    done_something=1
+fi
+if [[ "$*" == *reset_tor_browser* ]]; then
+    reset_tor_browser
     done_something=1
 fi
 
@@ -584,10 +613,10 @@ Use: ./build.sh clean | all | [other stuff...]
 
 # Linux related functions:
 
-    deps_deb	        - install dependencies with apt.
-    deps_rpm	        - install dependencies with dnf.
-    deps_pkg	        - install dependencies with pkg. (freebsd)
-    deps_mac	        - install dependencies with brew. (macOS)
+    deps_deb            - install dependencies with apt.
+    deps_rpm            - install dependencies with dnf.
+    deps_pkg            - install dependencies with pkg. (freebsd)
+    deps_mac            - install dependencies with brew. (macOS)
 
     artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
     artifacts_deb_perm  - include permissive build.
@@ -607,7 +636,7 @@ Use: ./build.sh clean | all | [other stuff...]
     git_init        - create .git folder in firefox-87.0 for creating patches.
     mach_run_config - copy librewolf config/policies to enable 'mach run'.
 
-# Cross-compile from linux:
+# Cross-compile from linux: (experimental)
 
     linux_patches    - the 'do_patches' for linux->win crosscompile.
     linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
@@ -622,10 +651,8 @@ Use: ./build.sh clean | all | [other stuff...]
     set_mozilla_unified    - use mozilla-unified instead of firefox-87.0 source.
     reset_mozilla_unified  - clean mozilla-unified and pull latest git changes.
 
-Documentation is in the build-howto.md. In a docker situation, we'd like
-to run something like: 
-
-    ./build.sh fetch extract linux_patches build linux_artifacts
+You can use init_tor_browser, set_tor_browser as above, but it attempts a Tor
+Browser build instead (esr releases). (experimental)
 
 # Installation from linux zip file:
 
