@@ -26,7 +26,7 @@ Use: ./build.sh clean | all | [other stuff...]
     clean           - remove generated cruft.
 
     mach_env        - create mach build environment.
-    rustup	        - perform a rustup for this user.
+    rustup          - perform a rustup for this user.
     git_subs        - update git submodules.
     config_diff     - diff between my .cfg and dist .cfg file. (win10)
     policies_diff   - diff between my policies and the dist policies. (win10)
