@@ -109,8 +109,8 @@ do_patches() {
 	if [ $? -ne 0 ]; then exit 1; fi
 	patch -p1 -i ../patches/nightly/report-site-issue.patch
 	if [ $? -ne 0 ]; then exit 1; fi
-	patch -p1 -i ../patches/nightly/megabar2.patch
-	if [ $? -ne 0 ]; then exit 1; fi
+#!	patch -p1 -i ../patches/nightly/megabar2.patch
+#!	if [ $? -ne 0 ]; then exit 1; fi
     else
 	patch -p1 -i ../linux/context-menu.patch
 	if [ $? -ne 0 ]; then exit 1; fi
@@ -227,7 +227,7 @@ artifacts_rpm()
 # Dependencies for linux/freebsd.
 deps_deb() {
     echo "deps_deb: begin."
-    deps="python python-dev python3 python3-dev python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev"
+    deps="python python-dev python3 python3-dev python3-distutils clang pkg-config libpulse-dev gcc curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev libxt-dev python3-pip mercurial"
     apt install -y $deps
     echo "deps_deb: done."
 }
