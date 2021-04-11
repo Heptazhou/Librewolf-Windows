@@ -5,6 +5,7 @@
 /tor-browser
 /bootstrap.py
 /mozconfig
+/dist
 /tmp.nsi
 /tmp-permissive.nsi
 /tmp-strict.nsi

@@ -239,13 +239,17 @@ clean() {
     rm -f librewolf-$pkgver.en-US.win64-setup.exe
     rm -f librewolf-$pkgver.en-US.win64-permissive.zip
     rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe
-    rm -f tmp.nsi tmp-permissive.nsi
+    rm -f librewolf-$pkgver.en-US.win64-strict.zip
+    rm -f librewolf-$pkgver.en-US.win64-strict-setup.exe
+    rm -f tmp.nsi tmp-permissive.nsi tmp-strict.nsi
     
     # linux
     rm -f librewolf-$pkgver.en-US.deb.zip
     rm -f librewolf-$pkgver.en-US.deb-permissive.zip
+    rm -f librewolf-$pkgver.en-US.deb-strict.zip
     rm -f librewolf-$pkgver.en-US.rpm.zip
     rm -f librewolf-$pkgver.en-US.rpm-permissive.zip
+    rm -f librewolf-$pkgver.en-US.rpm-strict.zip
 
     echo "clean: done."
 }
@@ -297,7 +301,7 @@ git_init() {
 }
 
 
-# Permissive configuration options (win10 only at the moment)
+# Permissive/strict configuration options (win10 only at the moment)
 
 perm_config_diff() {
     pushd settings > /dev/null
@@ -340,7 +344,7 @@ strict_policies_diff() {
 }
 
 #
-# Nightly builds
+# Nightly builds, alternative builds.
 #
 
 init_mozilla_unified() {
@@ -367,11 +371,6 @@ reset_mozilla_unified() {
     
     cd ..
     echo "reset_mozilla_unified: done."
-}
-
-# strict
-set_strict() {
-    strict=strict
 }
 
 # tor-browser.. (experimental)
@@ -404,22 +403,6 @@ reset_tor_browser() {
 
 
 
-
-
-
-
-
-
-
-
-#
-# process commandline arguments and do something
-#
-
-done_something=0
-
-
-
 # cross-compile actions...
 #
 #   linux_patches    - the 'do_patches' for linux->win crosscompile.
@@ -430,6 +413,16 @@ done_something=0
 #   setup_rpm_user   - setup compile environmnet (build user)
 
 . ./linux_xcompile.sh
+
+
+
+
+#
+# process commandline arguments and do something
+#
+
+done_something=0
+
 
 if [[ "$*" == *linux_patches* ]]; then
     linux_patches
@@ -484,13 +477,17 @@ if [[ "$*" == *reset_tor_browser* ]]; then
     reset_tor_browser
     done_something=1
 fi
-if [[ "$*" == *set_strict* ]]; then
-    set_strict
-    done_something=1
+
+# permissive & strict modes.
+if [[ "$*" == *set_perm* ]]; then
+    permissive=permissive
 fi
-
-
-
+if [[ "$*" == *set_permissive* ]]; then
+    permissive=permissive
+fi
+if [[ "$*" == *set_strict* ]]; then
+    strict=strict
+fi
 
 
 
@@ -504,7 +501,6 @@ if [[ "$*" == *all* ]]; then
     extract
     do_patches
     build
-    permissive=permissive
     artifacts_win
     done_something=1
 fi
@@ -568,35 +564,17 @@ fi
 
 # creating the artifacts...
 
-if [[ "$*" == *artifacts_perm* ]]; then
-    permissive=permissive
+if [[ "$*" == *artifacts_win* ]]; then
     artifacts_win
     done_something=1
-else
-    if [[ "$*" == *artifacts_win* ]]; then
-	artifacts_win
-	done_something=1
-    fi
 fi
-if [[ "$*" == *artifacts_deb_perm* ]]; then
-    permissive=permissive
+if [[ "$*" == *artifacts_deb* ]]; then
     artifacts_deb
     done_something=1
-else
-    if [[ "$*" == *artifacts_deb* ]]; then
-	artifacts_deb
-	done_something=1
-    fi
 fi
-if [[ "$*" == *artifacts_rpm_perm* ]]; then
-    permissive=permissive
+if [[ "$*" == *artifacts_rpm* ]]; then
     artifacts_rpm
     done_something=1
-else
-    if [[ "$*" == *artifacts_rpm* ]]; then
-	artifacts_rpm
-	done_something=1
-    fi
 fi
 
 # librewolf.cfg and policies.json differences
@@ -613,15 +591,10 @@ if [[ "$*" == *strict_config_diff* ]]; then
     strict_config_diff
     done_something=1
 fi
-if [[ "$*" == *policies_diff* ]]; then
+if [[ "$*" == *strict_policies_diff* ]]; then
     strict_policies_diff
     done_something=1
 fi
-if [[ "$*" == *mach_run_config* ]]; then
-    cp -r settings/* $(echo $srcdir/obj-*)/dist/bin
-    done_something=1
-fi
-
 
 
 # by default, give help..
@@ -635,7 +608,11 @@ Use: ./build.sh clean | all | [other stuff...]
     build            - the actual build.
 
     artifacts_win    - apply .cfg, build the zip file and NSIS setup.exe installer.
-    artifacts_perm   - package as above, but use the permissive config/policies.
+
+# Basic functionality:
+
+    all                - build all (fetch extract do_patches build artifacts_win)
+    clean              - remove generated cruft.
 
 # Linux related functions:
 
@@ -645,24 +622,29 @@ Use: ./build.sh clean | all | [other stuff...]
     deps_mac            - install dependencies with brew. (experimental)
 
     artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
-    artifacts_deb_perm  - include permissive build.
     artifacts_rpm       - apply .cfg, create a dist zip file (for fedora33).
-    artifacts_rpm_perm  - include permissive build.
 
 # Generic utility functionality:
-
-    all                - build all, produce all artifacts including -permissive.
-    clean              - remove generated cruft.
 
     mach_env           - create mach build environment.
     rustup             - perform a rustup for this user.
     git_subs           - update git submodules.
-    perm_config_diff   - diff between my .cfg and dist .cfg file. (win10)
-    perm_policies_diff - diff between my policies and the dist policies. (win10)
     git_init           - create .git folder in firefox-87.0 for creating patches.
-    mach_run_config    - copy librewolf config/policies to enable 'mach run'.
 
-There is also a strict_config_diff and strict_policies_diff for the strict version.
+# Strict/permissive config:
+
+    set_perm             - produce permissive artifacts.
+    set_strict           - produce strict mode build/artifacts
+
+    perm_config_diff     - diff between -release and -permissive config
+    perm_policies_diff   - diff between -release and -permissive policies.json
+    strict_config_diff   - diff between -release and -strict config
+    strict_policies_diff - diff between -release and -strict policies.json
+
+The *_diff commands are dangerous (change repo files), win10 specific, and 
+just for internal use. You can use './build set_perm all' to build permissve
+and './build set_strict all' for -strict. This functionality exists because
+we're constantly balancing settings between usability and security.
 
 # Cross-compile from linux: (experimental)
 
@@ -691,7 +673,7 @@ Copy the zip file in your $HOME folder, then:
     cd librewolf
     ./register-librewolf
 
-That should give an app icon. You can have it elsewhere and it will work.
+That should give an app icon. You can unzip it elsewhere and it will work.
 
 # Examples:
   
