@@ -1,0 +1,15 @@
+diff --git a/.mozconfig b/.mozconfig
+index d71c858844e3..2d295de7df72 100755
+--- a/.mozconfig
++++ b/.mozconfig
+@@ -16,8 +16,8 @@ export MOZILLA_OFFICIAL=1
+ ac_add_options --enable-optimize
+ ac_add_options --enable-official-branding
+ 
+-# Let's support GTK3 for ESR60
+-ac_add_options --enable-default-toolkit=cairo-gtk3
++## Let's support GTK3 for ESR60
++#ac_add_options --enable-default-toolkit=cairo-gtk3
+ 
+ ac_add_options --disable-strip
+ ac_add_options --disable-install-strip

@@ -386,17 +386,41 @@ reset_mozilla_unified() {
 }
 # tor.. experimental
 init_tor_browser() {
-    git clone https://git.torproject.org/tor-browser.git
+    git clone --no-checkout https://git.torproject.org/tor-browser.git
+    
     cd tor-browser
-    git checkout tor-browser-78.8.0esr-10.0-1
+      git checkout tor-browser-78.8.0esr-10.0-1
+      git submodule update --recursive
+      patch -p1 -i ../patches/tb-mozconfig-win10.patch 
     cd ..
 }
 set_tor_browser() {
     srcdir=tor-browser
 }
 reset_tor_browser() {
-    echo "(todo)"
+    echo "reset_tor_browser: begin."
+    if [ ! -d tor-browser ]; then
+	echo "Error: tor-browser folder not found. use init_tor_browser() to create one"
+	exit 1;
+    fi
+    cd tor-browser
+
+    echo "Resetting tor-browser..."
+    git reset --hard
+    
+    cd ..
+    echo "reset_tor_browser: done."
 }
+
+
+
+
+
+
+
+
+
+
 
 #
 # process commandline arguments and do something
