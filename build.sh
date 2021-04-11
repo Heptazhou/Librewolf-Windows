@@ -636,7 +636,6 @@ Use: ./build.sh clean | all | [other stuff...]
 
     artifacts_win    - apply .cfg, build the zip file and NSIS setup.exe installer.
     artifacts_perm   - package as above, but use the permissive config/policies.
-    artifacts_strict - package as above, but use the strict config/policies.
 
 # Linux related functions:
 

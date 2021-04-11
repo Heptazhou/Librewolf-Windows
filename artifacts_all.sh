@@ -25,40 +25,42 @@ cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete 
 # windows: copy the windows icon
 cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
 
-# create the final zip artifact
-rm -f librewolf-$pkgver.en-US.$ospkg.zip
-zip -qr9 librewolf-$pkgver.en-US.$ospkg.zip librewolf
-if [ $? -ne 0 ]; then exit 1; fi
-
-# now to try to make the installer
-rm -f librewolf-$pkgver.en-US.win64-setup.exe tmp.nsi
-sed "s/pkg_version/$pkgver/g" < artifacts_win.nsi > tmp.nsi
-makensis-3.01.exe -V1 tmp.nsi
-if [ $? -ne 0 ]; then exit 1; fi
-
-# patch to permissive config
-if [ ! -z $permissive ]; then
-    pushd librewolf
-    echo "Applying permissive patches..."
-    cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
-    patch -p1 -i ../patches/permissive/librewolf-config.patch
-    patch -p1 -i ../patches/permissive/librewolf-policies.patch
-    popd
-
-    # create the final zip artifact
-    rm -f librewolf-$pkgver.en-US.$ospkg-permissive.zip
-    zip -qr9 librewolf-$pkgver.en-US.$ospkg-permissive.zip librewolf
+# create the final zip/exe artifacts
+if [ -z $strict ]; then
+    rm -f librewolf-$pkgver.en-US.$ospkg.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg.zip librewolf
     if [ $? -ne 0 ]; then exit 1; fi
 
     # now to try to make the installer
-    rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe tmp-permissive.nsi
-    sed "s/win64-setup/win64-permissive-setup/g" < tmp.nsi > tmp-permissive.nsi
-    makensis-3.01.exe -V1 tmp-permissive.nsi
+    rm -f librewolf-$pkgver.en-US.win64-setup.exe tmp.nsi
+    sed "s/pkg_version/$pkgver/g" < artifacts_win.nsi > tmp.nsi
+    makensis-3.01.exe -V1 tmp.nsi
     if [ $? -ne 0 ]; then exit 1; fi
-fi
+    
+    # patch to permissive config
+    if [ ! -z $permissive ]; then
+	pushd librewolf
+	echo "Applying permissive patches..."
+	cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
+	patch -p1 -i ../patches/permissive/librewolf-config.patch
+	patch -p1 -i ../patches/permissive/librewolf-policies.patch
+	popd
 
-# patch to strict config
-if [ ! -z $strict ]; then
+	# create the final zip artifact
+	rm -f librewolf-$pkgver.en-US.$ospkg-permissive.zip
+	zip -qr9 librewolf-$pkgver.en-US.$ospkg-permissive.zip librewolf
+	if [ $? -ne 0 ]; then exit 1; fi
+
+	# now to try to make the installer
+	rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe tmp-permissive.nsi
+	sed "s/win64-setup/win64-permissive-setup/g" < tmp.nsi > tmp-permissive.nsi
+	makensis-3.01.exe -V1 tmp-permissive.nsi
+	if [ $? -ne 0 ]; then exit 1; fi
+    fi
+    
+else
+
+    # patch to strict config
     pushd librewolf
     echo "Applying strict config..."
     cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
@@ -73,9 +75,11 @@ if [ ! -z $strict ]; then
 
     # now to try to make the installer
     rm -f librewolf-$pkgver.en-US.win64-strict-setup.exe tmp-strict.nsi
+    sed "s/pkg_version/$pkgver/g" < artifacts_win.nsi > tmp.nsi
     sed "s/win64-setup/win64-strict-setup/g" < tmp.nsi > tmp-strict.nsi
     makensis-3.01.exe -V1 tmp-strict.nsi
     if [ $? -ne 0 ]; then exit 1; fi
+
 fi
 
 popd
