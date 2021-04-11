@@ -45,104 +45,68 @@ extract() {
     echo "extract: done."
 }
 
-
-# LibreWolf specific mozconfig and patches
-create_mozconfig() {
-    cat >../mozconfig <<END
-ac_add_options --enable-application=browser
-
-# This supposedly speeds up compilation (We test through dogfooding anyway)
-ac_add_options --disable-tests
-ac_add_options --disable-debug
-
-ac_add_options --enable-release
-ac_add_options --enable-hardening
-ac_add_options --enable-rust-simd
-ac_add_options --enable-optimize
-
-
-# Branding
-ac_add_options --enable-update-channel=release
-# theming bugs: ac_add_options --with-app-name=librewolf
-# theming bugs: ac_add_options --with-app-basename=LibreWolf
-ac_add_options --with-branding=browser/branding/librewolf
-ac_add_options --with-distribution-id=io.gitlab.librewolf-community
-ac_add_options --with-unsigned-addon-scopes=app,system
-ac_add_options --allow-addon-sideload
-export MOZ_REQUIRE_SIGNING=0
-
-# Features
-ac_add_options --disable-crashreporter
-ac_add_options --disable-updater
-
-# Disables crash reporting, telemetry and other data gathering tools
-mk_add_options MOZ_CRASHREPORTER=0
-mk_add_options MOZ_DATA_REPORTING=0
-mk_add_options MOZ_SERVICES_HEALTHREPORT=0
-mk_add_options MOZ_TELEMETRY_REPORTING=0
-
-# first attempt to fix the win32 vcredist issue results in build errors..
-#WIN32_REDIST_DIR=$VCINSTALLDIR\redist\x86\Microsoft.VC141.CRT
-END
-}
-
+. ./mozconfigs.sh
 
 do_patches() {
     echo "do_patches: begin. (srcdir=$srcdir)"
+
+    if [ "$srcdir" == "tor-browser" ]; then
+	echo "do_patches: warning: not running do_patches on tor-browser. done."
+	return
+    fi
 
     if [ ! -d $srcdir ]; then exit 1; fi
     cd $srcdir
 
     echo 'Creating mozconfig...'
+
+    if [ "$mozconfig_mode" == "xcompile" ]; then
+	create_mozconfig_xcompile
+	cp -v ../mozconfig .
+    elif [ "$strict" == "strict" ]; then
+	create_mozconfig_strict
+	cp -v ../mozconfig .
+    else
+	create_mozconfig_default
+	cp -v ../mozconfig .
+    fi
     
-    create_mozconfig
-    # just a straight copy for now..
-    cp -v ../mozconfig .
+
+    echo 'Copy librewolf branding files...'
+    
+    cp -vr ../common/source_files/* ./
+    # new branding stuff
+    cp -v ../files/configure.sh browser/branding/librewolf
 
     echo 'Applying patches...'
     
     patch -p1 -i ../linux/mozilla-vpn-ad.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-
+    
     if [ "$srcdir" == "mozilla-unified" ]; then
 	patch -p1 -i ../patches/nightly/context-menu2.patch
-	if [ $? -ne 0 ]; then exit 1; fi
 	patch -p1 -i ../patches/nightly/report-site-issue.patch
-	if [ $? -ne 0 ]; then exit 1; fi
-#!	patch -p1 -i ../patches/nightly/megabar2.patch
-#!	if [ $? -ne 0 ]; then exit 1; fi
+	patch -p1 -i ../patches/nightly/megabar2.patch
     else
 	patch -p1 -i ../linux/context-menu.patch
-	if [ $? -ne 0 ]; then exit 1; fi
 	patch -p1 -i ../linux/remove_addons.patch
-	if [ $? -ne 0 ]; then exit 1; fi
 	patch -p1 -i ../linux/megabar.patch
-	if [ $? -ne 0 ]; then exit 1; fi
     fi
 
     echo 'GNU sed patches...'
     
     patch -p1 -i ../patches/sed-patches/allow-searchengines-non-esr.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../patches/sed-patches/disable-pocket.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../patches/sed-patches/remove-internal-plugin-certs.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../patches/sed-patches/stop-undesired-requests.patch
-    if [ $? -ne 0 ]; then exit 1; fi
-
-    echo 'Copy librewolf branding files...'
     
-    # copy branding resources
-    cp -vr ../common/source_files/* ./
-    # new branding stuff
-    cp -v ../files/configure.sh browser/branding/librewolf
-
     echo 'Local patches...'
     
     # local win10 patches
     patch -p1 -i ../patches/browser-confvars.patch # not sure about this one yet!
-    if [ $? -ne 0 ]; then exit 1; fi
+    
+    if [ "$strict" == "strict" ]; then
+	echo 'strict patches...'
+    fi
     
     cd ..
     echo "do_patches: done."
@@ -335,7 +299,7 @@ git_init() {
 
 # Permissive configuration options (win10 only at the moment)
 
-config_diff() {
+perm_config_diff() {
     pushd settings > /dev/null
       cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
       if [ $? -ne 0 ]; then exit 1; fi
@@ -345,11 +309,31 @@ config_diff() {
     popd > /dev/null
 }
 
-policies_diff() {
+perm_policies_diff() {
     pushd settings/distribution > /dev/null
       cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
       if [ $? -ne 0 ]; then exit 1; fi
       git diff policies.json > ../../patches/permissive/librewolf-policies.patch
+      git diff policies.json
+      git checkout policies.json > /dev/null 2>&1 
+    popd > /dev/null
+}
+
+strict_config_diff() {
+    pushd settings > /dev/null
+      cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
+      if [ $? -ne 0 ]; then exit 1; fi
+      git diff librewolf.cfg > ../patches/strict/librewolf-config.patch
+      git diff librewolf.cfg
+      git checkout librewolf.cfg > /dev/null 2>&1
+    popd > /dev/null
+}
+
+strict_policies_diff() {
+    pushd settings/distribution > /dev/null
+      cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
+      if [ $? -ne 0 ]; then exit 1; fi
+      git diff policies.json > ../../patches/strict/librewolf-policies.patch
       git diff policies.json
       git checkout policies.json > /dev/null 2>&1 
     popd > /dev/null
@@ -384,7 +368,13 @@ reset_mozilla_unified() {
     cd ..
     echo "reset_mozilla_unified: done."
 }
-# tor.. experimental
+
+# strict
+set_strict() {
+    strict=strict
+}
+
+# tor-browser.. (experimental)
 init_tor_browser() {
     git clone --no-checkout https://git.torproject.org/tor-browser.git
     
@@ -492,6 +482,10 @@ if [[ "$*" == *set_tor_browser* ]]; then
 fi
 if [[ "$*" == *reset_tor_browser* ]]; then
     reset_tor_browser
+    done_something=1
+fi
+if [[ "$*" == *set_strict* ]]; then
+    set_strict
     done_something=1
 fi
 
@@ -607,12 +601,20 @@ fi
 
 # librewolf.cfg and policies.json differences
 
-if [[ "$*" == *config_diff* ]]; then
-    config_diff
+if [[ "$*" == *perm_config_diff* ]]; then
+    perm_config_diff
+    done_something=1
+fi
+if [[ "$*" == *perm_policies_diff* ]]; then
+    perm_policies_diff
+    done_something=1
+fi
+if [[ "$*" == *strict_config_diff* ]]; then
+    strict_config_diff
     done_something=1
 fi
 if [[ "$*" == *policies_diff* ]]; then
-    policies_diff
+    strict_policies_diff
     done_something=1
 fi
 if [[ "$*" == *mach_run_config* ]]; then
@@ -634,13 +636,14 @@ Use: ./build.sh clean | all | [other stuff...]
 
     artifacts_win    - apply .cfg, build the zip file and NSIS setup.exe installer.
     artifacts_perm   - package as above, but use the permissive config/policies.
+    artifacts_strict - package as above, but use the strict config/policies.
 
 # Linux related functions:
 
     deps_deb            - install dependencies with apt.
     deps_rpm            - install dependencies with dnf.
-    deps_pkg            - install dependencies with pkg. (freebsd)
-    deps_mac            - install dependencies with brew. (macOS)
+    deps_pkg            - install dependencies with pkg.  (experimental)
+    deps_mac            - install dependencies with brew. (experimental)
 
     artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
     artifacts_deb_perm  - include permissive build.
@@ -649,16 +652,18 @@ Use: ./build.sh clean | all | [other stuff...]
 
 # Generic utility functionality:
 
-    all             - build all, produce all artifacts including -permissive.
-    clean           - remove generated cruft.
+    all                - build all, produce all artifacts including -permissive.
+    clean              - remove generated cruft.
 
-    mach_env        - create mach build environment.
-    rustup          - perform a rustup for this user.
-    git_subs        - update git submodules.
-    config_diff     - diff between my .cfg and dist .cfg file. (win10)
-    policies_diff   - diff between my policies and the dist policies. (win10)
-    git_init        - create .git folder in firefox-87.0 for creating patches.
-    mach_run_config - copy librewolf config/policies to enable 'mach run'.
+    mach_env           - create mach build environment.
+    rustup             - perform a rustup for this user.
+    git_subs           - update git submodules.
+    perm_config_diff   - diff between my .cfg and dist .cfg file. (win10)
+    perm_policies_diff - diff between my policies and the dist policies. (win10)
+    git_init           - create .git folder in firefox-87.0 for creating patches.
+    mach_run_config    - copy librewolf config/policies to enable 'mach run'.
+
+There is also a strict_config_diff and strict_policies_diff for the strict version.
 
 # Cross-compile from linux: (experimental)
 
@@ -669,14 +674,15 @@ Use: ./build.sh clean | all | [other stuff...]
     setup_rpm_root   - setup compile environment (root stuff)
     setup_rpm_user   - setup compile environmnet (build user)
 
-# Nightly:
+# Nightly etc.:
 
     init_mozilla_unified   - use bootstrap.py to grab the latest mozilla-unified.
     set_mozilla_unified    - use mozilla-unified instead of firefox-87.0 source.
     reset_mozilla_unified  - clean mozilla-unified and pull latest git changes.
 
 You can use init_tor_browser, set_tor_browser as above, but it attempts a Tor
-Browser build instead (esr releases). (experimental)
+Browser build instead (esr releases). (experimental) or use set_strict to get
+a more restricted version (experimental).
 
 # Installation from linux zip file:
 

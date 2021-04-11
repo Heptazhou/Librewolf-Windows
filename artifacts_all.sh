@@ -40,10 +40,9 @@ if [ $? -ne 0 ]; then exit 1; fi
 if [ ! -z $permissive ]; then
     pushd librewolf
     echo "Applying permissive patches..."
+    cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
     patch -p1 -i ../patches/permissive/librewolf-config.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../patches/permissive/librewolf-policies.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     popd
 
     # create the final zip artifact
@@ -55,6 +54,27 @@ if [ ! -z $permissive ]; then
     rm -f librewolf-$pkgver.en-US.win64-permissive-setup.exe tmp-permissive.nsi
     sed "s/win64-setup/win64-permissive-setup/g" < tmp.nsi > tmp-permissive.nsi
     makensis-3.01.exe -V1 tmp-permissive.nsi
+    if [ $? -ne 0 ]; then exit 1; fi
+fi
+
+# patch to strict config
+if [ ! -z $strict ]; then
+    pushd librewolf
+    echo "Applying strict config..."
+    cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
+    patch -p1 -i ../patches/strict/librewolf-config.patch
+    patch -p1 -i ../patches/strict/librewolf-policies.patch
+    popd
+
+    # create the final zip artifact
+    rm -f librewolf-$pkgver.en-US.$ospkg-strict.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg-strict.zip librewolf
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    # now to try to make the installer
+    rm -f librewolf-$pkgver.en-US.win64-strict-setup.exe tmp-strict.nsi
+    sed "s/win64-setup/win64-strict-setup/g" < tmp.nsi > tmp-strict.nsi
+    makensis-3.01.exe -V1 tmp-strict.nsi
     if [ $? -ne 0 ]; then exit 1; fi
 fi
 
@@ -108,10 +128,9 @@ if [ $? -ne 0 ]; then exit 1; fi
 if [ ! -z $permissive ]; then
     pushd librewolf
     echo "Applying permissive patches..."
+    cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
     patch -p1 -i ../patches/permissive/librewolf-config.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../patches/permissive/librewolf-policies.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     popd
 
     # create the final zip artifact
@@ -176,10 +195,9 @@ if [ $? -ne 0 ]; then exit 1; fi
 if [ ! -z $permissive ]; then
     pushd librewolf
     echo "Applying permissive patches..."
+    cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
     patch -p1 -i ../patches/permissive/librewolf-config.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     patch -p1 -i ../patches/permissive/librewolf-policies.patch
-    if [ $? -ne 0 ]; then exit 1; fi
     popd
 
     # create the final zip artifact
