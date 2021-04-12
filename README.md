@@ -39,7 +39,7 @@ _What is it then?_ It's a **_hardened_** _version_ of Firefox. (See bottom of fi
 * If at all possible, pleasse go to the relevant 'issues' link and start discussing thing there.
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
 * [readthedocs.io](https://librewolf.readthedocs.io/en/latest/).
-* [[gitter](https://gitter.im/librewolf-community/librewolf)].
+* [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
 
 # hardening firefox
 
