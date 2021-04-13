@@ -214,13 +214,6 @@ deps_pkg() {
     echo "deps_pkg: done."
 }
 
-deps_mac() {
-    echo "deps_mac: begin."
-    deps="yasm nasm ffmpeg node@14 gcc dbus nss"
-    brew install $deps
-    echo "deps_mac: done."
-}
-
 # these utilities should work everywhere
 clean() {
     echo "clean: begin."
@@ -534,10 +527,6 @@ if [[ "$*" == *deps_pkg* ]]; then
     deps_pkg
     done_something=1
 fi
-if [[ "$*" == *deps_mac* ]]; then
-    deps_mac
-    done_something=1
-fi
 
 # main building actions...
 
@@ -619,7 +608,6 @@ Use: ./build.sh clean | all | [other stuff...]
     deps_deb            - install dependencies with apt.
     deps_rpm            - install dependencies with dnf.
     deps_pkg            - install dependencies with pkg.  (experimental)
-    deps_mac            - install dependencies with brew. (experimental)
 
     artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
     artifacts_rpm       - apply .cfg, create a dist zip file (for fedora33).

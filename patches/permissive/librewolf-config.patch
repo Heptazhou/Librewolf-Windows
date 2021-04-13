@@ -1,5 +1,5 @@
 diff --git a/librewolf.cfg b/librewolf.cfg
-index 1ad0cea..7515734 100644
+index 1ad0cea..597dd5e 100644
 --- a/librewolf.cfg
 +++ b/librewolf.cfg
 @@ -264,11 +264,12 @@ defaultPref("media.gmp-manager.certs.1.commonName", "");
@@ -68,7 +68,7 @@ index 1ad0cea..7515734 100644
  // Default Value
  // https://versioncheck.addons.mozilla.org/update/VersionCheck.php?reqVersion=
  // %REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=
-@@ -1804,7 +1805,7 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
+@@ -1804,13 +1805,13 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
  lockPref("datareporting.policy.dataSubmissionEnabled", false);
  
  // Pref : Disable right-click menu manipulation via JavaScript (disabled)
@@ -77,6 +77,13 @@ index 1ad0cea..7515734 100644
  
  // Pref : Disable clipboard event detection (onCut/onCopy/onPaste) via Javascript
  // Disabling clipboard events breaks Ctrl+C/X/V copy/cut/paste functionaility in
+ // JS-based web applications (Google Docs etc.)
+ // https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/Preference_reference/dom.event.clipboardevents.enabled
+-lockPref("dom.event.clipboardevents.enabled", false);
++lockPref("dom.event.clipboardevents.enabled", true);
+ 
+ // Pref : Force Punycode for Internationalized Domain Names
+ // http://kb.mozillazine.org/Network.IDN_show_punycode
 @@ -2773,3 +2774,14 @@ defaultPref("devtools.selfxss.count", 0);
  // enable HTTPS only mode by default
  defaultPref("dom.security.https_only_mode", true);
