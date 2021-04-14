@@ -1,5 +1,5 @@
 diff --git a/librewolf.cfg b/librewolf.cfg
-index 1ad0cea..597dd5e 100644
+index 1ad0cea..934e6ca 100644
 --- a/librewolf.cfg
 +++ b/librewolf.cfg
 @@ -264,11 +264,12 @@ defaultPref("media.gmp-manager.certs.1.commonName", "");
@@ -68,6 +68,32 @@ index 1ad0cea..597dd5e 100644
  // Default Value
  // https://versioncheck.addons.mozilla.org/update/VersionCheck.php?reqVersion=
  // %REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=
+@@ -1430,18 +1431,18 @@ defaultPref("browser.tabs.animate", false);
+ // Bench Diff : -220/5000
+ // Pref : Disable webGL I/II
+ // WebGL introduces high fingerprinting (WebGL is a js API for directly accessing hardware)
+-defaultPref("webgl.disabled", false); // Tor have it false but the rest is the same (webgl)
++//defaultPref("webgl.disabled", false); // Tor have it false but the rest is the same (webgl)
+ // This does not leak
+-lockPref("webgl.enable-webgl2", false);
+-lockPref("webgl.min_capability_mode", true);
++//lockPref("webgl.enable-webgl2", false);
++//lockPref("webgl.min_capability_mode", true);
+ 
+ // Bench Diff : 0/5000
+ // Pref : Disable webGL II/II
+ // WebGL introduces high fingerprinting (WebGL is a js API for directly accessing hardware)
+-lockPref("pdfjs.enableWebGL", false);
+-lockPref("webgl.disable-extensions", true);
+-lockPref("webgl.disable-fail-if-major-performance-caveat", true);
+-lockPref("webgl.enable-debug-renderer-info", false); //Deprecated Active
++//lockPref("pdfjs.enableWebGL", false);
++//lockPref("webgl.disable-extensions", true);
++//lockPref("webgl.disable-fail-if-major-performance-caveat", true);
++//lockPref("webgl.enable-debug-renderer-info", false); //Deprecated Active
+ 
+ // Bench Diff : -1500/5000
+ // Pref : Disable asm.js
 @@ -1804,13 +1805,13 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
  lockPref("datareporting.policy.dataSubmissionEnabled", false);
  
