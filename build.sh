@@ -281,6 +281,7 @@ mach_env() {
 git_subs() {
     echo "git_subs: begin."
     git submodule update --recursive
+    git submodule foreach git pull origin master
     git submodule foreach git merge origin master
     echo "git_subs: done."
 }
