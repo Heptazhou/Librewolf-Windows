@@ -87,8 +87,8 @@ do_patches() {
 	patch -p1 -i ../patches/nightly/context-menu2.patch
 	echo "../patches/nightly/report-site-issue.patch"
 	patch -p1 -i ../patches/nightly/report-site-issue.patch
-	echo "../patches/nightly/megabar2.patch"
-	patch -p1 -i ../patches/nightly/megabar2.patch
+	echo "../patches/nightly/megabar3.patch"
+	patch -p1 -i ../patches/nightly/megabar3.patch
     else
 	echo "../linux/context-menu.patch"
 	patch -p1 -i ../linux/context-menu.patch
@@ -307,6 +307,7 @@ git_init() {
 
 
 # Permissive/strict configuration options (win10 only at the moment)
+# this stuff should probably go away..
 
 perm_config_diff() {
     pushd settings > /dev/null
@@ -328,25 +329,6 @@ perm_policies_diff() {
     popd > /dev/null
 }
 
-strict_config_diff() {
-    pushd settings > /dev/null
-      cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff librewolf.cfg > ../patches/strict/librewolf-config.patch
-      git diff librewolf.cfg
-      git checkout librewolf.cfg > /dev/null 2>&1
-    popd > /dev/null
-}
-
-strict_policies_diff() {
-    pushd settings/distribution > /dev/null
-      cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff policies.json > ../../patches/strict/librewolf-policies.patch
-      git diff policies.json
-      git checkout policies.json > /dev/null 2>&1 
-    popd > /dev/null
-}
 
 #
 # Nightly builds, alternative builds.
@@ -588,14 +570,6 @@ if [[ "$*" == *perm_policies_diff* ]]; then
     perm_policies_diff
     done_something=1
 fi
-if [[ "$*" == *strict_config_diff* ]]; then
-    strict_config_diff
-    done_something=1
-fi
-if [[ "$*" == *strict_policies_diff* ]]; then
-    strict_policies_diff
-    done_something=1
-fi
 
 
 # by default, give help..
@@ -638,15 +612,13 @@ Use: ./build.sh clean | all | [other stuff...]
 
     perm_config_diff     - diff between -release and -permissive config
     perm_policies_diff   - diff between -release and -permissive policies.json
-    strict_config_diff   - diff between -release and -strict config
-    strict_policies_diff - diff between -release and -strict policies.json
 
 The *_diff commands are dangerous (change repo files), win10 specific, and 
 just for internal use. You can use './build set_perm all' to build permissve
 and './build set_strict all' for -strict. This functionality exists because
 we're constantly balancing settings between usability and security.
 
-# Cross-compile from linux: (experimental)
+# Cross-compile from linux: (in development)
 
     linux_patches    - the 'do_patches' for linux->win crosscompile.
     linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
