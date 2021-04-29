@@ -305,31 +305,6 @@ git_init() {
     echo "git_init: done."
 }
 
-
-# Permissive/strict configuration options (win10 only at the moment)
-# this stuff should probably go away..
-
-perm_config_diff() {
-    pushd settings > /dev/null
-      cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff librewolf.cfg > ../patches/permissive/librewolf-config.patch
-      git diff librewolf.cfg
-      git checkout librewolf.cfg > /dev/null 2>&1
-    popd > /dev/null
-}
-
-perm_policies_diff() {
-    pushd settings/distribution > /dev/null
-      cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff policies.json > ../../patches/permissive/librewolf-policies.patch
-      git diff policies.json
-      git checkout policies.json > /dev/null 2>&1 
-    popd > /dev/null
-}
-
-
 #
 # Nightly builds, alternative builds.
 #
@@ -465,17 +440,6 @@ if [[ "$*" == *reset_tor_browser* ]]; then
     done_something=1
 fi
 
-# permissive & strict modes.
-if [[ "$*" == *set_perm* ]]; then
-    permissive=permissive
-fi
-if [[ "$*" == *set_permissive* ]]; then
-    permissive=permissive
-fi
-if [[ "$*" == *set_strict* ]]; then
-    strict=strict
-fi
-
 
 
 
@@ -560,18 +524,6 @@ if [[ "$*" == *artifacts_rpm* ]]; then
     done_something=1
 fi
 
-# librewolf.cfg and policies.json differences
-
-if [[ "$*" == *perm_config_diff* ]]; then
-    perm_config_diff
-    done_something=1
-fi
-if [[ "$*" == *perm_policies_diff* ]]; then
-    perm_policies_diff
-    done_something=1
-fi
-
-
 # by default, give help..
 if (( done_something == 0 )); then
     cat << EOF
@@ -604,19 +556,6 @@ Use: ./build.sh clean | all | [other stuff...]
     rustup             - perform a rustup for this user.
     git_subs           - update git submodules.
     git_init           - create .git folder in firefox-87.0 for creating patches.
-
-# Strict/permissive config:
-
-    set_perm             - produce permissive artifacts.
-    set_strict           - produce strict mode build/artifacts
-
-    perm_config_diff     - diff between -release and -permissive config
-    perm_policies_diff   - diff between -release and -permissive policies.json
-
-The *_diff commands are dangerous (change repo files), win10 specific, and 
-just for internal use. You can use './build set_perm all' to build permissve
-and './build set_strict all' for -strict. This functionality exists because
-we're constantly balancing settings between usability and security.
 
 # Cross-compile from linux: (in development)
 
