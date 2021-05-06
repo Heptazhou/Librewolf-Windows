@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pkgver=88.0
+pkgver=88.0.1
 private_token=$1
 if [ -z $private_token ]; then
     echo "Please specify the Gitlab PRIVATE TOKEN on the commandline."
