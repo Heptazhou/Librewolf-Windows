@@ -7,17 +7,9 @@ _What is it then?_ It's a **_hardened_** _version_ of Firefox. (See bottom of fi
 
 # LibreWolf for windows
 
-* **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**.
+* **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**
+* or install via chocolatey: `choco install librewolf`
 * [issue tracker](https://gitlab.com/librewolf-community/browser/windows/-/issues).
-
-# Chocolatey package manager
-
-This work is not completely finished yet, but ready to be used anyway.
-For now, to install, download [librewolf.87.0.4.nupkg](https://gitlab.com/librewolf-community/browser/windows/uploads/c0d228fc15c1a8f96f4f1db0e0fe2d42/librewolf.87.0.4.nupkg), and run this in the folder with the nupkg:
-
-`choco install librewolf -s "'.;chocolatey'"`
-
-Code is here https://github.com/maltejur/librewolf-choco
 
 # other download locations
 
