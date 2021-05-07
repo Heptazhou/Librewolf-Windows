@@ -1,4 +1,5 @@
-function artifacts_win_details(){
+function artifacts_win_details() {
+    
 exe=.exe
 objdir=obj-x86_64-pc-mingw32/dist/firefox
 ospkg=win64
@@ -92,9 +93,8 @@ popd
 
 
 
-
-
-function artifacts_deb_details(){
+function artifacts_deb_details() {
+    
 exe=
 objdir=obj-x86_64-pc-linux-gnu/dist/firefox
 ospkg=deb
@@ -116,35 +116,56 @@ cp -rv settings/* librewolf
 # rename the executable manually
 pushd librewolf ; mv -v firefox$exe librewolf$exe ; popd
 # clean garbage files
-cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete removed-files ; cd ..
+cd librewolf ; rm -rf maintenanceservice* pingsender* firefox.*.xml precomplete removed-files uninstall ; cd ..
+# copy the windows icon
+cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico
 
-# linux: copy app icon stuff
-cp files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf
-
-# create the final zip artifact
-rm -f librewolf-$pkgver.en-US.$ospkg.zip
-zip -qr9 librewolf-$pkgver.en-US.$ospkg.zip librewolf
-if [ $? -ne 0 ]; then exit 1; fi
-
-# now to try to make the installer
-# (create a .deb here)
-
-# patch to permissive config
+# create the final zip/exe artifacts
 if [ ! -z $permissive ]; then
+    
+    # patch to permissive config
     pushd librewolf
     echo "Applying permissive patches..."
     cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
     patch -p1 -i ../patches/permissive/librewolf-config.patch
     patch -p1 -i ../patches/permissive/librewolf-policies.patch
     popd
-
+    
     # create the final zip artifact
     rm -f librewolf-$pkgver.en-US.$ospkg-permissive.zip
     zip -qr9 librewolf-$pkgver.en-US.$ospkg-permissive.zip librewolf
     if [ $? -ne 0 ]; then exit 1; fi
+    
+    # now to try to make the installer
+    # (create a .deb here)
+    
+elif [ ! -z $strict ]; then
+
+    # patch to strict config
+    pushd librewolf
+    echo "Applying strict config..."
+    cp -v ../settings/librewolf.cfg . && cp -v ../settings/distribution/policies.json distribution
+    patch -p1 -i ../patches/strict/librewolf-config.patch
+    patch -p1 -i ../patches/strict/librewolf-policies.patch
+    popd
+
+    # create the final zip artifact
+    rm -f librewolf-$pkgver.en-US.$ospkg-strict.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg-strict.zip librewolf
+    if [ $? -ne 0 ]; then exit 1; fi
 
     # now to try to make the installer
     # (create a .deb here)
+
+else
+
+    rm -f librewolf-$pkgver.en-US.$ospkg.zip
+    zip -qr9 librewolf-$pkgver.en-US.$ospkg.zip librewolf
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    # now to try to make the installer
+    # (create a .deb here)
+
 fi
 
 popd
