@@ -1,26 +1,16 @@
 diff --git a/librewolf.cfg b/librewolf.cfg
-index 1ad0cea..7515734 100644
+index 03524fd..7aa8d33 100644
 --- a/librewolf.cfg
 +++ b/librewolf.cfg
-@@ -264,11 +264,12 @@ defaultPref("media.gmp-manager.certs.1.commonName", "");
- // User Settings : WebRTC
- // ----------------------
- 
--defaultPref("media.navigator.enabled", false);
--defaultPref("media.navigator.video.enabled", false);
--defaultPref("media.getusermedia.browser.enabled", false);
--defaultPref("media.getusermedia.screensharing.enabled", false);
--defaultPref("media.getusermedia.audiocapture.enabled", false);
-+// these 5 are needed to be true for webcam/camera
-+defaultPref("media.navigator.enabled", true);
-+defaultPref("media.navigator.video.enabled", true);
-+defaultPref("media.getusermedia.browser.enabled", true);
-+defaultPref("media.getusermedia.screensharing.enabled", true);
-+defaultPref("media.getusermedia.audiocapture.enabled", true);
- defaultPref("media.peerconnection.use_document_iceservers", false);
- defaultPref("media.peerconnection.identity.enabled", false);
- // 10000 per default
-@@ -389,7 +390,7 @@ defaultPref("extensions.ui.experiment.hidden", false);
+@@ -375,6 +375,7 @@ defaultPref("network.proxy.socks_version", 5);
+ defaultPref("browser.tabs.loadBookmarksInTabs", true);
+ defaultPref("devtools.debugger.remote-enabled", false);
+ defaultPref("devtools.chrome.enabled", false);
++defaultPref("general.useragent.site_specific_overrides", false);
+ defaultPref("extensions.ui.experiment.hidden", false);
+ //defaultPref("extensions.ui.dictionary.hidden", false);
+ //defaultPref("extensions.ui.locale.hidden", false);
+@@ -388,7 +389,7 @@ defaultPref("extensions.ui.experiment.hidden", false);
  lockPref("dom.indexedDB.enabled", true); //default true
  //lockPref("dom.indexedDB.logging.details", false); //default true
  //lockPref("dom.indexedDB.logging.enabled", false); //default true
@@ -29,7 +19,16 @@ index 1ad0cea..7515734 100644
  //lockPref("network.http.spdy.enabled", false);
  //lockPref("network.http.spdy.enabled.deps", false);
  //lockPref("network.http.spdy.enabled.http2", false);
-@@ -882,12 +883,12 @@ lockPref("extensions.getAddons.compatOverides.url", "");
+@@ -616,7 +617,7 @@ defaultPref("extensions.webextensions.background-delayed-startup", true); //defa
+ // >>>>>>>>>>>>>>>>>>>>
+ 
+ // Pref : Disabling performance addon url [FF64+]
+-lockPref("devtools.performance.recording.ui-base-url", "http://localhost:4242");
++lockPref("devtools.performance.recording.ui-base-url", "https://localhost:4242");
+ // Default Value : https://perf-html.io
+ 
+ // Pref : The default set of protocol handlers for irc [FF64+]
+@@ -881,12 +882,12 @@ lockPref("extensions.getAddons.compatOverides.url", "");
  // https://services.addons.mozilla.org/api/v3/addons/compat-override/?guid=%IDS%&lang=%LOCALE%
  
  // Pref :
@@ -44,7 +43,7 @@ index 1ad0cea..7515734 100644
  // Default Value
  // https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%
  
-@@ -897,12 +898,12 @@ defaultPref("extensions.getAddons.link.url", "");
+@@ -896,12 +897,12 @@ defaultPref("extensions.getAddons.link.url", "");
  // https://addons.mozilla.org/%LOCALE%/firefox/
  
  // Pref :
@@ -59,7 +58,7 @@ index 1ad0cea..7515734 100644
  // Default Value
  // https://addons.mozilla.org/%LOCALE%/firefox/themes/?src=firefox
  
-@@ -932,7 +933,7 @@ lockPref("browser.newtabpage.activity-stream.fxaccounts.endpoint", "");
+@@ -931,7 +932,7 @@ lockPref("browser.newtabpage.activity-stream.fxaccounts.endpoint", "");
  // https://accounts.firefox.com/
  
  // Pref :
@@ -68,7 +67,16 @@ index 1ad0cea..7515734 100644
  // Default Value
  // https://versioncheck.addons.mozilla.org/update/VersionCheck.php?reqVersion=
  // %REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=
-@@ -1804,7 +1805,7 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
+@@ -1476,7 +1477,7 @@ lockPref("javascript.options.shared_memory", false);
+ // So overall, disabling SW should enhance performance because it blocks SW Scripts.
+ // [NOTE] Service worker APIs are hidden (in Firefox) and cannot be used when in PB mode.
+ // [NOTE] Service workers only run over HTTPS. Service Workers have no DOM access.
+-defaultPref("dom.serviceWorkers.enabled", false);
++lockPref("dom.serviceWorkers.enabled", false);
+ 
+ // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ // Section : General Settings 1/3
+@@ -1803,7 +1804,7 @@ lockPref("datareporting.healthreport.uploadEnabled", false);
  lockPref("datareporting.policy.dataSubmissionEnabled", false);
  
  // Pref : Disable right-click menu manipulation via JavaScript (disabled)
@@ -77,7 +85,16 @@ index 1ad0cea..7515734 100644
  
  // Pref : Disable clipboard event detection (onCut/onCopy/onPaste) via Javascript
  // Disabling clipboard events breaks Ctrl+C/X/V copy/cut/paste functionaility in
-@@ -2773,3 +2774,14 @@ defaultPref("devtools.selfxss.count", 0);
+@@ -1893,7 +1894,7 @@ lockPref("dom.enable_user_timing", false);
+ // Pref : Disable Web Audio API
+ // https://bugzilla.mozilla.org/show_bug.cgi?id=1288359
+ // Avoid fingerprinting
+-defaultPref("dom.webaudio.enabled", false);
++lockPref("dom.webaudio.enabled", false);
+ 
+ // Pref : When geolocation is enabled, don't log geolocation requests to the console
+ lockPref("geo.wifi.logging.enabled", false);
+@@ -2772,3 +2773,10 @@ defaultPref("devtools.selfxss.count", 0);
  // enable HTTPS only mode by default
  defaultPref("dom.security.https_only_mode", true);
  defaultPref("dom.security.https_only_mode_ever_enabled", true);
@@ -88,7 +105,3 @@ index 1ad0cea..7515734 100644
 +defaultPref("privacy.clearOnShutdown.cookies", false);
 +defaultPref("privacy.clearOnShutdown.offlineApps", false);
 +defaultPref("network.cookie.lifetimePolicy", 2);
-+
-+// attempting to allow webcam and microphone
-+defaultPref("permissions.default.microphone",1);
-+defaultPref("permissions.default.camera",1);

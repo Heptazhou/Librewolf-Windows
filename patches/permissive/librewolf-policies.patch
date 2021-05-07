@@ -1,13 +1,33 @@
 diff --git a/distribution/policies.json b/distribution/policies.json
-index 7f7e822..e517284 100644
+index 171e53e..28669dd 100644
 --- a/distribution/policies.json
 +++ b/distribution/policies.json
-@@ -62,7 +62,7 @@
- 
-         "Extensions": {
-             "Install": [
--                "https://addons.cdn.mozilla.net/user-media/addons/607454/ublock_origin-1.33.2-an+fx.xpi"
-+                "https://addons.cdn.mozilla.net/user-media/addons/607454/ublock_origin-1.33.2-an+fx.xpi",
-             ],
-             "Uninstall": [
-                 "google@search.mozilla.org",
+@@ -21,7 +21,12 @@
+           "ProviderURL": "",
+           "Locked": false
+         },
+-
++		"UserMessaging": {
++			"ExtensionRecommendations": false,
++			"FeatureRecommendations": false,
++			"SkipOnboarding": true,
++			"UrlbarInterventions": false
++		},
+         "Bookmarks": [
+               {
+                 "Title": "Library",
+@@ -97,14 +102,6 @@
+                     "PostData": "q={searchTerms}&time_range=&language=en-US&category_general=on",
+                     "IconURL": "https://searx.be/favicon.ico"
+                 },
+-                {
+-                    "Name": "StartPage",
+-                    "Description": "The world's most private search engine",
+-                    "Alias": "",
+-                    "Method": "GET",
+-                    "URLTemplate": "https://www.startpage.com/do/search?query={searchTerms}",
+-                    "IconURL": "https://www.startpage.com/assets/images/logo-180x180.png"
+-                },
+                 {
+                     "Name": "Qwant",
+                     "Description": "The search engine that respects your privacy.",

@@ -83,25 +83,36 @@ do_patches() {
     patch -p1 -i ../linux/mozilla-vpn-ad.patch
     
     if [ "$srcdir" == "mozilla-unified" ]; then
+	echo "../patches/nightly/context-menu2.patch"
 	patch -p1 -i ../patches/nightly/context-menu2.patch
+	echo "../patches/nightly/report-site-issue.patch"
 	patch -p1 -i ../patches/nightly/report-site-issue.patch
-	patch -p1 -i ../patches/nightly/megabar2.patch
+	echo "../patches/nightly/megabar3.patch"
+	patch -p1 -i ../patches/nightly/megabar3.patch
     else
+	echo "../linux/context-menu.patch"
 	patch -p1 -i ../linux/context-menu.patch
+	echo "../linux/remove_addons.patch"
 	patch -p1 -i ../linux/remove_addons.patch
+	echo "../linux/megabar.patch"
 	patch -p1 -i ../linux/megabar.patch
     fi
 
     echo 'GNU sed patches...'
     
+    echo "../patches/sed-patches/allow-searchengines-non-esr.patch"
     patch -p1 -i ../patches/sed-patches/allow-searchengines-non-esr.patch
+    echo "../patches/sed-patches/disable-pocket.patch"
     patch -p1 -i ../patches/sed-patches/disable-pocket.patch
+    echo "../patches/sed-patches/remove-internal-plugin-certs.patch"
     patch -p1 -i ../patches/sed-patches/remove-internal-plugin-certs.patch
+    echo "../patches/sed-patches/stop-undesired-requests.patch"
     patch -p1 -i ../patches/sed-patches/stop-undesired-requests.patch
     
     echo 'Local patches...'
     
     # local win10 patches
+    echo "../patches/browser-confvars.patch"
     patch -p1 -i ../patches/browser-confvars.patch # not sure about this one yet!
     
     if [ "$strict" == "strict" ]; then
@@ -214,13 +225,6 @@ deps_pkg() {
     echo "deps_pkg: done."
 }
 
-deps_mac() {
-    echo "deps_mac: begin."
-    deps="yasm nasm ffmpeg node@14 gcc dbus nss"
-    brew install $deps
-    echo "deps_mac: done."
-}
-
 # these utilities should work everywhere
 clean() {
     echo "clean: begin."
@@ -277,6 +281,7 @@ mach_env() {
 git_subs() {
     echo "git_subs: begin."
     git submodule update --recursive
+    git submodule foreach git pull origin master
     git submodule foreach git merge origin master
     echo "git_subs: done."
 }
@@ -298,49 +303,6 @@ git_init() {
     
     cd ..
     echo "git_init: done."
-}
-
-
-# Permissive/strict configuration options (win10 only at the moment)
-
-perm_config_diff() {
-    pushd settings > /dev/null
-      cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff librewolf.cfg > ../patches/permissive/librewolf-config.patch
-      git diff librewolf.cfg
-      git checkout librewolf.cfg > /dev/null 2>&1
-    popd > /dev/null
-}
-
-perm_policies_diff() {
-    pushd settings/distribution > /dev/null
-      cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff policies.json > ../../patches/permissive/librewolf-policies.patch
-      git diff policies.json
-      git checkout policies.json > /dev/null 2>&1 
-    popd > /dev/null
-}
-
-strict_config_diff() {
-    pushd settings > /dev/null
-      cp "/c/Program Files/LibreWolf/librewolf.cfg" librewolf.cfg
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff librewolf.cfg > ../patches/strict/librewolf-config.patch
-      git diff librewolf.cfg
-      git checkout librewolf.cfg > /dev/null 2>&1
-    popd > /dev/null
-}
-
-strict_policies_diff() {
-    pushd settings/distribution > /dev/null
-      cp "/c/Program Files/LibreWolf/distribution/policies.json" policies.json
-      if [ $? -ne 0 ]; then exit 1; fi
-      git diff policies.json > ../../patches/strict/librewolf-policies.patch
-      git diff policies.json
-      git checkout policies.json > /dev/null 2>&1 
-    popd > /dev/null
 }
 
 #
@@ -478,17 +440,6 @@ if [[ "$*" == *reset_tor_browser* ]]; then
     done_something=1
 fi
 
-# permissive & strict modes.
-if [[ "$*" == *set_perm* ]]; then
-    permissive=permissive
-fi
-if [[ "$*" == *set_permissive* ]]; then
-    permissive=permissive
-fi
-if [[ "$*" == *set_strict* ]]; then
-    strict=strict
-fi
-
 
 
 
@@ -534,10 +485,6 @@ if [[ "$*" == *deps_pkg* ]]; then
     deps_pkg
     done_something=1
 fi
-if [[ "$*" == *deps_mac* ]]; then
-    deps_mac
-    done_something=1
-fi
 
 # main building actions...
 
@@ -577,26 +524,6 @@ if [[ "$*" == *artifacts_rpm* ]]; then
     done_something=1
 fi
 
-# librewolf.cfg and policies.json differences
-
-if [[ "$*" == *perm_config_diff* ]]; then
-    perm_config_diff
-    done_something=1
-fi
-if [[ "$*" == *perm_policies_diff* ]]; then
-    perm_policies_diff
-    done_something=1
-fi
-if [[ "$*" == *strict_config_diff* ]]; then
-    strict_config_diff
-    done_something=1
-fi
-if [[ "$*" == *strict_policies_diff* ]]; then
-    strict_policies_diff
-    done_something=1
-fi
-
-
 # by default, give help..
 if (( done_something == 0 )); then
     cat << EOF
@@ -619,7 +546,6 @@ Use: ./build.sh clean | all | [other stuff...]
     deps_deb            - install dependencies with apt.
     deps_rpm            - install dependencies with dnf.
     deps_pkg            - install dependencies with pkg.  (experimental)
-    deps_mac            - install dependencies with brew. (experimental)
 
     artifacts_deb       - apply .cfg, create a dist zip file (for debian10).
     artifacts_rpm       - apply .cfg, create a dist zip file (for fedora33).
@@ -631,22 +557,7 @@ Use: ./build.sh clean | all | [other stuff...]
     git_subs           - update git submodules.
     git_init           - create .git folder in firefox-87.0 for creating patches.
 
-# Strict/permissive config:
-
-    set_perm             - produce permissive artifacts.
-    set_strict           - produce strict mode build/artifacts
-
-    perm_config_diff     - diff between -release and -permissive config
-    perm_policies_diff   - diff between -release and -permissive policies.json
-    strict_config_diff   - diff between -release and -strict config
-    strict_policies_diff - diff between -release and -strict policies.json
-
-The *_diff commands are dangerous (change repo files), win10 specific, and 
-just for internal use. You can use './build set_perm all' to build permissve
-and './build set_strict all' for -strict. This functionality exists because
-we're constantly balancing settings between usability and security.
-
-# Cross-compile from linux: (experimental)
+# Cross-compile from linux: (in development)
 
     linux_patches    - the 'do_patches' for linux->win crosscompile.
     linux_artifacts  - standard artifact zip file. perhaps a -setup.exe.
