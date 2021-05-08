@@ -90,10 +90,12 @@ SectionEnd
 function un.onInit
 	SetShellVarContext all
  
-	#Verify the uninstaller - last chance to back out
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?" IDOK next
-		Abort
-	next:
+	# Verify the uninstaller - last chance to back out
+	# (commented this out, it causes problems with Chocolatey.)
+	# MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?" IDOK next
+	# 	Abort
+	# next:
+	
 functionEnd
 
 # Uninstaller
