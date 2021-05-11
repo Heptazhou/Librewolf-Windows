@@ -11,29 +11,9 @@ _What is it then?_ It's a **_hardened_** _version_ of Firefox. (See bottom of fi
 * or install via chocolatey: `choco install librewolf`
 * [issue tracker](https://gitlab.com/librewolf-community/browser/windows/-/issues).
 
-# other download locations
-
-* [[arch releases](https://gitlab.com/librewolf-community/browser/arch/-/releases)] - [librewolf-bin AUR(en)](https://aur.archlinux.org/packages/librewolf-bin/), [librewolf AUR(en)](https://aur.archlinux.org/packages/librewolf/)
-* [[linux releases](https://gitlab.com/librewolf-community/browser/linux/-/releases)] - Flatpak, AppImage, Arch and other Linux builds of the LibreWolf browser.
-
 # settings repository
 
 * [[settings repository](https://gitlab.com/librewolf-community/settings)] - all _librewolf.cfg_ stuff.. _([issues](https://gitlab.com/librewolf-community/settings/-/issues))_
-
-# librewolf repositories
-
-* [[common](https://gitlab.com/librewolf-community/browser/common)] -> _([issues](https://gitlab.com/librewolf-community/browser/common/-/issues))_
-* [[linux](https://gitlab.com/librewolf-community/browser/linux)] -> _([issues](https://gitlab.com/librewolf-community/browser/linux/-/issues))_
-* [[website](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io)] - _([issues](https://gitlab.com/librewolf-community/librewolf-community.gitlab.io/-/issues))_
-
-# distro repositories
-
-* [[arch](https://gitlab.com/librewolf-community/browser/arch)] -> _([issues](https://gitlab.com/librewolf-community/browser/arch/-/issues))_
-* [[debian](https://gitlab.com/librewolf-community/browser/debian)] -> _([issues](https://gitlab.com/librewolf-community/browser/debian/-/issues))_
-* [[flatpack](https://gitlab.com/librewolf-community/browser/flatpak)] -> _([issues](https://gitlab.com/librewolf-community/browser/flatpak/-/issues))_
-* [[gentoo](https://gitlab.com/librewolf-community/browser/gentoo)] -> _([issues](https://gitlab.com/librewolf-community/browser/gentoo/-/issues))_
-* [[macos](https://gitlab.com/librewolf-community/browser/macos)] -> _([issues](https://gitlab.com/librewolf-community/browser/macos/-/issues))_
-* [[windows](https://gitlab.com/librewolf-community/browser/windows)] -> _([issues](https://gitlab.com/librewolf-community/browser/windows/-/issues))_
 
 # community links
 
