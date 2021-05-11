@@ -80,44 +80,29 @@ do_patches() {
 
     echo 'Applying patches...'
     
-    patch -p1 -i ../linux/mozilla-vpn-ad.patch
+    patch -p1 -i ../common/patches/mozilla-vpn-ad.patch
     
     if [ "$srcdir" == "mozilla-unified" ]; then
-	echo "../patches/nightly/context-menu2.patch"
-	patch -p1 -i ../patches/nightly/context-menu2.patch
-	echo "../patches/nightly/report-site-issue.patch"
-	patch -p1 -i ../patches/nightly/report-site-issue.patch
-	echo "../patches/nightly/megabar3.patch"
-	patch -p1 -i ../patches/nightly/megabar3.patch
+	patch -p1 -i ../common/patches/nightly/context-menu2.patch
+	patch -p1 -i ../common/patches/nightly/report-site-issue.patch
+	patch -p1 -i ../common/patches/nightly/megabar3.patch
     else
-	echo "../linux/context-menu.patch"
-	patch -p1 -i ../linux/context-menu.patch
-	echo "../linux/remove_addons.patch"
-	patch -p1 -i ../linux/remove_addons.patch
-	echo "../linux/megabar.patch"
-	patch -p1 -i ../linux/megabar.patch
+	patch -p1 -i ../common/patches/context-menu.patch
+	patch -p1 -i ../common/patches/remove_addons.patch
+	patch -p1 -i ../common/patches/megabar.patch
     fi
 
     echo 'GNU sed patches...'
     
-    echo "../patches/sed-patches/allow-searchengines-non-esr.patch"
-    patch -p1 -i ../patches/sed-patches/allow-searchengines-non-esr.patch
-    echo "../patches/sed-patches/disable-pocket.patch"
-    patch -p1 -i ../patches/sed-patches/disable-pocket.patch
-    echo "../patches/sed-patches/remove-internal-plugin-certs.patch"
-    patch -p1 -i ../patches/sed-patches/remove-internal-plugin-certs.patch
-    echo "../patches/sed-patches/stop-undesired-requests.patch"
-    patch -p1 -i ../patches/sed-patches/stop-undesired-requests.patch
+    patch -p1 -i ../common/patches/sed-patches/allow-searchengines-non-esr.patch
+    patch -p1 -i ../common/patches/sed-patches/disable-pocket.patch
+    patch -p1 -i ../common/patches/sed-patches/remove-internal-plugin-certs.patch
+    patch -p1 -i ../common/patches/sed-patches/stop-undesired-requests.patch
     
     echo 'Local patches...'
     
     # local win10 patches
-    echo "../patches/browser-confvars.patch"
     patch -p1 -i ../patches/browser-confvars.patch # not sure about this one yet!
-    
-    if [ "$strict" == "strict" ]; then
-	echo 'strict patches...'
-    fi
     
     cd ..
     echo "do_patches: done."
