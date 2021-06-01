@@ -66,6 +66,9 @@ do_patches() {
     elif [ "$strict" == "strict" ]; then
 	create_mozconfig_strict
 	cp -v ../mozconfig .
+    elif [ "$android" == "android" ]; then
+	create_mozconfig_android
+	cp -v ../mozconfig .
     else
 	create_mozconfig_default
 	cp -v ../mozconfig .
@@ -397,6 +400,12 @@ if [[ "$*" == *setup_rpm_user* ]]; then
 fi
 
 
+# android
+if [[ "$*" == *set_android* ]]; then
+    android=android
+    done_something=1
+fi
+
 
 # various administrative actions...
 
@@ -556,6 +565,7 @@ Use: ./build.sh clean | all | [other stuff...]
     init_mozilla_unified   - use bootstrap.py to grab the latest mozilla-unified.
     set_mozilla_unified    - use mozilla-unified instead of firefox-87.0 source.
     reset_mozilla_unified  - clean mozilla-unified and pull latest git changes.
+s   set_android            - attempt andorid build (experimental).
 
 You can use init_tor_browser, set_tor_browser as above, but it attempts a Tor
 Browser build instead (esr releases). (experimental) or use set_strict to get
