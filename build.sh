@@ -82,24 +82,38 @@ do_patches() {
     cp -v ../files/configure.sh browser/branding/librewolf
 
     echo 'Applying patches...'
+
     
-    patch -p1 -i ../common/patches/mozilla-vpn-ad.patch
     
     if [ "$srcdir" == "mozilla-unified" ]; then
 	patch -p1 -i ../common/patches/nightly/context-menu2.patch
 	patch -p1 -i ../common/patches/nightly/report-site-issue.patch
 	patch -p1 -i ../common/patches/nightly/megabar3.patch
     else
-	patch -p1 -i ../common/patches/context-menu.patch
+	echo "patch -p1 -i ../common/patches/nightly/context-menu2.patch"
+	patch -p1 -i ../common/patches/nightly/context-menu2.patch
+	#	patch -p1 -i ../common/patches/context-menu.patch
+	
+	echo "patch -p1 -i ../common/patches/remove_addons.patch"
 	patch -p1 -i ../common/patches/remove_addons.patch
-	patch -p1 -i ../common/patches/megabar.patch
+#	echo "patch -p1 -i ../common/patches/megabar.patch"
+#	patch -p1 -i ../common/patches/megabar.patch
+	echo 'patch -p1 -i ../common/patches/nightly/megabar3.patch'
+	patch -p1 -i ../common/patches/nightly/megabar3.patch
+	
+	echo "patch -p1 -i ../patches/mozilla-vpn-ad-proton.patch"
+	patch -p1 -i ../patches/mozilla-vpn-ad-proton.patch
     fi
 
     echo 'GNU sed patches...'
     
-    patch -p1 -i ../common/patches/sed-patches/allow-searchengines-non-esr.patch
+    echo 'patch -p1 -i ../common/patches/sed-patches/allow-searchengines-non-esr.patch'
+    patch -p1 -i ../common/patches/sed-patches/allow-searchengines-non-esr.patch    
+    echo 'patch -p1 -i ../common/patches/sed-patches/disable-pocket.patch'
     patch -p1 -i ../common/patches/sed-patches/disable-pocket.patch
+    echo 'patch -p1 -i ../common/patches/sed-patches/remove-internal-plugin-certs.patch'
     patch -p1 -i ../common/patches/sed-patches/remove-internal-plugin-certs.patch
+    echo 'patch -p1 -i ../common/patches/sed-patches/stop-undesired-requests.patch'
     patch -p1 -i ../common/patches/sed-patches/stop-undesired-requests.patch
     
     echo 'Local patches...'
