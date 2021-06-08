@@ -8,7 +8,7 @@ _What is it then?_ It's a **_hardened_** _version_ of Firefox. (See bottom of fi
 # LibreWolf for windows
 
 * **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**
-* or install via chocolatey: `choco install librewolf`
+* or install via [chocolatey](https://community.chocolatey.org/packages/librewolf): `choco install librewolf`
 * [issue tracker](https://gitlab.com/librewolf-community/browser/windows/-/issues).
 
 # settings repository
