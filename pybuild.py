@@ -9,36 +9,134 @@ import sys
 
 parser = optparse.OptionParser()
 
-#parser.add_option('-o', '--output', dest="output_filename", default="default.out")
-#parser.add_option('-v', '--verbose',dest="verbose",default=False,action="store_true")
-#parser.add_option('--version',dest="version",default=1.0,type="float")
 parser.add_option('-x', '--cross',  dest='cross_compile', default=False, action="store_true")
 parser.add_option('-s', '--src',    dest='src',           default='release')
 parser.add_option('-t', '--distro', dest='distro',        default='win')
 
 options, remainder = parser.parse_args()
 
-#if len(sys.argv[1:])>=1:
-#        print('ARGV      :', sys.argv[1:])
-#        print('VERSION   :', options.version)
-#        print('VERBOSE   :', options.verbose)
-#        print('OUTPUT    :', options.output_filename)
-#        print('REMAINING :', remainder)
-#
-
-
-for arg in remainder:
-        if arg == 'all':
-                print("[debug] all")
-        elif arg == 'clean':
-                print("[debug] clean")
-        else:
-                print("[debug] unknown command: ", arg)
 
 
 
-# Print help message
-if len(remainder)<1:
+# Targets:
+def execute_fetch():
+        print("[debug] doing target -> fetch")
+def execute_extract():
+        print("[debug] doing target -> extract")
+def execute_lw_do_patches():
+        print("[debug] doing target -> lw_do_patches")
+def execute_build():
+        print("[debug] doing target -> build")
+def execute_lw_post_build():
+        print("[debug] doing target -> lw_post_build")
+def execute_package():
+        print("[debug] doing target -> package")
+def execute_lw_artifacts():
+        print("[debug] doing target -> lw_artifacts")
+        
+# Main targets:
+def execute_all():
+        execute_fetch()
+        execute_extract()
+        execute_lw_do_patches()
+        execute_build()
+        execute_lw_post_build()
+        execute_package()
+        execute_lw_artifacts() 
+def execute_clean():
+        print("[debug] doing target -> clean")
+        
+# Utilities:
+def execute_git_subs():
+        print("[debug] doing target -> git_subs")
+
+def execute_git_init():
+        print("[debug] doing target -> git_init")
+def execute_git_reset():
+        print("[debug] doing target -> git_reset")
+
+def execute_deps_deb():
+        print("[debug] doing target -> deps_deb")
+def execute_deps_rpm():
+        print("[debug] doing target -> deps_rpm")
+def execute_deps_pkg():
+        print("[debug] doing target -> deps_pkg")
+
+def execute_rustup():        
+        print("[debug] doing target -> rustup")
+def execute_mach_env():
+        print("[debug] doing target -> mach_env")
+
+
+
+
+
+
+# main commandline interpretation
+if len(remainder)>0:
+        if not options.src in ['release','nightly','tor-browser']:
+                print("error: option --src invalid value")
+                sys.exit(1)
+        if not options.distro in ['deb','rpm', 'win']:
+                print("error: option --distro invalid value")
+                sys.exit(1)
+                
+        print("[debug] ----------")
+        print("[debug] --cross  = ", options.cross_compile)
+        print("[debug] --src    = ", options.src)
+        print("[debug] --distro = ", options.distro)
+        print("[debug] ----------")
+
+        for arg in remainder:
+                if arg == 'all':
+                        execute_all()
+                elif arg == 'clean':
+                        execute_clean()
+                        
+                # Targets:
+                        
+                elif arg == 'fetch':
+                        execute_fetch()
+                elif arg == 'extract':
+                        execute_extract()
+                elif arg == 'lw_do_patches':
+                        execute_lw_do_patches()
+                elif arg == 'build':
+                        execute_build()
+                elif arg == 'lw_post_build':
+                        execute_lw_post_build()
+                elif arg == 'package':
+                        execute_package()
+                elif arg == 'lw_artifacts':
+                        execute_lw_artifacts()
+
+                # Utilities
+                        
+                elif arg == 'git_subs':
+                        execute_git_subs()
+                        
+                elif arg == 'git_init':
+                        execute_git_init()
+                elif arg == 'git_reset':
+                        execute_git_reset()
+                        
+                elif arg == 'deps_deb':
+                        execute_deps_deb()
+                elif arg == 'deps_rpm':
+                        execute_deps_rpm()
+                elif arg == 'deps_pkg':
+                        execute_deps_pkg()
+                        
+                elif arg == 'rustup':
+                        execute_rustup()
+                elif arg == 'mach_env':
+                        execute_mach_env()
+                        
+                else:
+                        print("error: unknown command on command line: ", arg)
+                        sys.exit(1)
+else:
+        # Print help message
         print("""# Use: 
 
      pybuild [<options>] clean | all | <targets>
@@ -77,9 +175,6 @@ if len(remainder)<1:
     rustup      - update rust
     mach_env    - create mach environment
 """)
-        sys.exit(1)
-# eof
-
 
 
 
