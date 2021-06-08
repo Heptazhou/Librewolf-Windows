@@ -6,6 +6,7 @@
 
 import optparse
 import sys
+import os
 
 parser = optparse.OptionParser()
 
@@ -14,6 +15,28 @@ parser.add_option('-s', '--src',    dest='src',           default='release')
 parser.add_option('-t', '--distro', dest='distro',        default='win')
 
 options, remainder = parser.parse_args()
+
+                
+#print("[debug] ----------")
+#print("[debug] --cross  = ", options.cross_compile)
+#print("[debug] --src    = ", options.src)
+#print("[debug] --distro = ", options.distro)
+#print("[debug] ----------")
+
+
+
+
+def enter_srcdir():
+        pass
+def leave_srcdir():
+        pass
+def exec(cmd):
+        # print command on stdout and sys.exit(1) on errors
+        pass
+
+
+
+
 
 
 
@@ -26,14 +49,22 @@ def execute_extract():
 def execute_lw_do_patches():
         print("[debug] doing target -> lw_do_patches")
 def execute_build():
-        print("[debug] doing target -> build")
+        enter_srcdir()
+        cmd = "./mach build"
+        exec(cmd)
+        leave_srcdir()
 def execute_lw_post_build():
         print("[debug] doing target -> lw_post_build")
 def execute_package():
-        print("[debug] doing target -> package")
+        enter_srcdir()
+        cmd = "./mach package"
+        exec(cmd)
+        leave_srcdir()
 def execute_lw_artifacts():
         print("[debug] doing target -> lw_artifacts")
         
+
+
 # Main targets:
 def execute_all():
         execute_fetch()
@@ -45,6 +76,10 @@ def execute_all():
         execute_lw_artifacts() 
 def execute_clean():
         print("[debug] doing target -> clean")
+
+
+
+
         
 # Utilities:
 def execute_git_subs():
@@ -80,12 +115,6 @@ if len(remainder)>0:
         if not options.distro in ['deb','rpm', 'win']:
                 print("error: option --distro invalid value")
                 sys.exit(1)
-                
-        print("[debug] ----------")
-        print("[debug] --cross  = ", options.cross_compile)
-        print("[debug] --src    = ", options.src)
-        print("[debug] --distro = ", options.distro)
-        print("[debug] ----------")
 
         for arg in remainder:
                 if arg == 'all':
