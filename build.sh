@@ -87,7 +87,7 @@ do_patches() {
     patch -p1 -i ../common/patches/nightly/context-menu2.patch
     echo "patch -p1 -i ../common/patches/remove_addons.patch"
     patch -p1 -i ../common/patches/remove_addons.patch
-    echo 'patch -p1 -i ../common/patches/nightly/megabar3.patch'
+    echo 'patch -p1 -i ../common/patches/nightly/megabar2.patch'
     patch -p1 -i ../common/patches/nightly/megabar3.patch	
     echo "patch -p1 -i ../patches/mozilla-vpn-ad-proton.patch"
     patch -p1 -i ../patches/mozilla-vpn-ad-proton.patch
@@ -278,6 +278,7 @@ git_subs() {
 
 git_init() {
     echo "git_init: begin."
+    echo "srcdir = $srcdir"
     if [ ! -d $srcdir ]; then exit 1; fi
     cd $srcdir
 
@@ -551,7 +552,7 @@ Use: ./build.sh clean | all | [other stuff...]
     mach_env           - create mach build environment.
     rustup             - perform a rustup for this user.
     git_subs           - update git submodules.
-    git_init           - create .git folder in firefox-87.0 for creating patches.
+    git_init           - create .git folder in firefox-$pkgver for creating patches.
 
 # Cross-compile from linux: (in development)
 
