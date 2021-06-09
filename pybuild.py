@@ -10,6 +10,8 @@ import optparse
 import sys
 import os
 
+import pybuild_lw
+
 parser = optparse.OptionParser()
 
 parser.add_option('-x', '--cross',         dest='cross_compile', default=False, action="store_true")
@@ -19,21 +21,11 @@ parser.add_option('-s', '--src',           dest='src',           default='releas
 parser.add_option('-t', '--distro',        dest='distro',        default='win')
 
 options, remainder = parser.parse_args()
-
                 
-#print("[debug] ----------")
-#print("[debug] --cross  = ", options.cross_compile)
-#print("[debug] --no-execute = ", options.no_execute)
-#print("[debug] --src    = ", options.src)
-#print("[debug] --distro = ", options.distro)
-#print("[debug] ----------")
-
-
 
 
 def beep():
         print('\a')
-
 
 def enter_srcdir():
         dir = "firefox-{}".format(pkgver)
@@ -264,44 +256,7 @@ if len(remainder) > 0:
         beep()
 else:
         # Print help message
-        print("""# Use: 
-
-     pybuild [<options>] clean | all | <targets>
-
-# Options:
-
-    -n,--no-execute         - print commands, don't execute them
-    -l,--no-librewolf       - skip LibreWolf specific stages.
-    -x,--cross              - crosscompile from linux, implies -t win
-    -s,--src <src>          - release,nightly,tor-browser
-                              (default=release)
-    -t,--distro <distro>    - deb,rpm,win (default=win)
-
-# Targets:
-
-    all      - all steps from fetch to producing setup.exe
-    clean    - clean everything, including extracted/fetched sources
-
-    fetch               - wget or hg clone or git pull
-    extract             - nop if not wget
-    lw_do_patches       - [librewolf] patch the source
-    build               - build the browser
-    lw_post_build       - [librewolf] insert our settings
-    package             - package the browser into zip/apk
-    lw_artifacts        - [librewolf] build setup.exe
-
-# Utilities:
-
-    git_subs    - git update submodules
-    git_init    - put the source folder in a .git repository
-
-    deps_deb    - install dependencies with apt
-    deps_rpm    - install dependencies with dnf
-    deps_pkg    - install dependencies on freebsd
-
-    rustup      - update rust
-    mach_env    - create mach environment
-""")
+        print(pybuild_lw.help_message)
 
 
 

@@ -9,3 +9,4 @@
 /tmp.nsi
 /tmp-permissive.nsi
 /tmp-strict.nsi
+/__pycache__
