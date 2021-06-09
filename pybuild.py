@@ -1,7 +1,9 @@
-#!/usr/bin/python3
+#!/bin/env python3
+
+pkgver='89.0'
 
 #
-# pybuild.py - try move functionality away from that too big of a script.
+# pybuild.py - try move functionality away from that too big/horrible build script.
 #
 
 import optparse
@@ -10,15 +12,18 @@ import os
 
 parser = optparse.OptionParser()
 
-parser.add_option('-x', '--cross',  dest='cross_compile', default=False, action="store_true")
-parser.add_option('-s', '--src',    dest='src',           default='release')
-parser.add_option('-t', '--distro', dest='distro',        default='win')
+parser.add_option('-x', '--cross',         dest='cross_compile', default=False, action="store_true")
+parser.add_option('-n', '--no-execute',    dest='no_execute',    default=False, action="store_true")
+parser.add_option('-l', '--no-librewolf',  dest='no_librewolf',  default=False, action="store_true")
+parser.add_option('-s', '--src',           dest='src',           default='release')
+parser.add_option('-t', '--distro',        dest='distro',        default='win')
 
 options, remainder = parser.parse_args()
 
                 
 #print("[debug] ----------")
 #print("[debug] --cross  = ", options.cross_compile)
+#print("[debug] --no-execute = ", options.no_execute)
 #print("[debug] --src    = ", options.src)
 #print("[debug] --distro = ", options.distro)
 #print("[debug] ----------")
@@ -26,45 +31,145 @@ options, remainder = parser.parse_args()
 
 
 
+def beep():
+        print('\a')
+
+
 def enter_srcdir():
-        pass
+        dir = "firefox-{}".format(pkgver)
+        if options.src == 'nightly':
+                dir = 'mozilla-unified'
+        elif options.src == 'tor-browser':
+                dir = 'tor-browser'
+        print("cd {}".format(dir))
+        if not options.no_execute:
+                os.chdir(dir)
+                
 def leave_srcdir():
-        pass
+        print("cd ..")
+        if not options.no_execute:
+                os.chdir("..")
+        
 def exec(cmd):
-        # print command on stdout and sys.exit(1) on errors
-        pass
+        print("{}".format(cmd))
+        if not options.no_execute:
+                retval = os.system(cmd)
+                if retval != 0:
+                        beep()
+                        sys.exit(1)
 
 
 
 
+        
+# Utilities:
+def execute_git_subs():
+        exec("git submodule update --recursive")
+        exec("git submodule foreach git pull origin master")
+        exec("git submodule foreach git merge origin master")
+
+def execute_git_init():
+        enter_srcdir()
+        exec("rm -rf .git")
+        exec("git init")
+        exec("git config core.safecrlf false")
+        exec("git config commit.gpgsign false")
+        exec("git add -f * .[a-z]*")
+        exec("git commit -am 'Initial commit'")
+        leave_srcdir()
+        
+        
+def execute_deps_deb():
+        deps1 = "python python-dev python3 python3-dev python3-distutils clang pkg-config libpulse-dev gcc"
+        deps2 = "curl wget nodejs libpango1.0-dev nasm yasm zip m4 libgtk-3-dev libgtk2.0-dev libdbus-glib-1-dev"
+        deps3 = "libxt-dev python3-pip mercurial automake autoconf libtool m4"
+        exec("apt install -y {} {} {}".format(deps1,deps2,deps3))
+        
+def execute_deps_rpm():
+        deps1 = "python3 python3-distutils-extra clang pkg-config gcc curl wget nodejs nasm yasm zip m4"
+        deps2 = "python3-zstandard python-zstandard python-devel python3-devel gtk3-devel llvm gtk2-devel dbus-glib-devel libXt-devel pulseaudio-libs-devel"
+        exec("dnf -y install {} {}".format(deps1,deps2))
+        
+def execute_deps_pkg():
+        deps = "wget gmake m4 python3 py37-sqlite3 pkgconf llvm node nasm zip unzip yasm"
+        exec("pkg install {}".format(deps))
+
+        
+def execute_rustup():        
+        # rust needs special love: https://www.atechtown.com/install-rust-language-on-debian-10/
+        exec("curl https://sh.rustup.rs -sSf | sh")
+        exec("cargo install cbindgen")
+        
+def execute_mach_env():
+        enter_srcdir()
+        exec("bash ./mach create-mach-environment")
+        leave_srcdir()
+        
+                        
+
+
+        
 
 
 
 
 # Targets:
 def execute_fetch():
-        print("[debug] doing target -> fetch")
+        if options.src == 'release':
+                exec("rm -f firefox-{}.source.tar.xz".format(pkgver))
+                exec("wget -q https://archive.mozilla.org/pub/firefox/releases/{}/source/firefox-{}.source.tar.xz".format(pkgver, pkgver))
+        elif options.src == 'nightly':
+                exec("rm -f bootstrap.py")
+                exec("rm -rf mozilla-unified")
+                exec("wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py")
+                exec("python3 bootstrap.py --no-interactive --application-choice=browser")
+        elif options.src == 'tor-browser':
+                exec("rm -rf tor-browser")
+                exec("git clone --no-checkout --recursive https://git.torproject.org/tor-browser.git")
+                enter_srcdir()
+                exec("git checkout tor-browser-89.0-10.5-1-build1")
+                exec("git submodule update --recursive")
+                exec("patch -p1 -i ../patches/tb-mozconfig-win10.patch")
+                leave_srcdir()
+
 def execute_extract():
-        print("[debug] doing target -> extract")
+        if options.src == 'release':
+                exec("rm -rf firefox-{}".format(pkgver))
+                exec("tar xf firefox-{}.source.tar.xz".format(pkgver))
+        
 def execute_lw_do_patches():
+        if options.no_librewolf:
+                return
         print("[debug] doing target -> lw_do_patches")
+        
 def execute_build():
         enter_srcdir()
-        cmd = "./mach build"
-        exec(cmd)
+        exec("bash ./mach build")
         leave_srcdir()
+        
 def execute_lw_post_build():
+        if options.no_librewolf:
+                return
         print("[debug] doing target -> lw_post_build")
+        
 def execute_package():
         enter_srcdir()
-        cmd = "./mach package"
-        exec(cmd)
+        exec("bash ./mach package")
         leave_srcdir()
+
 def execute_lw_artifacts():
+        if options.no_librewolf:
+                return
         print("[debug] doing target -> lw_artifacts")
         
 
 
+
+        
+
+
+
+        
 # Main targets:
 def execute_all():
         execute_fetch()
@@ -74,41 +179,35 @@ def execute_all():
         execute_lw_post_build()
         execute_package()
         execute_lw_artifacts() 
+
 def execute_clean():
-        print("[debug] doing target -> clean")
+        if options.src == 'release':
+                exec("rm -rf firefox-{}".format(pkgver))
+        elif options.src == 'nightly':
+                exec("rm -rf mozilla-unified")
+        elif options.src == 'tor-browser': 
+                exec("rm -rf tor-browser")
+        
+        exec("rm -rf librewolf firefox-{}.source.tar.xz mozconfig bootstrap.py".format(pkgver))
+        exec("rm -f librewolf-{}.en-US.win64.zip librewolf-{}.en-US.win64-setup.exe".format(pkgver,pkgver))
+        exec("rm -f tmp.nsi tmp-permissive.nsi tmp-strict.nsi".format())
+
 
 
 
 
         
-# Utilities:
-def execute_git_subs():
-        print("[debug] doing target -> git_subs")
-
-def execute_git_init():
-        print("[debug] doing target -> git_init")
-def execute_git_reset():
-        print("[debug] doing target -> git_reset")
-
-def execute_deps_deb():
-        print("[debug] doing target -> deps_deb")
-def execute_deps_rpm():
-        print("[debug] doing target -> deps_rpm")
-def execute_deps_pkg():
-        print("[debug] doing target -> deps_pkg")
-
-def execute_rustup():        
-        print("[debug] doing target -> rustup")
-def execute_mach_env():
-        print("[debug] doing target -> mach_env")
 
 
 
+#
+# main commandline interface
+#
 
+if options.src == 'tor-browser':
+        options.no_librewolf = True
 
-
-# main commandline interpretation
-if len(remainder)>0:
+if len(remainder) > 0:
         if not options.src in ['release','nightly','tor-browser']:
                 print("error: option --src invalid value")
                 sys.exit(1)
@@ -146,8 +245,6 @@ if len(remainder)>0:
                         
                 elif arg == 'git_init':
                         execute_git_init()
-                elif arg == 'git_reset':
-                        execute_git_reset()
                         
                 elif arg == 'deps_deb':
                         execute_deps_deb()
@@ -164,6 +261,7 @@ if len(remainder)>0:
                 else:
                         print("error: unknown command on command line: ", arg)
                         sys.exit(1)
+        beep()
 else:
         # Print help message
         print("""# Use: 
@@ -172,7 +270,9 @@ else:
 
 # Options:
 
-    -x,--cross              - build windows setup.exe from linux
+    -n,--no-execute         - print commands, don't execute them
+    -l,--no-librewolf       - skip LibreWolf specific stages.
+    -x,--cross              - crosscompile from linux, implies -t win
     -s,--src <src>          - release,nightly,tor-browser
                               (default=release)
     -t,--distro <distro>    - deb,rpm,win (default=win)
@@ -180,7 +280,7 @@ else:
 # Targets:
 
     all      - all steps from fetch to producing setup.exe
-    clean    - clean everything, includeing extracted/fetched sources
+    clean    - clean everything, including extracted/fetched sources
 
     fetch               - wget or hg clone or git pull
     extract             - nop if not wget
@@ -193,9 +293,7 @@ else:
 # Utilities:
 
     git_subs    - git update submodules
-
-    git_init    - put the source folder in a .git reposity
-    git_reset   - reset the source folder from the .git repo
+    git_init    - put the source folder in a .git repository
 
     deps_deb    - install dependencies with apt
     deps_rpm    - install dependencies with dnf
