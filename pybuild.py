@@ -10,8 +10,6 @@ import optparse
 import sys
 import os
 
-import pybuild_lw
-
 parser = optparse.OptionParser()
 
 parser.add_option('-x', '--cross',         dest='cross_compile', default=False, action="store_true")
@@ -35,7 +33,11 @@ def enter_srcdir():
                 dir = 'tor-browser'
         print("cd {}".format(dir))
         if not options.no_execute:
-                os.chdir(dir)
+                try:
+                        os.chdir(dir)
+                except:
+                        print("fatal error: can't change to '{}' folder.".format(dir))
+                        sys.exit(1)
                 
 def leave_srcdir():
         print("cd ..")
@@ -101,7 +103,22 @@ def execute_mach_env():
         exec("bash ./mach create-mach-environment")
         leave_srcdir()
         
-                        
+
+def execute_reset():
+        if options.src == 'release':
+                print("error: cannot reset -release source as it's not under version control")
+                beep()
+                sys.exit(1)
+        elif options.src == 'nightly':
+                enter_srcdir()
+                exec("hg up -C")
+                exec("hg purge")
+                exec("hg pull -u")
+                leave_srcdir()
+        elif options.src == 'tor-browser':
+                enter_srcdir()
+                exec("git reset --hard")
+                leave_srcidr()
 
 
         
@@ -264,6 +281,8 @@ def main():
                                 execute_rustup()
                         elif arg == 'mach_env':
                                 execute_mach_env()
+                        elif arg == 'reset':
+                                execute_reset()
                         
                         else:
                                 print("error: unknown command on command line: ", arg)
@@ -311,6 +330,7 @@ help_message = """# Use:
 # Utilities:
 
     git_subs    - git update submodules
+    reset       - use git/mercurial to revert changes to a clean state
     git_init    - put the source folder in a .git repository
 
     deps_deb    - install dependencies with apt
