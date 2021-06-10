@@ -23,7 +23,7 @@ options, remainder = parser.parse_args()
 
 
 def beep():
-        print('\a')
+        print('\a', end='')
 
 def enter_srcdir():
         dir = "firefox-{}".format(pkgver)
@@ -45,7 +45,7 @@ def leave_srcdir():
                 os.chdir("..")
         
 def exec(cmd):
-        print("{}".format(cmd))
+        print(cmd)
         if not options.no_execute:
                 retval = os.system(cmd)
                 if retval != 0:
@@ -73,7 +73,7 @@ def execute_git_init():
         exec("git config core.safecrlf false")
         exec("git config commit.gpgsign false")
         exec("git add -f * .[a-z]*")
-        exec("git commit -am 'Initial commit'")
+        exec("git commit -am initial")
         leave_srcdir()
         
         
@@ -106,9 +106,13 @@ def execute_mach_env():
 
 def execute_reset():
         if options.src == 'release':
-                print("error: cannot reset -release source as it's not under version control")
-                beep()
-                sys.exit(1)
+                path = "firefox-{}/.git/index".format(pkgver)
+                if not os.path.isfile(path):
+                        print("fatal error: cannot reset '--src release' sources as it's not under version control.")
+                        sys.exit(1)
+                enter_srcdir()
+                exec("git reset --hard")
+                leave_srcdir()
         elif options.src == 'nightly':
                 enter_srcdir()
                 exec("hg up -C")
@@ -287,7 +291,7 @@ def main():
                         else:
                                 print("error: unknown command on command line: ", arg)
                                 sys.exit(1)
-                                beep()
+                beep()
         else:
                 # Print help message
                 print(help_message)
@@ -320,7 +324,7 @@ help_message = """# Use:
     clean    - clean everything, including extracted/fetched sources
 
     fetch               - wget or hg clone or git pull
-    extract             - nop if not wget
+    extract             - when using wget, extract the archive.
     lw_do_patches       - [librewolf] patch the source
     build               - build the browser
     lw_post_build       - [librewolf] insert our settings
