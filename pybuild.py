@@ -53,8 +53,12 @@ def exec(cmd):
 
 
 
-        
+#        
 # Utilities:
+#
+
+
+
 def execute_git_subs():
         exec("git submodule update --recursive")
         exec("git submodule foreach git pull origin master")
@@ -102,10 +106,11 @@ def execute_mach_env():
 
         
 
-
-
-
+#
 # Targets:
+#
+
+
 def execute_fetch():
         if options.src == 'release':
                 exec("rm -f firefox-{}.source.tar.xz".format(pkgver))
@@ -129,26 +134,31 @@ def execute_extract():
                 exec("rm -rf firefox-{}".format(pkgver))
                 exec("tar xf firefox-{}.source.tar.xz".format(pkgver))
         
-def execute_lw_do_patches():
-        if options.no_librewolf:
-                return
-        print("[debug] doing target -> lw_do_patches")
-        
 def execute_build():
         enter_srcdir()
         exec("bash ./mach build")
         leave_srcdir()
-        
-def execute_lw_post_build():
-        if options.no_librewolf:
-                return
-        print("[debug] doing target -> lw_post_build")
         
 def execute_package():
         enter_srcdir()
         exec("bash ./mach package")
         leave_srcdir()
 
+
+#
+# LibreWolf specific:
+#
+
+def execute_lw_do_patches():
+        if options.no_librewolf:
+                return
+        print("[debug] doing target -> lw_do_patches")
+        
+def execute_lw_post_build():
+        if options.no_librewolf:
+                return
+        print("[debug] doing target -> lw_post_build")
+        
 def execute_lw_artifacts():
         if options.no_librewolf:
                 return
@@ -162,7 +172,11 @@ def execute_lw_artifacts():
 
 
         
+#
 # Main targets:
+#
+
+
 def execute_all():
         execute_fetch()
         execute_extract()
@@ -196,67 +210,116 @@ def execute_clean():
 # main commandline interface
 #
 
-if options.src == 'tor-browser':
-        options.no_librewolf = True
+def main():
+        if options.src == 'tor-browser':
+                options.no_librewolf = True
 
-if len(remainder) > 0:
-        if not options.src in ['release','nightly','tor-browser']:
-                print("error: option --src invalid value")
-                sys.exit(1)
-        if not options.distro in ['deb','rpm', 'win']:
-                print("error: option --distro invalid value")
-                sys.exit(1)
-
-        for arg in remainder:
-                if arg == 'all':
-                        execute_all()
-                elif arg == 'clean':
-                        execute_clean()
-                        
-                # Targets:
-                        
-                elif arg == 'fetch':
-                        execute_fetch()
-                elif arg == 'extract':
-                        execute_extract()
-                elif arg == 'lw_do_patches':
-                        execute_lw_do_patches()
-                elif arg == 'build':
-                        execute_build()
-                elif arg == 'lw_post_build':
-                        execute_lw_post_build()
-                elif arg == 'package':
-                        execute_package()
-                elif arg == 'lw_artifacts':
-                        execute_lw_artifacts()
-
-                # Utilities
-                        
-                elif arg == 'git_subs':
-                        execute_git_subs()
-                        
-                elif arg == 'git_init':
-                        execute_git_init()
-                        
-                elif arg == 'deps_deb':
-                        execute_deps_deb()
-                elif arg == 'deps_rpm':
-                        execute_deps_rpm()
-                elif arg == 'deps_pkg':
-                        execute_deps_pkg()
-                        
-                elif arg == 'rustup':
-                        execute_rustup()
-                elif arg == 'mach_env':
-                        execute_mach_env()
-                        
-                else:
-                        print("error: unknown command on command line: ", arg)
+        if len(remainder) > 0:
+                if not options.src in ['release','nightly','tor-browser']:
+                        print("error: option --src invalid value")
                         sys.exit(1)
-        beep()
-else:
-        # Print help message
-        print(pybuild_lw.help_message)
+                if not options.distro in ['deb','rpm', 'win']:
+                        print("error: option --distro invalid value")
+                        sys.exit(1)
+
+                for arg in remainder:
+                        if arg == 'all':
+                                execute_all()
+                        elif arg == 'clean':
+                                execute_clean()
+                        
+                        # Targets:
+                        
+                        elif arg == 'fetch':
+                                execute_fetch()
+                        elif arg == 'extract':
+                                execute_extract()
+                        elif arg == 'lw_do_patches':
+                                execute_lw_do_patches()
+                        elif arg == 'build':
+                                execute_build()
+                        elif arg == 'lw_post_build':
+                                execute_lw_post_build()
+                        elif arg == 'package':
+                                execute_package()
+                        elif arg == 'lw_artifacts':
+                                execute_lw_artifacts()
+
+                        # Utilities
+                        
+                        elif arg == 'git_subs':
+                                execute_git_subs()
+                        
+                        elif arg == 'git_init':
+                                execute_git_init()
+                        
+                        elif arg == 'deps_deb':
+                                execute_deps_deb()
+                        elif arg == 'deps_rpm':
+                                execute_deps_rpm()
+                        elif arg == 'deps_pkg':
+                                execute_deps_pkg()
+                        
+                        elif arg == 'rustup':
+                                execute_rustup()
+                        elif arg == 'mach_env':
+                                execute_mach_env()
+                        
+                        else:
+                                print("error: unknown command on command line: ", arg)
+                                sys.exit(1)
+                                beep()
+        else:
+                # Print help message
+                print(help_message)
 
 
 
+
+#
+# Large multiline strings
+#
+
+
+
+help_message = """# Use: 
+
+     pybuild [<options>] clean | all | <targets> | <utilities>
+
+# Options:
+
+    -n,--no-execute         - print commands, don't execute them
+    -l,--no-librewolf       - skip LibreWolf specific stages.
+    -x,--cross              - crosscompile from linux, implies -t win
+    -s,--src <src>          - release,nightly,tor-browser
+                              (default=release)
+    -t,--distro <distro>    - deb,rpm,win (default=win)
+
+# Targets:
+
+    all      - all steps from fetch to producing setup.exe
+    clean    - clean everything, including extracted/fetched sources
+
+    fetch               - wget or hg clone or git pull
+    extract             - nop if not wget
+    lw_do_patches       - [librewolf] patch the source
+    build               - build the browser
+    lw_post_build       - [librewolf] insert our settings
+    package             - package the browser into zip/apk
+    lw_artifacts        - [librewolf] build setup.exe
+
+# Utilities:
+
+    git_subs    - git update submodules
+    git_init    - put the source folder in a .git repository
+
+    deps_deb    - install dependencies with apt
+    deps_rpm    - install dependencies with dnf
+    deps_pkg    - install dependencies on freebsd
+
+    rustup      - update rust
+    mach_env    - create mach environment
+"""
+
+
+main()
