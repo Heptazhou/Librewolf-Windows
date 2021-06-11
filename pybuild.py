@@ -9,6 +9,7 @@ pkgver='89.0'
 import optparse
 import sys
 import os
+import glob
 
 parser = optparse.OptionParser()
 
@@ -23,7 +24,8 @@ options, remainder = parser.parse_args()
 
 
 def beep():
-        print('\a', end='')
+        if not options.no_execute:
+                print('\a', end='')
 
 def enter_srcdir():
         dir = "firefox-{}".format(pkgver)
@@ -49,10 +51,19 @@ def exec(cmd):
         if not options.no_execute:
                 retval = os.system(cmd)
                 if retval != 0:
+                        print("fatal error: command '{}' failed".format(cmd))
                         beep()
                         sys.exit(1)
 
-
+def patch(patchfile):
+        cmd = "patch -p1 -i {}".format(patchfile)
+        print(cmd)
+        if not options.no_execute:
+                retval = os.system(cmd)
+                if retval != 0:
+                        print("fatal error: patch '{}' failed".format(patchfile))
+                        beep()
+                        sys.exit(1)
 
 
 #        
@@ -147,7 +158,7 @@ def execute_fetch():
                 enter_srcdir()
                 exec("git checkout tor-browser-89.0-10.5-1-build1")
                 exec("git submodule update --recursive")
-                exec("patch -p1 -i ../patches/tb-mozconfig-win10.patch")
+                patch("../patches/tb-mozconfig-win10.patch")
                 leave_srcdir()
 
 def execute_extract():
@@ -166,19 +177,71 @@ def execute_package():
         leave_srcdir()
 
 
+
+
+
+
+
+
+        
 #
 # LibreWolf specific:
 #
 
+def create_mozconfig(contents):
+        if not options.no_execute:
+                f = open('mozconfig', 'w')
+                f.write(contents)
+                f.close()
+
 def execute_lw_do_patches():
         if options.no_librewolf:
                 return
-        print("[debug] doing target -> lw_do_patches")
+        if not options.src in ['release','nightly']:
+                return
+
+        enter_srcdir()
+        # create the right mozconfig file..
+        create_mozconfig(mozconfig_release)
+        
+        # copy branding files..
+        exec("cp -vr ../common/source_files/* .")
+        exec("cp -v ../files/configure.sh browser/branding/librewolf")
+
+        # patches..
+        patch("../common/patches/context-menu.patch")
+        patch("../common/patches/remove_addons.patch")
+        patch("../common/patches/megabar.patch")
+        patch("../common/patches/mozilla-vpn-ad.patch")
+
+        # sed patches..
+        patch("../common/patches/sed-patches/allow-searchengines-non-esr.patch")
+        patch("../common/patches/sed-patches/disable-pocket.patch")
+        patch("../common/patches/sed-patches/remove-internal-plugin-certs.patch")
+        patch("../common/patches/sed-patches/stop-undesired-requests.patch")
+
+        # local windows patches
+        patch("../patches/browser-confvars.patch") # not sure about this one yet!
+        patch("../patches/package-manifest.patch") # let ./mach package pick up our added files
+        leave_srcdir()
         
 def execute_lw_post_build():
         if options.no_librewolf:
                 return
-        print("[debug] doing target -> lw_post_build")
+        enter_srcdir()
+        
+        pattern = "obj-*"
+        retval = glob.glob(pattern)
+        if len(retval) != 1:
+                printf("fatal error: in execute_lw_post_build(): cannot glob build output folder '{}'".format(pattern))
+                sys.exit(1)
+                
+        os.makedirs("{}/dist/bin/defaults/pref".format(retval[0]), exist_ok=True)
+        os.makedirs("{}/dist/bin/distribution".format(retval[0]), exist_ok=True)
+        exec("cp -v ../settings/defaults/pref/local-settings.js {}/dist/bin/defaults/pref/".format(retval[0]))
+        exec("cp -v ../settings/distribution/policies.json {}/dist/bin/distribution/".format(retval[0]))
+        exec("cp -v ../settings/librewolf.cfg {}/dist/bin/".format(retval[0]))
+        leave_srcdir()
         
 def execute_lw_artifacts():
         if options.no_librewolf:
@@ -215,7 +278,7 @@ def execute_clean():
         elif options.src == 'tor-browser': 
                 exec("rm -rf tor-browser")
         
-        exec("rm -rf librewolf firefox-{}.source.tar.xz mozconfig bootstrap.py".format(pkgver))
+        exec("rm -rf librewolf firefox-{}.source.tar.xz bootstrap.py".format(pkgver))
         exec("rm -f librewolf-{}.en-US.win64.zip librewolf-{}.en-US.win64-setup.exe".format(pkgver,pkgver))
         exec("rm -f tmp.nsi tmp-permissive.nsi tmp-strict.nsi".format())
 
@@ -344,6 +407,51 @@ help_message = """# Use:
     rustup      - update rust
     mach_env    - create mach environment
 """
+
+#
+# mozconfig files:
+#
+
+mozconfig_release = """
+ac_add_options --enable-application=browser
+
+# This supposedly speeds up compilation (We test through dogfooding anyway)
+ac_add_options --disable-tests
+ac_add_options --disable-debug
+
+ac_add_options --enable-release
+ac_add_options --enable-hardening
+ac_add_options --enable-rust-simd
+ac_add_options --enable-optimize
+
+
+# Branding
+ac_add_options --enable-update-channel=release
+# theming bugs: ac_add_options --with-app-name=librewolf
+# theming bugs: ac_add_options --with-app-basename=LibreWolf
+ac_add_options --with-branding=browser/branding/librewolf
+ac_add_options --with-distribution-id=io.gitlab.librewolf-community
+ac_add_options --with-unsigned-addon-scopes=app,system
+ac_add_options --allow-addon-sideload
+#export MOZ_REQUIRE_SIGNING=0
+
+# Features
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+
+# Disables crash reporting, telemetry and other data gathering tools
+mk_add_options MOZ_CRASHREPORTER=0
+mk_add_options MOZ_DATA_REPORTING=0
+mk_add_options MOZ_SERVICES_HEALTHREPORT=0
+mk_add_options MOZ_TELEMETRY_REPORTING=0
+
+# testing..
+# MOZ_APP_NAME=librewolf
+# This gives the same theming issue as --with-app-name=librewolf
+"""
+
+
+
 
 
 main()
