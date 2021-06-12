@@ -224,38 +224,67 @@ def execute_lw_do_patches():
         patch("../patches/browser-confvars.patch") # not sure about this one yet!
         patch("../patches/package-manifest.patch") # let ./mach package pick up our added files
         leave_srcdir()
-        
-def execute_lw_post_build():
-        if options.no_librewolf:
-                return
-        enter_srcdir()
-        
+
+
+def get_objdir():
         pattern = "obj-*"
         retval = glob.glob(pattern)
         if len(retval) != 1:
                 printf("fatal error: in execute_lw_post_build(): cannot glob build output folder '{}'".format(pattern))
                 sys.exit(1)
+        return retval[0]
+        
+def execute_lw_post_build():
+        if options.no_librewolf:
+                return
+        enter_srcdir()
+        dirname = get_objdir()
                 
-        os.makedirs("{}/dist/bin/defaults/pref".format(retval[0]), exist_ok=True)
-        os.makedirs("{}/dist/bin/distribution".format(retval[0]), exist_ok=True)
-        exec("cp -v ../settings/defaults/pref/local-settings.js {}/dist/bin/defaults/pref/".format(retval[0]))
-        exec("cp -v ../settings/distribution/policies.json {}/dist/bin/distribution/".format(retval[0]))
-        exec("cp -v ../settings/librewolf.cfg {}/dist/bin/".format(retval[0]))
+        os.makedirs("{}/dist/bin/defaults/pref".format(dirname), exist_ok=True)
+        os.makedirs("{}/dist/bin/distribution".format(dirname), exist_ok=True)
+        exec("cp -v ../settings/defaults/pref/local-settings.js {}/dist/bin/defaults/pref/".format(dirname))
+        exec("cp -v ../settings/distribution/policies.json {}/dist/bin/distribution/".format(dirname))
+        exec("cp -v ../settings/librewolf.cfg {}/dist/bin/".format(dirname))
         leave_srcdir()
         
 def execute_lw_artifacts():
         if options.no_librewolf:
                 return
-        print("[debug] doing target -> lw_artifacts")
         
-
-
-
+        enter_srcdir()
         
+        if options.distro == 'win':
+                exe = ".exe"
+                ospkg = "win64"
+                dirname = "{}/dist/firefox".format(get_objdir())
+        elif options.distro == 'deb':
+                exe = ""
+                ospkg = "deb"
+                dirname = "{}/dist/firefox".format(get_objdir())
+        elif options.distro == 'rpm':
+                exe = ""
+                ospkg = "rpm"
+                dirname = "{}/dist/firefox".format(get_objdir())
 
-
-
+        exec("rm -rf ../firefox ../librewolf")
+        exec("cp -rv {} ..".format(dirname))
+        leave_srcdir()
         
+        exec("mv firefox librewolf")
+        exec("mv -v librewolf/firefox{} librewolf/librewolf{}".format(exe,exe));
+        exec("rm -rf librewolf/maintainanceservice* librewolf/pingsender* librewolf/firefox.*.xml librewolf/precomplete librewolf/removed-files librewolf/uninstall")
+        exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico")
+        
+        # create zip file
+        zipname = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
+        exec("rm -f {}".format(zipname))
+        exec("zip -qr9 {} librewolf".format(zipname))
+        
+        # create installer
+        if options.distro == 'win':
+                exec("rm -f librewolf-{}.en-US.win64-setup.exe tmp.nsi".format(pkgver))
+                exec("sed \"s/pkg_version/{}/g\" < artifacts_win.nsi > tmp.nsi".format(pkgver))
+                exec("makensis-3.01.exe -V1 tmp.nsi")
 #
 # Main targets:
 #
@@ -280,7 +309,7 @@ def execute_clean():
         
         exec("rm -rf librewolf firefox-{}.source.tar.xz bootstrap.py".format(pkgver))
         exec("rm -f librewolf-{}.en-US.win64.zip librewolf-{}.en-US.win64-setup.exe".format(pkgver,pkgver))
-        exec("rm -f tmp.nsi tmp-permissive.nsi tmp-strict.nsi".format())
+        exec("rm -f tmp.nsi")
 
 
 
