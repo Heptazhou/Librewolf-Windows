@@ -1,6 +1,7 @@
 #!/bin/env python3
 
-pkgver='89.0'
+pkgver = '89.0'
+nightly_ver = '91.0a1'
 
 #
 # pybuild.py - try move functionality away from that too big/horrible build script.
@@ -18,6 +19,7 @@ parser.add_option('-n', '--no-execute',    dest='no_execute',    default=False, 
 parser.add_option('-l', '--no-librewolf',  dest='no_librewolf',  default=False, action="store_true")
 parser.add_option('-s', '--src',           dest='src',           default='release')
 parser.add_option('-t', '--distro',        dest='distro',        default='win')
+parser.add_option('-T', '--token',         dest='token',         default='')
 
 options, remainder = parser.parse_args()
                 
@@ -229,8 +231,10 @@ def execute_lw_do_patches():
 def get_objdir():
         pattern = "obj-*"
         retval = glob.glob(pattern)
+        if options.no_execute:
+                return "obj-XXX"
         if len(retval) != 1:
-                printf("fatal error: in execute_lw_post_build(): cannot glob build output folder '{}'".format(pattern))
+                print("fatal error: in execute_lw_post_build(): cannot glob build output folder '{}'".format(pattern))
                 sys.exit(1)
         return retval[0]
         
@@ -239,9 +243,10 @@ def execute_lw_post_build():
                 return
         enter_srcdir()
         dirname = get_objdir()
-                
-        os.makedirs("{}/dist/bin/defaults/pref".format(dirname), exist_ok=True)
-        os.makedirs("{}/dist/bin/distribution".format(dirname), exist_ok=True)
+
+        if not options.no_execute:
+                os.makedirs("{}/dist/bin/defaults/pref".format(dirname), exist_ok=True)
+                os.makedirs("{}/dist/bin/distribution".format(dirname), exist_ok=True)
         exec("cp -v ../settings/defaults/pref/local-settings.js {}/dist/bin/defaults/pref/".format(dirname))
         exec("cp -v ../settings/distribution/policies.json {}/dist/bin/distribution/".format(dirname))
         exec("cp -v ../settings/librewolf.cfg {}/dist/bin/".format(dirname))
@@ -276,15 +281,71 @@ def execute_lw_artifacts():
         exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico")
         
         # create zip file
-        zipname = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
+        if options.src == 'release':
+                zipname = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
+        elif options.src == 'nightly':
+                zipname = "librewolf-{}.en-US.{}-nightly.zip".format(nightly_ver,ospkg)
+
         exec("rm -f {}".format(zipname))
         exec("zip -qr9 {} librewolf".format(zipname))
         
         # create installer
         if options.distro == 'win':
-                exec("rm -f librewolf-{}.en-US.win64-setup.exe tmp.nsi".format(pkgver))
+                setupname = "librewolf-{}.en-US.win64-setup.exe".format(pkgver)
+                if options.src == 'nightly':
+                        if os.path.isfile(setupname):
+                                exec("rm -f tmp.exe")
+                                exec("mv {} tmp.exe".format(setupname))
+                        setupname = "librewolf-{}.en-US.win64-nightly-setup.exe".format(nightly_ver)
+                        
+                exec("rm -f {} tmp.nsi".format(setupname))
                 exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(pkgver))
                 exec("makensis-3.01.exe -V1 tmp.nsi")
+                exec("rm -f tmp.nsi")
+                if os.path.isfile("tmp.exe"):
+                        exec("mv librewolf-{}.en-US.win64-setup.exe {}".format(pkgver,setupname))
+                        exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
+
+def do_upload(filename):
+        print("")
+        print("")
+        exec("curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\"".format(options.token,filename))
+        print("")
+        print("")
+        
+def execute_upload():
+        if options.token =='':
+                print("fatal error: You must specify a private token when using the 'upload' command.")
+                sys.exit(1)
+
+        if options.distro == 'win':
+                ospkg = "win64"
+        elif options.distro == 'deb':
+                ospkg = "deb"
+        elif options.distro == 'rpm':
+                ospkg = "rpm"
+
+                
+        zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
+        setup_filename = "librewolf-{}.en-US.win64-setup.exe".format(pkgver)
+        nightly_setup_filename = "librewolf-{}.en-US.win64-nightly-setup.exe".format(nightly_ver)
+        
+        if not os.path.isfile(zip_filename):
+                print("fatal error: File '{}' not found.".format(zip_filename))
+                sys.exit(1)
+        if not os.path.isfile(setup_filename):
+                print("fatal error: File '{}' not found.".format(setup_filename))
+                sys.exit(1)
+        if not os.path.isfile(nightly_setup_filename):
+                print("fatal error: File '{}' not found.".format(nightly_setup_filename))
+                sys.exit(1)
+
+        exec("sha256sum {} {} {} > sha256sums.txt".format(zip_filename,setup_filename,nightly_setup_filename))
+        do_upload(setup_filename)
+        do_upload(zip_filename)
+        do_upload(nightly_setup_filename)
+        do_upload("sha256sums.txt")
+
 #
 # Main targets:
 #
@@ -300,16 +361,12 @@ def execute_all():
         execute_lw_artifacts() 
 
 def execute_clean():
-        if options.src == 'release':
-                exec("rm -rf firefox-{}".format(pkgver))
-        elif options.src == 'nightly':
-                exec("rm -rf mozilla-unified")
-        elif options.src == 'tor-browser': 
-                exec("rm -rf tor-browser")
-        
-        exec("rm -rf librewolf firefox-{}.source.tar.xz bootstrap.py".format(pkgver))
-        exec("rm -f librewolf-{}.en-US.win64.zip librewolf-{}.en-US.win64-setup.exe".format(pkgver,pkgver))
-        exec("rm -f tmp.nsi")
+        exec("rm -rf firefox-{} mozilla-unified tor-browser".format(pkgver))
+        exec("rm -rf librewolf firefox-{}.source.tar.xz bootstrap.py tmp.nsi tmp.exe".format(pkgver))
+
+def execute_veryclean():
+        execute_clean()
+        exec("rm -f librewolf-*.en-US.*.zip librewolf-*.en-US.*-setup.exe sha256sums.txt")
 
 
 
@@ -340,6 +397,8 @@ def main():
                                 execute_all()
                         elif arg == 'clean':
                                 execute_clean()
+                        elif arg == 'veryclean':
+                                execute_veryclean()
                         
                         # Targets:
                         
@@ -357,6 +416,8 @@ def main():
                                 execute_package()
                         elif arg == 'lw_artifacts':
                                 execute_lw_artifacts()
+                        elif arg == 'upload':
+                                execute_upload()
 
                         # Utilities
                         
@@ -403,17 +464,19 @@ help_message = """# Use:
 
 # Options:
 
-    -n,--no-execute         - print commands, don't execute them
-    -l,--no-librewolf       - skip LibreWolf specific stages.
-    -x,--cross              - crosscompile from linux, implies -t win
-    -s,--src <src>          - release,nightly,tor-browser
-                              (default=release)
-    -t,--distro <distro>    - deb,rpm,win (default=win)
+    -n,--no-execute            - print commands, don't execute them
+    -l,--no-librewolf          - skip LibreWolf specific stages.
+    -x,--cross                 - crosscompile from linux, implies -t win
+    -s,--src <src>             - release,nightly,tor-browser
+                                 (default=release)
+    -t,--distro <distro>       - deb,rpm,win (default=win)
+    -T,--token <private_token> - private token used to upload to gitlab.com
 
 # Targets:
 
-    all      - all steps from fetch to producing setup.exe
-    clean    - clean everything, including extracted/fetched sources
+    all        - all steps from fetch to producing setup.exe
+    clean      - clean everything, including extracted/fetched sources
+    veryclean  - clean like above, and also remove build artifacts.
 
     fetch               - wget or hg clone or git pull
     extract             - when using wget, extract the archive.
