@@ -283,7 +283,7 @@ def execute_lw_artifacts():
         # create installer
         if options.distro == 'win':
                 exec("rm -f librewolf-{}.en-US.win64-setup.exe tmp.nsi".format(pkgver))
-                exec("sed \"s/pkg_version/{}/g\" < artifacts_win.nsi > tmp.nsi".format(pkgver))
+                exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(pkgver))
                 exec("makensis-3.01.exe -V1 tmp.nsi")
 #
 # Main targets:
