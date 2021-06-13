@@ -416,13 +416,13 @@ def main():
                                 execute_package()
                         elif arg == 'lw_artifacts':
                                 execute_lw_artifacts()
-                        elif arg == 'upload':
-                                execute_upload()
 
                         # Utilities
                         
                         elif arg == 'git_subs':
                                 execute_git_subs()
+                        elif arg == 'upload':
+                                execute_upload()
                         
                         elif arg == 'git_init':
                                 execute_git_init()
@@ -489,8 +489,9 @@ help_message = """# Use:
 # Utilities:
 
     git_subs    - git update submodules
-    reset       - use git/mercurial to revert changes to a clean state
+    upload      - upload the build artifacts to gitlab.com
     git_init    - put the source folder in a .git repository
+    reset       - use git/mercurial to revert changes to a clean state
 
     deps_deb    - install dependencies with apt
     deps_rpm    - install dependencies with dnf
