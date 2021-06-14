@@ -80,6 +80,9 @@ def execute_update_submodules():
         exec("git submodule foreach git merge origin master")
 
 def execute_git_init():
+        if options.src != 'release':
+            print("fatal error: git_init only works with the release source (--src release)")
+            sys.exit(1)
         enter_srcdir()
         exec("rm -rf .git")
         exec("git init")
@@ -210,21 +213,29 @@ def execute_lw_do_patches():
         exec("cp -vr ../common/source_files/* .")
         exec("cp -v ../files/configure.sh browser/branding/librewolf")
 
-        # patches..
-        patch("../common/patches/context-menu.patch")
-        patch("../common/patches/remove_addons.patch")
-        patch("../common/patches/megabar.patch")
-        patch("../common/patches/mozilla-vpn-ad.patch")
-
-        # sed patches..
-        patch("../common/patches/sed-patches/allow-searchengines-non-esr.patch")
-        patch("../common/patches/sed-patches/disable-pocket.patch")
-        patch("../common/patches/sed-patches/remove-internal-plugin-certs.patch")
-        patch("../common/patches/sed-patches/stop-undesired-requests.patch")
-
+        patches = [
+                "../common/patches/context-menu.patch",
+                "../common/patches/remove_addons.patch",
+                "../common/patches/megabar.patch",
+                "../common/patches/mozilla-vpn-ad.patch",
+                "../common/patches/allow_dark_preference_with_rfp.patch",
+                "../common/patches/about-dialog.patch",
+                
+                # sed patches..
+                "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
+                "../common/patches/sed-patches/disable-pocket.patch",
+                "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
+                "../common/patches/sed-patches/stop-undesired-requests.patch",
+                ]
+                
+        for p in patches:
+            patch(p)
+            
         # local windows patches
-        patch("../patches/browser-confvars.patch") # not sure about this one yet!
-        patch("../patches/package-manifest.patch") # let ./mach package pick up our added files
+        for p in ["../patches/browser-confvars.patch", "../patches/package-manifest.patch"]:
+            patch(p)
+
+                
         leave_srcdir()
 
 
