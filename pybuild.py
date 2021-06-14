@@ -74,7 +74,7 @@ def patch(patchfile):
 
 
 
-def execute_git_subs():
+def execute_update_submodules():
         exec("git submodule update --recursive")
         exec("git submodule foreach git pull origin master")
         exec("git submodule foreach git merge origin master")
@@ -366,7 +366,10 @@ def execute_clean():
 
 def execute_veryclean():
         execute_clean()
-        exec("rm -f librewolf-*.en-US.*.zip librewolf-*.en-US.*-setup.exe sha256sums.txt")
+        exec("rm -f sha256sums.txt")
+        for filename in glob.glob("librewolf-*"):
+                os.remove(filename)
+        
 
 
 
@@ -419,8 +422,8 @@ def main():
 
                         # Utilities
                         
-                        elif arg == 'git_subs':
-                                execute_git_subs()
+                        elif arg == 'update_submodules':
+                                execute_update_submodules()
                         elif arg == 'upload':
                                 execute_upload()
                         
@@ -488,8 +491,9 @@ help_message = """# Use:
 
 # Utilities:
 
-    git_subs    - git update submodules
-    upload      - upload the build artifacts to gitlab.com
+    update_submodules   - git update submodules
+    upload              - upload the build artifacts to gitlab.com
+
     git_init    - put the source folder in a .git repository
     reset       - use git/mercurial to revert changes to a clean state
 
