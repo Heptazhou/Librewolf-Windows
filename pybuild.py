@@ -11,7 +11,9 @@ import optparse
 import sys
 import os
 import glob
+import time
 
+start_time = time.time()
 parser = optparse.OptionParser()
 
 parser.add_option('-x', '--cross',         dest='cross_compile', default=False, action="store_true")
@@ -23,12 +25,14 @@ parser.add_option('-T', '--token',         dest='token',         default='')
 
 options, remainder = parser.parse_args()
                 
-
-
-def beep():
-        if not options.no_execute:
-                print('\a', end='')
-
+def script_exit(statuscode):
+        if (time.time() - start_time) > 60:
+                # print elapsed time
+                elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time))
+                print(f"\nElapsed time: {elapsed}")
+        
+        sys.exit(statuscode)
+        
 def enter_srcdir():
         dir = "firefox-{}".format(pkgver)
         if options.src == 'nightly':
@@ -41,7 +45,7 @@ def enter_srcdir():
                         os.chdir(dir)
                 except:
                         print("fatal error: can't change to '{}' folder.".format(dir))
-                        sys.exit(1)
+                        script_exit(1)
                 
 def leave_srcdir():
         print("cd ..")
@@ -54,8 +58,7 @@ def exec(cmd):
                 retval = os.system(cmd)
                 if retval != 0:
                         print("fatal error: command '{}' failed".format(cmd))
-                        beep()
-                        sys.exit(1)
+                        script_exit(1)
 
 def patch(patchfile):
         cmd = "patch -p1 -i {}".format(patchfile)
@@ -64,8 +67,7 @@ def patch(patchfile):
                 retval = os.system(cmd)
                 if retval != 0:
                         print("fatal error: patch '{}' failed".format(patchfile))
-                        beep()
-                        sys.exit(1)
+                        script_exit(1)
 
 
 #        
@@ -82,7 +84,7 @@ def execute_update_submodules():
 def execute_git_init():
         if options.src != 'release':
             print("fatal error: git_init only works with the release source (--src release)")
-            sys.exit(1)
+            script_exit(1)
         enter_srcdir()
         exec("rm -rf .git")
         exec("git init")
@@ -125,7 +127,7 @@ def execute_reset():
                 path = "firefox-{}/.git/index".format(pkgver)
                 if not os.path.isfile(path):
                         print("fatal error: cannot reset '--src release' sources as it's not under version control.")
-                        sys.exit(1)
+                        script_exit(1)
                 enter_srcdir()
                 exec("git reset --hard")
                 leave_srcdir()
@@ -246,7 +248,7 @@ def get_objdir():
                 return "obj-XXX"
         if len(retval) != 1:
                 print("fatal error: in execute_lw_post_build(): cannot glob build output folder '{}'".format(pattern))
-                sys.exit(1)
+                script_exit(1)
         return retval[0]
         
 def execute_lw_post_build():
@@ -327,7 +329,7 @@ def do_upload(filename):
 def execute_upload():
         if options.token =='':
                 print("fatal error: You must specify a private token when using the 'upload' command.")
-                sys.exit(1)
+                script_exit(1)
 
         if options.distro == 'win':
                 ospkg = "win64"
@@ -343,13 +345,13 @@ def execute_upload():
         
         if not os.path.isfile(zip_filename):
                 print("fatal error: File '{}' not found.".format(zip_filename))
-                sys.exit(1)
+                script_exit(1)
         if not os.path.isfile(setup_filename):
                 print("fatal error: File '{}' not found.".format(setup_filename))
-                sys.exit(1)
+                script_exit(1)
         if not os.path.isfile(nightly_setup_filename):
                 print("fatal error: File '{}' not found.".format(nightly_setup_filename))
-                sys.exit(1)
+                script_exit(1)
 
         exec("sha256sum {} {} {} > sha256sums.txt".format(zip_filename,setup_filename,nightly_setup_filename))
         do_upload(setup_filename)
@@ -401,10 +403,10 @@ def main():
         if len(remainder) > 0:
                 if not options.src in ['release','nightly','tor-browser']:
                         print("error: option --src invalid value")
-                        sys.exit(1)
+                        script_exit(1)
                 if not options.distro in ['deb','rpm', 'win']:
                         print("error: option --distro invalid value")
-                        sys.exit(1)
+                        script_exit(1)
 
                 for arg in remainder:
                         if arg == 'all':
@@ -457,8 +459,7 @@ def main():
                         
                         else:
                                 print("error: unknown command on command line: ", arg)
-                                sys.exit(1)
-                beep()
+                                script_exit(1)
         else:
                 # Print help message
                 print(help_message)
@@ -563,3 +564,4 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 
 
 main()
+script_exit(0)
