@@ -1,6 +1,6 @@
 #!/bin/env python3
 
-pkgver = '89.0'
+pkgver = '89.0.1'
 nightly_ver = '91.0a1'
 
 #
@@ -29,8 +29,8 @@ def script_exit(statuscode):
         if (time.time() - start_time) > 60:
                 # print elapsed time
                 elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time))
-                print(f"\nElapsed time: {elapsed}")
-        
+                print(f"\n\aElapsed time: {elapsed}")
+
         sys.exit(statuscode)
         
 def enter_srcdir():
@@ -320,11 +320,9 @@ def execute_lw_artifacts():
                         exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
 
 def do_upload(filename):
-        print("")
-        print("")
-        exec("curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\"".format(options.token,filename))
-        print("")
-        print("")
+        exec("echo "" >> upload.txt")
+        exec("curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt".format(options.token,filename))
+        exec("echo "" >> upload.txt")
         
 def execute_upload():
         if options.token =='':
@@ -354,6 +352,7 @@ def execute_upload():
                 script_exit(1)
 
         exec("sha256sum {} {} {} > sha256sums.txt".format(zip_filename,setup_filename,nightly_setup_filename))
+        exec("rm -f upload.txt")
         do_upload(setup_filename)
         do_upload(zip_filename)
         do_upload(nightly_setup_filename)
@@ -379,7 +378,7 @@ def execute_clean():
 
 def execute_veryclean():
         execute_clean()
-        exec("rm -f sha256sums.txt")
+        exec("rm -f sha256sums.txt pybuild.upload.txt")
         for filename in glob.glob("librewolf-*"):
                 os.remove(filename)
         
