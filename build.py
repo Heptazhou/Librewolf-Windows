@@ -292,6 +292,8 @@ def execute_lw_artifacts():
         exec("mv -v librewolf/firefox{} librewolf/librewolf{}".format(exe,exe));
         exec("rm -rf librewolf/maintainanceservice* librewolf/pingsender* librewolf/firefox.*.xml librewolf/precomplete librewolf/removed-files librewolf/uninstall")
         exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico")
+        if options.distro != 'win':
+                exec("cp -v files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf")
         
         # create zip file
         if options.src == 'release':
