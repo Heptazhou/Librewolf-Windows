@@ -4,7 +4,7 @@ pkgver = '89.0.1'
 nightly_ver = '91.0a1'
 
 #
-# pybuild.py - try move functionality away from that too big/horrible build script.
+# build.py - try move functionality away from that too big/horrible build script.
 #
 
 import optparse
@@ -476,7 +476,7 @@ def main():
 
 help_message = """# Use: 
 
-     pybuild [<options>] clean | all | <targets> | <utilities>
+     build.py [<options>] clean | all | <targets> | <utilities>
 
 # Options:
 
