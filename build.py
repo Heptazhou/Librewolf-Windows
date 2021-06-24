@@ -62,7 +62,7 @@ def exec(cmd):
 
 def patch(patchfile):
         cmd = "patch -p1 -i {}".format(patchfile)
-        print(cmd)
+        print("\n*** -> {}".format(cmd))
         if not options.no_execute:
                 retval = os.system(cmd)
                 if retval != 0:
@@ -210,25 +210,50 @@ def execute_lw_do_patches():
         enter_srcdir()
         # create the right mozconfig file..
         create_mozconfig(mozconfig_release)
+
         
         # copy branding files..
         exec("cp -vr ../common/source_files/* .")
         exec("cp -v ../files/configure.sh browser/branding/librewolf")
 
-        patches = [
-                "../common/patches/context-menu.patch",
-                "../common/patches/remove_addons.patch",
-                "../common/patches/megabar.patch",
-                "../common/patches/mozilla-vpn-ad.patch",
-                "../common/patches/allow_dark_preference_with_rfp.patch",
-                "../common/patches/about-dialog.patch",
+        
+        if options.src == 'release':
+                # production patches
+                patches = [
+                        "../common/patches/context-menu.patch",
+                        "../common/patches/remove_addons.patch",
+                        "../common/patches/megabar.patch",
+                        "../common/patches/mozilla-vpn-ad.patch",
+                        "../common/patches/allow_dark_preference_with_rfp.patch",
+                        "../common/patches/about-dialog.patch",
                 
-                # sed patches..
-                "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
-                "../common/patches/sed-patches/disable-pocket.patch",
-                "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
-                "../common/patches/sed-patches/stop-undesired-requests.patch",
+                        # sed patches..
+                        "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
+                        "../common/patches/sed-patches/disable-pocket.patch",
+                        "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
+                        "../common/patches/sed-patches/stop-undesired-requests.patch",
                 ]
+                
+        elif options.src == 'nightly':
+                # patches for future releases are caught with nightly
+                patches = [
+                        "../common/patches/context-menu.patch",
+                        "../common/patches/remove_addons.patch",
+                        "../common/patches/megabar.patch",
+                        #"../common/patches/mozilla-vpn-ad.patch",
+                        "../patches/vpn-patch-91.0a1-nightly.patch",
+                        "../common/patches/allow_dark_preference_with_rfp.patch",
+                        "../common/patches/about-dialog.patch",
+                
+                        # sed patches..
+                        "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
+                        "../common/patches/sed-patches/disable-pocket.patch",
+                        "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
+                        "../common/patches/sed-patches/stop-undesired-requests.patch",
+                ]
+
+
+
                 
         for p in patches:
             patch(p)

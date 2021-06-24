@@ -1,0 +1,18 @@
+diff -r 536a892dd51f browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
+--- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html	Tue Jun 22 16:56:13 2021 +0000
++++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html	Wed Jun 23 07:09:38 2021 +0200
+@@ -58,6 +58,7 @@
+       </div>
+     </div>
+ 
++    <!--
+     <div class="promo">
+       <div class="promo-image-large">
+         <img src="" alt="" />
+@@ -73,5 +74,6 @@
+         </div>
+       </div>
+     </div>
++    -->
+   </body>
+ </html>
