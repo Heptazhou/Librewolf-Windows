@@ -1,6 +1,6 @@
 #!/bin/env python3
 
-pkgver = '89.0.1'
+pkgver = '89.0.2'
 nightly_ver = '91.0a1'
 
 #
