@@ -1,0 +1,70 @@
+diff -r 2689403bd0d2 browser/extensions/moz.build
+--- a/browser/extensions/moz.build	Mon Jun 28 12:08:51 2021 +0000
++++ b/browser/extensions/moz.build	Mon Jun 28 14:29:05 2021 +0200
+@@ -5,11 +5,8 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ DIRS += [
+-    "doh-rollout",
+     "formautofill",
+     "screenshots",
+-    "webcompat",
+-    "report-site-issue",
+     "pictureinpicture",
+ ]
+ 
+diff -r 2689403bd0d2 browser/locales/Makefile.in
+--- a/browser/locales/Makefile.in	Mon Jun 28 12:08:51 2021 +0000
++++ b/browser/locales/Makefile.in	Mon Jun 28 14:29:05 2021 +0200
+@@ -61,7 +61,6 @@
+ ifneq (,$(wildcard ../extensions/formautofill/locales))
+ 	@$(MAKE) -C ../extensions/formautofill/locales AB_CD=$* XPI_NAME=locale-$*
+ endif
+-	@$(MAKE) -C ../extensions/report-site-issue/locales AB_CD=$* XPI_NAME=locale-$*
+ 	@$(MAKE) -C ../../devtools/client/locales AB_CD=$* XPI_NAME=locale-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
+ 	@$(MAKE) -C ../../devtools/startup/locales AB_CD=$* XPI_NAME=locale-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
+ 	@$(MAKE) l10n AB_CD=$* XPI_NAME=locale-$* PREF_DIR=$(PREF_DIR)
+@@ -82,7 +81,6 @@
+ 	@$(MAKE) -C ../../devtools/startup/locales chrome AB_CD=$*
+ 	@$(MAKE) chrome AB_CD=$*
+ 	@$(MAKE) -C $(DEPTH)/$(MOZ_BRANDING_DIRECTORY)/locales chrome AB_CD=$*
+-	@$(MAKE) -C ../extensions/report-site-issue/locales chrome AB_CD=$*
+ 
+ package-win32-installer: $(SUBMAKEFILES)
+ 	$(MAKE) -C ../installer/windows CONFIG_DIR=l10ngen ZIP_IN='$(ZIP_OUT)' installer
+diff -r 2689403bd0d2 browser/locales/filter.py
+--- a/browser/locales/filter.py	Mon Jun 28 12:08:51 2021 +0000
++++ b/browser/locales/filter.py	Mon Jun 28 14:29:05 2021 +0200
+@@ -19,7 +19,6 @@
+         "devtools/startup",
+         "browser",
+         "browser/extensions/formautofill",
+-        "browser/extensions/report-site-issue",
+         "extensions/spellcheck",
+         "other-licenses/branding/firefox",
+         "browser/branding/official",
+diff -r 2689403bd0d2 browser/locales/l10n.ini
+--- a/browser/locales/l10n.ini	Mon Jun 28 12:08:51 2021 +0000
++++ b/browser/locales/l10n.ini	Mon Jun 28 14:29:05 2021 +0200
+@@ -13,7 +13,6 @@
+      devtools/client
+      devtools/startup
+      browser/extensions/formautofill
+-     browser/extensions/report-site-issue
+ 
+ [includes]
+ # non-central apps might want to use %(topsrcdir)s here, or other vars
+diff -r 2689403bd0d2 browser/locales/l10n.toml
+--- a/browser/locales/l10n.toml	Mon Jun 28 12:08:51 2021 +0000
++++ b/browser/locales/l10n.toml	Mon Jun 28 14:29:05 2021 +0200
+@@ -132,10 +132,6 @@
+     l10n = "{l}browser/extensions/formautofill/**"
+ 
+ [[paths]]
+-    reference = "browser/extensions/report-site-issue/locales/en-US/**"
+-    l10n = "{l}browser/extensions/report-site-issue/**"
+-
+-[[paths]]
+     reference = "services/sync/locales/en-US/**"
+     l10n = "{l}services/sync/**"
+ 

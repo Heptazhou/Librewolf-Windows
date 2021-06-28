@@ -238,7 +238,8 @@ def execute_lw_do_patches():
                 # patches for future releases are caught with nightly
                 patches = [
                         "../common/patches/context-menu.patch",
-                        "../common/patches/remove_addons.patch",
+                        #"../common/patches/remove_addons.patch",
+                        "../patches/remove_addons-91.0a1-nightly.patch",                        
                         "../common/patches/megabar.patch",
                         #"../common/patches/mozilla-vpn-ad.patch",
                         "../patches/vpn-patch-91.0a1-nightly.patch",
