@@ -211,7 +211,12 @@ def execute_lw_do_patches():
         # create the right mozconfig file..
         create_mozconfig(mozconfig_release)
 
-        # macos : if have compatibilty ssh headers, add that to mozconfig_release
+        # macos : if have compatibilty osx api headers, add that to mozconfig_release
+        dir = os.environ['HOME'] + '/.mozbuild/macos-sdk/MacOSX11.1.sdk'
+        if os.path.isdir(dir):
+                with open('mozconfig','a') as f:
+                        f.write("\nac_add_options --with-macos-sdk=$HOME/.mozbuild/macos-sdk/MacOSX11.1.sdk")
+                        f.close()
 
         
         # copy branding files..
@@ -285,12 +290,16 @@ def execute_lw_post_build():
         enter_srcdir()
         dirname = get_objdir()
 
+        distfolder = "dist/bin"
+        if options.distro == 'osx':
+                distfolder = 'dist/LibreWolf.app/Contents/Resources'
+
         if not options.no_execute:
-                os.makedirs("{}/dist/bin/defaults/pref".format(dirname), exist_ok=True)
-                os.makedirs("{}/dist/bin/distribution".format(dirname), exist_ok=True)
-        exec("cp -v ../settings/defaults/pref/local-settings.js {}/dist/bin/defaults/pref/".format(dirname))
-        exec("cp -v ../settings/distribution/policies.json {}/dist/bin/distribution/".format(dirname))
-        exec("cp -v ../settings/librewolf.cfg {}/dist/bin/".format(dirname))
+                os.makedirs("{}/{}/defaults/pref".format(dirname,distfolder), exist_ok=True)
+                os.makedirs("{}/{}/distribution".format(dirname,distfolder), exist_ok=True)
+        exec("cp -v ../settings/defaults/pref/local-settings.js {}/{}/defaults/pref/".format(dirname,distfolder))
+        exec("cp -v ../settings/distribution/policies.json {}/{}/distribution/".format(dirname,distfolder))
+        exec("cp -v ../settings/librewolf.cfg {}/{}/".format(dirname,distfolder))
         leave_srcdir()
         
 def execute_lw_artifacts():
@@ -311,17 +320,26 @@ def execute_lw_artifacts():
                 exe = ""
                 ospkg = "rpm"
                 dirname = "{}/dist/firefox".format(get_objdir())
+        elif options.distro == 'osx':
+                exe = ""
+                ospkg = "osx"
+                dirname = "{}/dist/firefox".format(get_objdir())
 
         exec("rm -rf ../firefox ../librewolf")
         exec("cp -rv {} ..".format(dirname))
         leave_srcdir()
-        
+
+        librewolfdir = "librewolf"
+        if options.distro == 'osx':
+                librewolfdir = 'librewolf/Librewolf.app'
         exec("mv firefox librewolf")
-        exec("mv -v librewolf/firefox{} librewolf/librewolf{}".format(exe,exe));
-        exec("rm -rf librewolf/maintainanceservice* librewolf/pingsender* librewolf/firefox.*.xml librewolf/precomplete librewolf/removed-files librewolf/uninstall")
-        exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico librewolf/librewolf.ico")
-        if options.distro != 'win':
-                exec("cp -v files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf")
+        if options.distro != 'osx':
+                exec("mv -v {}/firefox{} {}/librewolf{}".format(librewolfdir,exe,librewolfdir,exe));
+                exec("rm -rf {}/maintainanceservice* {}/pingsender* {}/firefox.*.xml {}/precomplete {}/removed-files {}/uninstall"
+                     .format(librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir))
+                exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico {}/librewolf.ico".format(librewolfdir))
+                if options.distro != 'win':
+                        exec("cp -v files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf")
         
         # create zip file
         if options.src == 'release':
@@ -350,9 +368,9 @@ def execute_lw_artifacts():
                         exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
 
 def do_upload(filename):
-        exec("echo "" >> upload.txt")
+        exec("echo \"\\n\\n\" >> upload.txt")
         exec("curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt".format(options.token,filename))
-        exec("echo "" >> upload.txt")
+        exec("echo \"\\n\\n\" >> upload.txt")
         
 def execute_upload():
         if options.token =='':
@@ -365,6 +383,8 @@ def execute_upload():
                 ospkg = "deb"
         elif options.distro == 'rpm':
                 ospkg = "rpm"
+        elif options.distro == 'osx':
+                ospkg = "osx"
 
                 
         zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
@@ -433,7 +453,7 @@ def main():
                 if not options.src in ['release','nightly','tor-browser']:
                         print("error: option --src invalid value")
                         script_exit(1)
-                if not options.distro in ['deb','rpm', 'win']:
+                if not options.distro in ['deb','rpm', 'win','osx']:
                         print("error: option --distro invalid value")
                         script_exit(1)
 
