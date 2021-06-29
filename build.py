@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!env python3
 
 pkgver = '89.0.2'
 nightly_ver = '91.0a1'
@@ -210,6 +210,8 @@ def execute_lw_do_patches():
         enter_srcdir()
         # create the right mozconfig file..
         create_mozconfig(mozconfig_release)
+
+        # macos : if have compatibilty ssh headers, add that to mozconfig_release
 
         
         # copy branding files..
