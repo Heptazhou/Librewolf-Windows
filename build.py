@@ -7,11 +7,13 @@ nightly_ver = '91.0a1'
 # build.py - try move functionality away from that too big/horrible build script.
 #
 
+
 import optparse
 import sys
 import os
 import glob
 import time
+
 
 start_time = time.time()
 parser = optparse.OptionParser()
@@ -20,10 +22,29 @@ parser.add_option('-x', '--cross',         dest='cross_compile', default=False, 
 parser.add_option('-n', '--no-execute',    dest='no_execute',    default=False, action="store_true")
 parser.add_option('-l', '--no-librewolf',  dest='no_librewolf',  default=False, action="store_true")
 parser.add_option('-s', '--src',           dest='src',           default='release')
-parser.add_option('-t', '--distro',        dest='distro',        default='win')
+parser.add_option('-t', '--distro',        dest='distro',        default='autodetect')
 parser.add_option('-T', '--token',         dest='token',         default='')
 
 options, remainder = parser.parse_args()
+
+# try autodetecting options.distro
+if options.distro == 'autodetect':
+    options.distro = 'win'
+    if os.path.isdir('/Applications'):
+        options.distro = 'osx'
+    elif os.path.isdir('/etc'):
+        options.distro = 'rpm'
+        if os.path.isdir('/etc/apt'):
+            options.distro = 'deb'
+    print('[debug]: autoselected --distro {}'.format(options.distro))
+
+
+
+
+
+
+
+
                 
 def script_exit(statuscode):
         if (time.time() - start_time) > 60:
@@ -388,8 +409,8 @@ def execute_upload():
 
                 
         zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
-        setup_filename = "librewolf-{}.en-US.win64-setup.exe".format(pkgver)
-        nightly_setup_filename = "librewolf-{}.en-US.win64-nightly-setup.exe".format(nightly_ver)
+        setup_filename = "librewolf-{}.en-US.{}-setup.exe".format(pkgver,ospkg)
+        nightly_setup_filename = "librewolf-{}.en-US.{}-nightly-setup.exe".format(nightly_ver,ospkg)
         
         if not os.path.isfile(zip_filename):
                 print("fatal error: File '{}' not found.".format(zip_filename))
@@ -407,10 +428,16 @@ def execute_upload():
         do_upload(zip_filename)
         do_upload(nightly_setup_filename)
         do_upload("sha256sums.txt")
+        print("upload.txt: Upload JSON api results are in the file \'upload.txt\'.")
+
+
+
 
 #
 # Main targets:
 #
+
+
 
 
 def execute_all():
