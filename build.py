@@ -36,7 +36,8 @@ if options.distro == 'autodetect':
         options.distro = 'rpm'
         if os.path.isdir('/etc/apt'):
             options.distro = 'deb'
-
+if options.cross_compile:
+    options.distro = 'win'
 
 
 
