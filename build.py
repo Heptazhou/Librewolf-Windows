@@ -36,7 +36,6 @@ if options.distro == 'autodetect':
         options.distro = 'rpm'
         if os.path.isdir('/etc/apt'):
             options.distro = 'deb'
-    print('[debug]: autoselected --distro {}'.format(options.distro))
 
 
 
@@ -538,7 +537,7 @@ def main():
                                 script_exit(1)
         else:
                 # Print help message
-                print(help_message)
+                print(help_message.format(options.distro))
 
 
 
@@ -560,7 +559,7 @@ help_message = """# Use:
     -x,--cross                 - crosscompile from linux, implies -t win
     -s,--src <src>             - release,nightly,tor-browser
                                  (default=release)
-    -t,--distro <distro>       - deb,rpm,win (default=win)
+    -t,--distro <distro>       - deb,rpm,win,osx (default={})
     -T,--token <private_token> - private token used to upload to gitlab.com
 
 # Targets:
