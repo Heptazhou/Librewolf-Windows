@@ -60,6 +60,8 @@ def enter_srcdir():
                 dir = 'mozilla-unified'
         elif options.src == 'tor-browser':
                 dir = 'tor-browser'
+        elif options.src == 'gecko-dev':
+            dir = 'gecko-dev'
         print("cd {}".format(dir))
         if not options.no_execute:
                 try:
@@ -162,7 +164,10 @@ def execute_reset():
                 enter_srcdir()
                 exec("git reset --hard")
                 leave_srcidr()
-
+        elif options.src == 'gecko-dev':
+                enter_srcdir()
+                exec("git reset --hard")
+                leave_srcdir()
 
         
 
@@ -187,6 +192,12 @@ def execute_fetch():
                 exec("git checkout tor-browser-89.0-10.5-1-build1")
                 exec("git submodule update --recursive")
                 patch("../patches/tb-mozconfig-win10.patch")
+                leave_srcdir()
+        elif options.src == 'gecko-dev':
+                exec("rm -rf gecko-dev")
+                exec("git clone --no-checkout --recursive --depth=1 https://github.com/mozilla/gecko-dev.git")
+                enter_srcdir()
+                exec("git checkout")
                 leave_srcdir()
 
 def execute_extract():
@@ -225,7 +236,7 @@ def create_mozconfig(contents):
 def execute_lw_do_patches():
         if options.no_librewolf:
                 return
-        if not options.src in ['release','nightly']:
+        if not options.src in ['release','nightly','gecko-dev']:
                 return
 
         enter_srcdir()
@@ -244,6 +255,7 @@ def execute_lw_do_patches():
         exec("cp -vr ../common/source_files/* .")
         exec("cp -v ../files/configure.sh browser/branding/librewolf")
 
+        patches = []
         
         if options.src == 'release':
                 # production patches
@@ -262,7 +274,7 @@ def execute_lw_do_patches():
                         "../common/patches/sed-patches/stop-undesired-requests.patch",
                 ]
                 
-        elif options.src == 'nightly':
+        elif options.src == 'nightly' or options.src == 'gecko-dev':
                 # patches for future releases are caught with nightly
                 patches = [
                         "../common/patches/context-menu.patch",
@@ -280,8 +292,6 @@ def execute_lw_do_patches():
                         "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
                         "../common/patches/sed-patches/stop-undesired-requests.patch",
                 ]
-
-
 
                 
         for p in patches:
@@ -367,6 +377,8 @@ def execute_lw_artifacts():
                 zipname = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
         elif options.src == 'nightly':
                 zipname = "librewolf-{}.en-US.{}-nightly.zip".format(nightly_ver,ospkg)
+        elif options.src == 'gecko-dev':
+                zipname = "librewolf-{}.en-US.{}-gecko-dev.zip".format(nightly_ver,ospkg)
 
         exec("rm -f {}".format(zipname))
         exec("zip -qr9 {} librewolf".format(zipname))
@@ -379,6 +391,8 @@ def execute_lw_artifacts():
                                 exec("rm -f tmp.exe")
                                 exec("mv {} tmp.exe".format(setupname))
                         setupname = "librewolf-{}.en-US.win64-nightly-setup.exe".format(nightly_ver)
+                elif options.src == 'gecko-dev':
+                    setupname = "librewolf-{}.en-US.win64-gecko-dev-setup.exe".format(nightly_ver)
                         
                 exec("rm -f {} tmp.nsi".format(setupname))
                 exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(pkgver))
@@ -477,7 +491,7 @@ def main():
                 options.no_librewolf = True
 
         if len(remainder) > 0:
-                if not options.src in ['release','nightly','tor-browser']:
+                if not options.src in ['release','nightly','tor-browser','gecko-dev']:
                         print("error: option --src invalid value")
                         script_exit(1)
                 if not options.distro in ['deb','rpm', 'win','osx']:
@@ -558,9 +572,9 @@ help_message = """# Use:
     -n,--no-execute            - print commands, don't execute them
     -l,--no-librewolf          - skip LibreWolf specific stages.
     -x,--cross                 - crosscompile from linux, implies -t win
-    -s,--src <src>             - release,nightly,tor-browser
+    -s,--src <src>             - release,nightly,tor-browser,gecko-dev
                                  (default=release)
-    -t,--distro <distro>       - deb,rpm,win,osx (default={})
+    -t,--distro <distro>       - deb,rpm,win,osx (default={})
     -T,--token <private_token> - private token used to upload to gitlab.com
 
 # Targets:

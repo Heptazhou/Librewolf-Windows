@@ -3,6 +3,7 @@
 /librewolf
 /mozilla-unified
 /tor-browser
+/gecko-dev
 /bootstrap.py
 /mozconfig
 /dist
