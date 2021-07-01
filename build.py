@@ -398,7 +398,10 @@ def execute_lw_artifacts():
                     setupname = "librewolf-{}.en-US.win64-gecko-dev-setup.exe".format(nightly_ver)
                         
                 exec("rm -f {} tmp.nsi".format(setupname))
-                exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(pkgver))
+                s = pkgver
+                if options.src == 'nightly' or options.src == 'gecko-dev':
+                    s = nightly_ver
+                exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(s))
                 exec("makensis-3.01.exe -V1 tmp.nsi")
                 exec("rm -f tmp.nsi")
                 exec("mv librewolf-{}.en-US.win64-setup.exe {}".format(pkgver,setupname))
