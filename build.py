@@ -392,14 +392,17 @@ def execute_lw_artifacts():
                                 exec("mv {} tmp.exe".format(setupname))
                         setupname = "librewolf-{}.en-US.win64-nightly-setup.exe".format(nightly_ver)
                 elif options.src == 'gecko-dev':
+                    if os.path.isfile(setupname):
+                        exec("rm -f tmp.exe")
+                        exec("mv {} tmp.exe".format(setupname))
                     setupname = "librewolf-{}.en-US.win64-gecko-dev-setup.exe".format(nightly_ver)
                         
                 exec("rm -f {} tmp.nsi".format(setupname))
                 exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(pkgver))
                 exec("makensis-3.01.exe -V1 tmp.nsi")
                 exec("rm -f tmp.nsi")
+                exec("mv librewolf-{}.en-US.win64-setup.exe {}".format(pkgver,setupname))
                 if os.path.isfile("tmp.exe"):
-                        exec("mv librewolf-{}.en-US.win64-setup.exe {}".format(pkgver,setupname))
                         exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
 
 def do_upload(filename):
