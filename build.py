@@ -195,10 +195,7 @@ def execute_fetch():
                 leave_srcdir()
         elif options.src == 'gecko-dev':
                 exec("rm -rf gecko-dev")
-                exec("git clone --no-checkout --recursive --depth=1 https://github.com/mozilla/gecko-dev.git")
-                enter_srcdir()
-                exec("git checkout")
-                leave_srcdir()
+                exec("git clone --depth=1 https://github.com/mozilla/gecko-dev.git")
 
 def execute_extract():
         if options.src == 'release':
