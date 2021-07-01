@@ -404,7 +404,7 @@ def execute_lw_artifacts():
                 exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(s))
                 exec("makensis-3.01.exe -V1 tmp.nsi")
                 exec("rm -f tmp.nsi")
-                exec("mv librewolf-{}.en-US.win64-setup.exe {}".format(pkgver,setupname))
+                exec("mv librewolf-{}.en-US.win64-setup.exe {}".format(s,setupname))
                 if os.path.isfile("tmp.exe"):
                         exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
 
@@ -470,12 +470,12 @@ def execute_all():
         execute_lw_artifacts() 
 
 def execute_clean():
-        exec("rm -rf firefox-{} mozilla-unified tor-browser".format(pkgver))
+        exec("rm -rf firefox-{} mozilla-unified tor-browser gecko-dev".format(pkgver))
         exec("rm -rf librewolf firefox-{}.source.tar.xz bootstrap.py tmp.nsi tmp.exe".format(pkgver))
 
 def execute_veryclean():
         execute_clean()
-        exec("rm -f sha256sums.txt pybuild.upload.txt")
+        exec("rm -f sha256sums.txt upload.txt")
         for filename in glob.glob("librewolf-*"):
                 os.remove(filename)
         
