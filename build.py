@@ -228,6 +228,8 @@ def create_mozconfig(contents):
         if not options.no_execute:
                 f = open('mozconfig', 'w')
                 f.write(contents)
+                if not options.distro == 'win':
+                    f.write("\nac_add_options --with-app-name=librewolf")
                 f.close()
 
 def execute_lw_do_patches():
@@ -349,9 +351,12 @@ def execute_lw_artifacts():
                 ospkg = "rpm"
                 dirname = "{}/dist/firefox".format(get_objdir())
         elif options.distro == 'osx':
-                exe = ""
-                ospkg = "osx"
-                dirname = "{}/dist/firefox".format(get_objdir())
+            #exe = ""
+            #ospkg = "osx"
+            #dirname = "{}/dist/firefox".format(get_objdir())
+            exec("cp {}/dist/librewolf*.dmg ..".format(get_objdir()))
+            leave_srcdir()
+            return
 
         exec("rm -rf ../firefox ../librewolf")
         exec("cp -rv {} ..".format(dirname))
