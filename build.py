@@ -36,8 +36,6 @@ if options.distro == 'autodetect':
         options.distro = 'rpm'
         if os.path.isdir('/etc/apt'):
             options.distro = 'deb'
-if options.cross_compile:
-    options.distro = 'win'
 
 
 
@@ -230,6 +228,9 @@ def create_mozconfig(contents):
                 f.write(contents)
                 if not options.distro == 'win':
                     f.write("\nac_add_options --with-app-name=librewolf")
+                if options.distro == 'osx' and options.cross_compile:
+                    f.write("\nac_add_options --target=aarch64")
+                f.write("\n")
                 f.close()
 
 def execute_lw_do_patches():
