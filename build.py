@@ -1,6 +1,6 @@
 #!env python3
 
-pkgver = '90.0'
+pkgver = '90.0.1'
 nightly_ver = '92.0a1'
 
 #
@@ -24,6 +24,7 @@ parser.add_option('-l', '--no-librewolf',  dest='no_librewolf',  default=False, 
 parser.add_option('-s', '--src',           dest='src',           default='release')
 parser.add_option('-t', '--distro',        dest='distro',        default='autodetect')
 parser.add_option('-T', '--token',         dest='token',         default='')
+parser.add_option('-3', '--i386',          dest='i386',          default=False, action="store_true")
 
 options, remainder = parser.parse_args()
 
@@ -230,6 +231,8 @@ def create_mozconfig(contents):
                     f.write("\nac_add_options --with-app-name=librewolf")
                 if options.distro == 'osx' and options.cross_compile:
                     f.write("\nac_add_options --target=aarch64")
+                if options.i386:
+                    f.write("\nac_add_options --target=i386")
                 f.write("\n")
                 f.close()
 
@@ -412,9 +415,9 @@ def execute_lw_artifacts():
                         exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
 
 def do_upload(filename):
-        exec("echo \"\\n\\n\" >> upload.txt")
+        exec("echo \".\" >> upload.txt")
         exec("curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt".format(options.token,filename))
-        exec("echo \"\\n\\n\" >> upload.txt")
+        exec("echo \".\" >> upload.txt")
         
 def execute_upload():
         if options.token =='':
@@ -433,7 +436,7 @@ def execute_upload():
                 
         zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
         setup_filename = "librewolf-{}.en-US.{}-setup.exe".format(pkgver,ospkg)
-        nightly_setup_filename = "librewolf-{}.en-US.{}-nightly-setup.exe".format(nightly_ver,ospkg)
+        nightly_setup_filename = "librewolf-{}.en-US.{}-gecko-dev-setup.exe".format(nightly_ver,ospkg)
         
         if not os.path.isfile(zip_filename):
                 print("fatal error: File '{}' not found.".format(zip_filename))
@@ -585,6 +588,7 @@ help_message = """# Use:
                                  (default=release)
     -t,--distro <distro>       - deb,rpm,win,osx (default={})
     -T,--token <private_token> - private token used to upload to gitlab.com
+    -3,--i386                  - build 32-bit
 
 # Targets:
 
