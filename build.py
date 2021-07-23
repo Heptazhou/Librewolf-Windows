@@ -1,6 +1,6 @@
 #!env python3
 
-pkgver = '90.0.1'
+pkgver = '90.0.2'
 nightly_ver = '92.0a1'
 
 #
@@ -25,6 +25,7 @@ parser.add_option('-s', '--src',           dest='src',           default='releas
 parser.add_option('-t', '--distro',        dest='distro',        default='autodetect')
 parser.add_option('-T', '--token',         dest='token',         default='')
 parser.add_option('-3', '--i386',          dest='i386',          default=False, action="store_true")
+parser.add_option('-P', '--settings-pane', dest='settings_pane', default=False, action="store_true")
 
 options, remainder = parser.parse_args()
 
@@ -75,6 +76,7 @@ def leave_srcdir():
                 os.chdir("..")
         
 def exec(cmd):
+    if cmd != '':
         print(cmd)
         if not options.no_execute:
                 retval = os.system(cmd)
@@ -302,7 +304,17 @@ def execute_lw_do_patches():
         for p in ["../patches/browser-confvars.patch", "../patches/package-manifest.patch"]:
             patch(p)
 
-                
+        # insert the settings pane source (experimental)
+        if options.settings_pane:
+            exec('git clone https://gitlab.com/ohfp/librewolf-pref-pane.git')
+            exec('cp -vrf librewolf-pref-pane/browser/* browser')
+            exec('touch browser/themes/shared/newInstall.css')
+            exec('touch browser/themes/shared/newInstallPage.css')
+            exec('cp -v browser/themes/shared/icons/pin-12.svg browser/themes/shared/icons/pin-tab.svg')
+            exec('cp -v browser/themes/shared/icons/stop-to-reload.svg browser/themes/shared/icons/stop.svg')
+            exec('cp -v browser/themes/shared/icons/stop.svg browser/themes/shared/icons/unpin-tab.svg')
+            exec('rm -rf librewolf-pref-pane')
+
         leave_srcdir()
 
 
@@ -589,6 +601,7 @@ help_message = """# Use:
     -t,--distro <distro>       - deb,rpm,win,osx (default={})
     -T,--token <private_token> - private token used to upload to gitlab.com
     -3,--i386                  - build 32-bit
+    -P,--settings-pane         - build with the experimental settings pane
 
 # Targets:
 
