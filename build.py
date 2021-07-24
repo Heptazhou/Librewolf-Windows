@@ -1,4 +1,5 @@
 #!env python3
+# tag: v90.0.2
 
 pkgver = '90.0.2'
 nightly_ver = '92.0a1'
