@@ -307,14 +307,64 @@ def execute_lw_do_patches():
 
         # insert the settings pane source (experimental)
         if options.settings_pane:
+            exec('rm -rf librewolf-pref-pane')
             exec('git clone https://gitlab.com/ohfp/librewolf-pref-pane.git')
             exec('cp -vrf librewolf-pref-pane/browser/* browser')
             exec('touch browser/themes/shared/newInstall.css')
             exec('touch browser/themes/shared/newInstallPage.css')
-            exec('cp -v browser/themes/shared/icons/pin-12.svg browser/themes/shared/icons/pin-tab.svg')
-            exec('cp -v browser/themes/shared/icons/stop-to-reload.svg browser/themes/shared/icons/stop.svg')
-            exec('cp -v browser/themes/shared/icons/stop.svg browser/themes/shared/icons/unpin-tab.svg')
-            exec('rm -rf librewolf-pref-pane')
+            exec('cp browser/themes/shared/icons/pin-12.svg browser/themes/shared/icons/pin-tab.svg')
+            exec('cp browser/themes/shared/icons/stop-to-reload.svg browser/themes/shared/icons/stop.svg')
+            exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/unpin-tab.svg')
+
+            if options.src == 'nightly' or options.src == 'gecko-dev':
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/3rdpartycookies-disabled.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/cryptominers-disabled.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/fingerprinters.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/fingerprinters-disabled.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/socialblock-disabled.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/tracker-image.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/tracker-image-disabled.svg')
+                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/customizableui/menu-arrow.svg')
+                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/illustrations/blue-berror.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/illustrations/error-connection-failure.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/illustrations/error-server-not-found.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/illustrations/error-session-restore.svg')
+                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/canvas-blocked.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/canvas.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/indexedDB.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/indexedDB.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/popup-subitem.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/update.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/webauthn.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/webauthn.svg')                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/block-cryptominer.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/block-social.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/notification-icons/block-fingerprinter.svg')
+                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/preferences/no-search-results.svg')                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/back-12.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/restore-session.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/quit.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/reload.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/send-to-device.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/sign-out.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/tab-12.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/zoom-in.svg')
+                
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/indicator-tab-attention.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/tab-audio-blocked.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/tab-overflow-indicator.svg')
+
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/update-circle-fill-12.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/incontent-icons/welcome-back.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/places/folder.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/places/history.svg')
+                
+                # this code ultimately does not work, it remains stuck on 'tab-overflow-indicator.svg
+                pass
 
         leave_srcdir()
 
