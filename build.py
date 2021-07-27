@@ -183,19 +183,22 @@ def execute_fetch():
                 exec("rm -f firefox-{}.source.tar.xz".format(pkgver))
                 exec("wget -q https://archive.mozilla.org/pub/firefox/releases/{}/source/firefox-{}.source.tar.xz".format(pkgver, pkgver))
         elif options.src == 'nightly':
+            if not os.path.isdir('mozilla-unified'):
                 exec("rm -f bootstrap.py")
                 exec("rm -rf mozilla-unified")
                 exec("wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py")
-                exec("python3 bootstrap.py --no-interactive --application-choice=browser")
+            exec("python3 bootstrap.py --no-interactive --application-choice=browser")
         elif options.src == 'tor-browser':
+            if not os.path.isdir('tor-browser'):
                 exec("rm -rf tor-browser")
                 exec("git clone --no-checkout --recursive https://git.torproject.org/tor-browser.git")
-                enter_srcdir()
-                exec("git checkout tor-browser-89.0-10.5-1-build1")
-                exec("git submodule update --recursive")
                 patch("../patches/tb-mozconfig-win10.patch")
-                leave_srcdir()
+            enter_srcdir()
+            exec("git checkout tor-browser-89.0-10.5-1-build1")
+            exec("git submodule update --recursive")
+            leave_srcdir()
         elif options.src == 'gecko-dev':
+            if not os.path.isdir('gecko-dev'):
                 exec("rm -rf gecko-dev")
                 exec("git clone --depth=1 https://github.com/mozilla/gecko-dev.git")
 
@@ -356,7 +359,7 @@ def execute_lw_do_patches():
                 
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/indicator-tab-attention.svg')
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/tab-audio-blocked.svg')
-                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/tab-overflow-indicator.svg')
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/tabbrowser/tab-overflow-indicator.png')
 
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/update-circle-fill-12.svg')
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/incontent-icons/welcome-back.svg')
@@ -539,14 +542,14 @@ def execute_all():
         execute_lw_artifacts() 
 
 def execute_clean():
-        exec("rm -rf firefox-{} mozilla-unified tor-browser gecko-dev".format(pkgver))
-        exec("rm -rf librewolf firefox-{}.source.tar.xz bootstrap.py tmp.nsi tmp.exe".format(pkgver))
-
-def execute_veryclean():
-        execute_clean()
-        exec("rm -f sha256sums.txt upload.txt")
+        exec("rm -rf firefox-{}".format(pkgver))
+        exec("rm -rf librewolf bootstrap.py tmp.nsi tmp.exe sha256sums.txt upload.txt")
         for filename in glob.glob("librewolf-*"):
                 os.remove(filename)
+
+def execute_veryclean():
+        exec("rm -rf firefox-{}.source.tar.xz mozilla-unified tor-browser gecko-dev".format(pkgver))
+        execute_clean()
         
 
 

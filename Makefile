@@ -1,6 +1,6 @@
 .phony: all clean veryclean  fetch extract lw_do_patches build lw_post_build package lw_artifacts
 
-BUILD=python3 ./build.py ${OPTS}
+BUILD=python3 build.py ${OPTS}
 
 all :
 	$(BUILD) all
