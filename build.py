@@ -441,6 +441,12 @@ def execute_lw_artifacts():
                 exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico {}/librewolf.ico".format(librewolfdir))
                 if options.distro != 'win':
                         exec("cp -v files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf")
+
+        if options.distro == 'win':
+            exec("rm -f librewolf-portable.exe")
+            exec("wget -q https://gitlab.com/stanzabird/librewolf-portable/uploads/975201177f106840b9067a4193c25319/librewolf-portable.exe")
+            exec("mv librewolf-portable.exe librewolf")
+            pass
         
         # create zip file
         if options.src == 'release':
@@ -543,7 +549,7 @@ def execute_all():
 
 def execute_clean():
         exec("rm -rf firefox-{}".format(pkgver))
-        exec("rm -rf librewolf bootstrap.py tmp.nsi tmp.exe sha256sums.txt upload.txt")
+        exec("rm -rf librewolf bootstrap.py tmp.nsi tmp.exe sha256sums.txt upload.txt librewolf-portable.exe")
         for filename in glob.glob("librewolf-*"):
                 os.remove(filename)
 
