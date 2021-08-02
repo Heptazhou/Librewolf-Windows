@@ -320,6 +320,7 @@ def execute_lw_do_patches():
             exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/icons/unpin-tab.svg')
 
             if options.src == 'nightly' or options.src == 'gecko-dev':
+                # this code ultimately does not work, it remains stuck on 'tab-overflow-indicator.svg
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/3rdpartycookies-disabled.svg')
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/cryptominers-disabled.svg')
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/controlcenter/fingerprinters.svg')
@@ -366,7 +367,7 @@ def execute_lw_do_patches():
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/places/folder.svg')
                 exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/places/history.svg')
                 
-                # this code ultimately does not work, it remains stuck on 'tab-overflow-indicator.svg
+                exec('cp browser/themes/shared/icons/stop.svg browser/themes/shared/warning.svg')
                 pass
 
         leave_srcdir()
@@ -446,7 +447,6 @@ def execute_lw_artifacts():
             exec("rm -f librewolf-portable.exe")
             exec("wget -q https://gitlab.com/stanzabird/librewolf-portable/uploads/975201177f106840b9067a4193c25319/librewolf-portable.exe")
             exec("mv librewolf-portable.exe librewolf")
-            pass
         
         # create zip file
         if options.src == 'release':
@@ -508,7 +508,7 @@ def execute_upload():
                 
         zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
         setup_filename = "librewolf-{}.en-US.{}-setup.exe".format(pkgver,ospkg)
-        nightly_setup_filename = "librewolf-{}.en-US.{}-gecko-dev-setup.exe".format(nightly_ver,ospkg)
+        nightly_setup_filename = "librewolf-{}.en-US.{}-gecko-dev.zip".format(nightly_ver,ospkg)
         
         if not os.path.isfile(zip_filename):
                 print("fatal error: File '{}' not found.".format(zip_filename))
