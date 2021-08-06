@@ -11,6 +11,5 @@
 
 # Community links
 
-* If at all possible, please go to the relevant 'issues' link and start discussing thing there.
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
 * [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
