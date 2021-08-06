@@ -443,12 +443,7 @@ def execute_lw_artifacts():
                 if options.distro != 'win':
                         exec("cp -v files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf")
 
-        if options.distro == 'win':
-            exec("rm -f librewolf-portable.exe")
-            exec("wget -q https://gitlab.com/stanzabird/librewolf-portable/uploads/975201177f106840b9067a4193c25319/librewolf-portable.exe")
-            exec("mv librewolf-portable.exe librewolf")
-        
-        # create zip file
+        # create zip filename
         if options.src == 'release':
                 zipname = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
         elif options.src == 'nightly':
@@ -456,8 +451,31 @@ def execute_lw_artifacts():
         elif options.src == 'gecko-dev':
                 zipname = "librewolf-{}.en-US.{}-gecko-dev.zip".format(nightly_ver,ospkg)
 
-        exec("rm -f {}".format(zipname))
-        exec("zip -qr9 {} librewolf".format(zipname))
+        # 'windows portable' zip stuff..
+        if options.distro == 'win':
+            # we need tmp to tell us what portable folder to make
+            if options.src == 'release':
+                tmp = pkgver
+            else:
+                tmp = nightly_ver
+                
+            exec("rm -rf librewolf-{}".format(tmp))
+            #exec("mkdir -p librewolf-{}/Profiles/Default librewolf-{}/LibreWolf".format(pkgver,pkgver))
+            os.makedirs("librewolf-{}/Profiles/Default".format(tmp), exist_ok=True)
+            os.makedirs("librewolf-{}/LibreWolf".format(tmp), exist_ok=True)
+            exec("cp -vr librewolf/* librewolf-{}/LibreWolf".format(tmp))
+            
+            exec("rm -f librewolf-portable.exe")
+            exec("wget -q https://gitlab.com/stanzabird/librewolf-portable/uploads/46bf5b8bf2cfea61639b52d36d5852ea/librewolf-portable.exe") # v0.2.0
+            exec("mv librewolf-portable.exe librewolf-{}".format(tmp))
+
+            exec("rm -f {}".format(zipname))
+            exec("zip -qr9 {} librewolf-{}".format(zipname,tmp))
+
+        # 'normal' zip file..
+        else:
+            exec("rm -f {}".format(zipname))
+            exec("zip -qr9 {} librewolf".format(zipname))
         
         # create installer
         if options.distro == 'win':
@@ -548,13 +566,14 @@ def execute_all():
         execute_lw_artifacts() 
 
 def execute_clean():
-        exec("rm -rf firefox-{}".format(pkgver))
+        exec("rm -rf librewolf-{}".format(pkgver))
         exec("rm -rf librewolf bootstrap.py tmp.nsi tmp.exe sha256sums.txt upload.txt librewolf-portable.exe")
         for filename in glob.glob("librewolf-*"):
                 os.remove(filename)
 
 def execute_veryclean():
         exec("rm -rf firefox-{}.source.tar.xz mozilla-unified tor-browser gecko-dev".format(pkgver))
+        exec("rm -rf firefox-{}".format(pkgver))
         execute_clean()
         
 
