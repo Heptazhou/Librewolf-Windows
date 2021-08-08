@@ -466,7 +466,7 @@ def execute_lw_artifacts():
             exec("cp -vr librewolf/* librewolf-{}/LibreWolf".format(tmp))
             
             exec("rm -f librewolf-portable.exe")
-            exec("wget -q https://gitlab.com/stanzabird/librewolf-portable/uploads/46bf5b8bf2cfea61639b52d36d5852ea/librewolf-portable.exe") # v0.2.0
+            exec("wget -q https://gitlab.com/librewolf-community/browser/windows/uploads/d8aeb768670911c7044b6c809782b3cc/librewolf-portable.exe") # v0.2.0
             exec("mv librewolf-portable.exe librewolf-{}".format(tmp))
 
             exec("rm -f {}".format(zipname))
