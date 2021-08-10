@@ -1,8 +1,7 @@
 #!env python3
-# tag: v90.0.2
 
-pkgver = '90.0.2'
-nightly_ver = '92.0a1'
+pkgver = '91.0'
+nightly_ver = '93.0a1'
 
 #
 # build.py - try move functionality away from that too big/horrible build script.
