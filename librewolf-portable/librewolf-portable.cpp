@@ -25,7 +25,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
-  wchar_t path[_MAX_PATH + 1], dir[_MAX_PATH+1], exe[_MAX_PATH+1], cmdline[_MAX_PATH+1];
+  //https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=cmd
+  //constexpr int max_path = _MAX_PATH+1;
+  constexpr int max_path = 32767+1;  
+  static wchar_t path[max_path], dir[max_path], exe[max_path], cmdline[max_path];
+
+  
 
   GetModuleFileName(NULL, path, _MAX_PATH);
   *wcsrchr(path,L'\\') = L'\0';
