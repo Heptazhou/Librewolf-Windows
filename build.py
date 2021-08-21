@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 pkgver = '91.0.1'
 nightly_ver = '93.0a1'
@@ -732,7 +732,8 @@ ac_add_options --with-branding=browser/branding/librewolf
 ac_add_options --with-distribution-id=io.gitlab.librewolf-community
 ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
-#export MOZ_REQUIRE_SIGNING=0
+# see issue # https://gitlab.com/librewolf-community/browser/arch/-/issues/49
+export MOZ_REQUIRE_SIGNING=
 
 # Features
 ac_add_options --disable-crashreporter
