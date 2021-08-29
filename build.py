@@ -18,14 +18,14 @@ import time
 start_time = time.time()
 parser = optparse.OptionParser()
 
-parser.add_option('-x', '--cross',         dest='cross_compile', default=False, action="store_true")
-parser.add_option('-n', '--no-execute',    dest='no_execute',    default=False, action="store_true")
-parser.add_option('-l', '--no-librewolf',  dest='no_librewolf',  default=False, action="store_true")
-parser.add_option('-s', '--src',           dest='src',           default='release')
-parser.add_option('-t', '--distro',        dest='distro',        default='autodetect')
-parser.add_option('-T', '--token',         dest='token',         default='')
-parser.add_option('-3', '--i386',          dest='i386',          default=False, action="store_true")
-parser.add_option('-P', '--settings-pane', dest='settings_pane', default=False, action="store_true")
+parser.add_option('-x', '--cross',            dest='cross_compile', default=False, action="store_true")
+parser.add_option('-n', '--no-execute',       dest='no_execute',    default=False, action="store_true")
+parser.add_option('-l', '--no-librewolf',     dest='no_librewolf',  default=False, action="store_true")
+parser.add_option('-s', '--src',              dest='src',           default='release')
+parser.add_option('-t', '--distro',           dest='distro',        default='autodetect')
+parser.add_option('-T', '--token',            dest='token',         default='')
+parser.add_option('-3', '--i386',             dest='i386',          default=False, action="store_true")
+parser.add_option('-P', '--no-settings-pane', dest='settings_pane', default=True, action="store_false")
 
 options, remainder = parser.parse_args()
 
