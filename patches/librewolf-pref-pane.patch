@@ -12,10 +12,10 @@ index 4f3babe..97c7ec2 100644
     content/browser/preferences/experimental.js
 diff --git a/browser/components/preferences/librewolf.inc.xhtml b/browser/components/preferences/librewolf.inc.xhtml
 new file mode 100644
-index 0000000..0b5e930
+index 0000000..74395a0
 --- /dev/null
 +++ b/browser/components/preferences/librewolf.inc.xhtml
-@@ -0,0 +1,388 @@
+@@ -0,0 +1,381 @@
 +# This Source Code Form is subject to the terms of the Mozilla Public
 +# License, v. 2.0. If a copy of the MPL was not distributed with this
 +# file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -169,6 +169,33 @@ index 0000000..0b5e930
 +  </vbox>
 +
 +  <hbox>
++    <checkbox id="librewolf-geolocation-checkbox" data-l10n-id="librewolf-geolocation-checkbox" preference="geo.enabled" flex="1" />
++    <html:label for="librewolf-geolocation-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-geolocation-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-geolocation-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-geolocation-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="geo.enabled" label="geo.enabled" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-auto-decline-canvas-checkbox" data-l10n-id="librewolf-auto-decline-canvas-checkbox" preference="privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" flex="1" />
++    <html:label for="librewolf-auto-decline-canvas-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-auto-decline-canvas-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-auto-decline-canvas-description" />
++      <html:div> <label data-l10n-id="librewolf-auto-decline-canvas-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <label data-l10n-id="librewolf-auto-decline-canvas-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" label="privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" />
++    </vbox>
++  </vbox>
++
++  <hbox>
 +    <checkbox id="librewolf-drm-checkbox" data-l10n-id="librewolf-drm-checkbox" preference="media.eme.enabled" flex="1" />
 +    <html:label for="librewolf-drm-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
 +  </hbox>
@@ -210,18 +237,6 @@ index 0000000..0b5e930
 +    </vbox>
 +
 +    <hbox>
-+      <checkbox id="librewolf-clipboard-checkbox" data-l10n-id="librewolf-clipboard-checkbox" preference="dom.event.clipboardevents.enabled" flex="1" />
-+      <html:label for="librewolf-clipboard-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
-+    </hbox>
-+    <vbox class="librewolf-collapse indent">
-+      <html:input type="checkbox" id="librewolf-clipboard-collapse" />
-+      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
-+        <label data-l10n-id="librewolf-clipboard-description" />
-+        <checkbox preference="dom.event.clipboardevents.enabled" label="dom.event.clipboardevents.enabled" />
-+      </vbox>
-+    </vbox>
-+
-+    <hbox>
 +      <checkbox id="librewolf-web-applications-checkbox" data-l10n-id="librewolf-web-applications-checkbox" preference="javascript.options.asmjs" flex="1" />
 +      <html:label for="librewolf-web-applications-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
 +    </hbox>
@@ -245,18 +260,6 @@ index 0000000..0b5e930
 +      </vbox>
 +    </vbox>
 +
-+    <hbox>
-+      <checkbox id="librewolf-harden-download-checkbox" data-l10n-id="librewolf-harden-download-checkbox" preference="browser.download.useDownloadDir" flex="1" />
-+      <html:label for="librewolf-harden-download-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
-+    </hbox>
-+    <vbox class="librewolf-collapse indent">
-+      <html:input type="checkbox" id="librewolf-harden-download-collapse" />
-+      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
-+        <label data-l10n-id="librewolf-harden-download-description" />
-+        <checkbox preference="browser.download.useDownloadDir" label="browser.download.useDownloadDir" />
-+      </vbox>
-+
-+    </vbox>
 +  </vbox>
 +</groupbox>
 +
@@ -298,6 +301,7 @@ index 0000000..0b5e930
 +    </vbox>
 +  </vbox>
 +
++  <!-- TODO commented out because we still are not sure how we want to handle this
 +  <hbox>
 +    <checkbox id="librewolf-moz-track-prot-checkbox" data-l10n-id="librewolf-moz-track-prot-checkbox" preference="privacy.trackingprotection.enabled" flex="1" />
 +    <html:label for="librewolf-moz-track-prot-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
@@ -331,19 +335,7 @@ index 0000000..0b5e930
 +      </vbox>
 +    </vbox>
 +  </vbox>
-+
-+  <hbox>
-+    <checkbox id="librewolf-rfp-light-checkbox" data-l10n-id="librewolf-rfp-light-checkbox" preference="privacy.override_rfp_for_color_scheme" flex="1" />
-+    <html:label for="librewolf-rfp-light-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
-+  </hbox>
-+  <vbox class="librewolf-collapse indent">
-+    <html:input type="checkbox" id="librewolf-rfp-light-collapse" />
-+    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
-+      <label data-l10n-id="librewolf-rfp-light-description" />
-+      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-rfp-light-warning1" class="librewolf-warning" /> </html:div>
-+      <checkbox preference="privacy.override_rfp_for_color_scheme" label="privacy.override_rfp_for_color_scheme" />
-+    </vbox>
-+  </vbox>
++  -->
 +
 +  <hbox>
 +    <checkbox id="librewolf-language-checkbox" data-l10n-id="librewolf-language-checkbox" preference="extensions.getAddons.langpacks.url" flex="1" />
@@ -359,7 +351,7 @@ index 0000000..0b5e930
 +    </vbox>
 +  </vbox>
 +
-+  <!-- OCSP settings with a radio button (so totally different from everything else -->
++  <!-- OCSP settings with a radio button (so totally different from everything else - TODO commented out because it has some issues
 +  <hbox>
 +    <label data-l10n-id="librewolf-OCSP-header" flex="1" />
 +    <html:label for="librewolf-OCSP-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
@@ -385,6 +377,7 @@ index 0000000..0b5e930
 +      <label data-l10n-id="librewolf-OCSP-prefs" />
 +    </vbox>
 +  </vbox>
++  -->
 +</groupbox>
 +
 +<hbox class="subcategory" hidden="true" data-category="paneLibrewolf">
@@ -406,10 +399,10 @@ index 0000000..0b5e930
 +</html:template>
 diff --git a/browser/components/preferences/librewolf.js b/browser/components/preferences/librewolf.js
 new file mode 100644
-index 0000000..59fe7f1
+index 0000000..6a1f974
 --- /dev/null
 +++ b/browser/components/preferences/librewolf.js
-@@ -0,0 +1,373 @@
+@@ -0,0 +1,381 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this file,
 + * You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -457,7 +450,6 @@ index 0000000..59fe7f1
 +  { id: "javascript.options.wasm", type: "bool" },
 +  { id: "privacy.resistFingerprinting.letterboxing", type: "bool" },
 +  { id: "dom.event.clipboardevents.enabled", type: "bool" },
-+  //{ id: "browser.download.useDownloadDir", type: "bool" }, // Already loaded from other setting pages
 +  // OCSP certificate revocation
 +  //{ id: "security.OCSP.enabled", type: "int" }, //Already enabled
 +  { id: "security.OCSP.require", type: "bool" },
@@ -474,8 +466,6 @@ index 0000000..59fe7f1
 +  //{ id: "browser.startup.page", type: "int" }, //Already added
 +  { id: "privacy.clearOnShutdown.history", type: "bool" },
 +  /**** Prefs that require changing a lockPref ****/
-+  // RFP force light theme
-+  { id: "privacy.override_rfp_for_color_scheme", type: "bool" },
 +  // Google safe browsing check downloads
 +  //{ id: "browser.safebrowsing.downloads.enabled", type: "bool" }, //Also already added
 +  // Mozilla Tracking Protection
@@ -493,6 +483,10 @@ index 0000000..59fe7f1
 +  { id: "svg.context-properties.content.enabled", type: "bool" },
 +  // Install language packs
 +  { id: "extensions.getAddons.langpacks.url", type: "string" },
++  // Canvas UI when blocked
++  { id: "privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts", type: "bool" },
++  // Geolocation data
++  { id: "geo.enabled", type: "bool" },
 +]);
 +
 +var gLibrewolfPane = {
@@ -546,6 +540,11 @@ index 0000000..59fe7f1
 +      ["media.getusermedia.screensharing.enabled"],
 +      [true                                      ],
 +    );
++    setBoolSyncListeners(
++      "librewolf-auto-decline-canvas-checkbox",
++      ["privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts"],
++      [true                                      ],
++    );
 +    setSyncListeners(
 +      "librewolf-drm-checkbox",
 +      ["media.eme.enabled", "media.gmp-widevinecdm.visible", "media.gmp-widevinecdm.enabled", "media.gmp-provider.enabled", "media.gmp-manager.url"],
@@ -556,11 +555,9 @@ index 0000000..59fe7f1
 +
 +    setBoolSyncListeners(
 +      "librewolf-hardened-master-checkbox",
-+      ["privacy.resistFingerprinting.letterboxing", "dom.event.clipboardevents.enabled", "browser.download.useDownloadDir", "javascript.options.asmjs", "javascript.options.wasm"],
-+      [true,                                        false,                               false,                             false,                      false                    ],
++      ["privacy.resistFingerprinting.letterboxing", "javascript.options.asmjs", "javascript.options.wasm"],
++      [true,                                        false,                      false                    ],
 +    );
-+    setBoolSyncListeners("librewolf-clipboard-checkbox", ["dom.event.clipboardevents.enabled"], [false]);
-+    setBoolSyncListeners("librewolf-harden-download-checkbox", ["browser.download.useDownloadDir"], [false]);
 +    setBoolSyncListeners("librewolf-web-applications-checkbox", ["javascript.options.asmjs"], [false]);
 +    setBoolSyncListeners("librewolf-wasm-checkbox", ["javascript.options.wasm"], [false]);
 +
@@ -594,6 +591,7 @@ index 0000000..59fe7f1
 +        "",
 +      ]
 +    );
++    /* TODO commented out because lockpref and also unsure what we want to do with it
 +    setSyncListeners(
 +      "librewolf-moz-track-prot-checkbox",
 +      [
@@ -627,16 +625,19 @@ index 0000000..59fe7f1
 +        "",
 +      ]
 +    );
++    */
 +    setSyncListeners("librewolf-language-checkbox", ["extensions.getAddons.langpacks.url"], ["https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%"], [""]);
 +    setSyncListeners("librewolf-language-url", ["extensions.getAddons.langpacks.url"], ["https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%"], [""]);
 +
 +    // Set event listeners on the radio buttons for OCSP
++    /* TODO commented out because not ready yet
 +    syncFromOCSP();
 +    setEventListener("librewolf-OCSP-radiogroup", "command", syncToOCSP);
 +    // Update radio-value when the pref changes
 +    Preferences.get("security.pki.crlite_mode").on("change", syncFromOCSP);
 +    Preferences.get("security.OCSP.enabled").on("change", syncFromOCSP);
 +    Preferences.get("security.OCSP.require").on("change", syncFromOCSP);
++    */
 +
 +    // Set event listener on open profile directory button
 +    setEventListener("librewolf-open-profile-button", "command", openProfileDirectory);
@@ -842,7 +843,7 @@ index aab4a9e..907a631 100644
  #include sync.inc.xhtml
  #include experimental.inc.xhtml
 diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
-index d276f7a..a771412 100644
+index d276f7a..9a3bcd3 100644
 --- a/browser/locales/en-US/browser/preferences/preferences.ftl
 +++ b/browser/locales/en-US/browser/preferences/preferences.ftl
 @@ -1347,3 +1347,152 @@ choose-download-folder-title = Choose Download Folder:
@@ -863,7 +864,7 @@ index d276f7a..a771412 100644
 +librewolf-warning-description = We carefully choose default settings to focus on privacy and security. When changing these settings, read the descriptions to understand the implications of those changes.
 +
 +# Page Layout
-+librewolf-general-heading = General
++librewolf-general-heading = Browser Behavior
 +librewolf-extension-update-checkbox =
 +    .label = Extensions & Themes auto-update
 +librewolf-ipv6-checkbox =
@@ -881,28 +882,28 @@ index d276f7a..a771412 100644
 +librewolf-webgl-checkbox =
 +    .label = Enable WebGL
 +librewolf-conferencing-checkbox =
-+    .label = Video Conferencing
++    .label = Peer Connections
 +librewolf-screensharing-checkbox =
 +    .label = Screensharing
++librewolf-geolocation-checkbox =
++    .label = Geolocation Data
++librewolf-auto-decline-canvas-checkbox =
++    .label = Hide canvas request popups
 +
 +librewolf-drm-checkbox =
 +    .label = Serve DRM-restricted content
 +
-+librewolf-hardened-heading = Hardened Privacy
++librewolf-hardened-heading = Hardened Privacy and Security
 +librewolf-hardened-master-checkbox =
 +    .label = Select all hardening options
 +librewolf-letterboxing-checkbox =
 +    .label = Window Letterboxing
-+librewolf-clipboard-checkbox =
-+    .label = Disable Clipboard Access
 +librewolf-web-applications-checkbox =
 +    .label = Disable asm.js
 +librewolf-wasm-checkbox =
 +    .label = Disable Web Assembly
-+librewolf-harden-download-checkbox =
-+    .label = Prompt before all downloads
 +
-+librewolf-misc-heading = Other Options
++librewolf-misc-heading = Miscellaneous Options
 +librewolf-goog-safe-checkbox =
 +    .label = Enable Google Safe Browsing
 +librewolf-goog-safe-download-checkbox =
@@ -911,8 +912,6 @@ index d276f7a..a771412 100644
 +    .label = Enable Mozilla Tracking Protection
 +librewolf-moz-track-prot-private-checkbox =
 +    .label = Mozilla Tracking Protection in private windows
-+librewolf-rfp-light-checkbox =
-+    .label = Do not pretend to use a light theme to resist fingerprinting
 +librewolf-language-checkbox =
 +    .label = Allow installation of other language packs
 +librewolf-OCSP-checkbox =
@@ -946,16 +945,21 @@ index d276f7a..a771412 100644
 +
 +librewolf-screensharing-description = Allow websites to share your screen
 +librewolf-screensharing-warning1 = Be mindful of which websites you allow to view your screen as that information can be used in ways you may not approve
-+librewolf-screensharing-warning2 = You will likely have to enable canvas access (left in the URL bar) after granting permission to screenshare
++librewolf-screensharing-warning2 = You will likely have to enable canvas access after granting permission to screenshare
++
++librewolf-geolocation-description = TODO Enabling this allows websites to access your physical location if they request it
++librewolf-geolocation-warning1 = TODO This may significantly reduce your privacy and give websites information you don't want them to know
++
++librewolf-auto-decline-canvas-description = Remove "Allow X to use your HTML5 canvas image data" popups. Instead, automatically block them.
++librewolf-auto-decline-canvas-warning1 = There is no reason not to select this, it just will require you to click the icon in the URL bar if you want to enable canvas.
++librewolf-auto-decline-canvas-warning2 = Enabling canvas should always be done with caution, as websites can very easily fingerprint your computer via the way it draws a canvas.
 +
 +librewolf-drm-description = Allow your browser to work against you :(
 +librewolf-drm-warning1 = Digital Rights Management does not protect your own digital rights, and it limits the freedom for everyone to share information
 +
 +librewolf-letterboxing-description = Letterboxing dynamically resizes the inner window by applying margins in stepped ranges, creating a fixed resolution
-+librewolf-clipboard-description = Prevent websites from accessing clipboard events and content, which will break copy/paste functionality on some websites
 +librewolf-web-applications-description = asm.js is an older specification, which allows JavaScript to software written in languages like C, C++ etc. It is deprecated in favor of WebAssembly. This preference disables it to improve security.
 +librewolf-wasm-description = WebAssembly has powerful low-level access, making certain attacks (brute-force, crytopmining, malware) and security exploits more possible. This preference disables it.
-+librewolf-harden-download-description = Force { -brand-short-name } to always prompt before downloading files
 +
 +librewolf-goog-safe-description = Enable Google Safe Browsing
 +librewolf-goog-safe-warning1 = Turning this preference on may give corporations the power to censor the internet or control what content you view
@@ -967,9 +971,6 @@ index d276f7a..a771412 100644
 +librewolf-moz-track-prot-description = Enable Mozilla Tracking Protection
 +librewolf-moz-track-prot-warning1 = uBlock Origin already provides most of the useful functionality that turning this on will provide
 +librewolf-moz-track-prot-private-description = Run Mozilla Tracking Protection in private windows
-+
-+librewolf-rfp-light-description = Normally, resistFingerprinting lies to always report using a light theme. This preference causes the user agent to accurately report whether a light or dark theme is being used by { -brand-short-name }
-+librewolf-rfp-light-warning1 = RFP has crafted a distinct (unusual) set of values to protect you, if you change one thing, you are now that unsual set with an extra very unusual change. This is probably a bad idea
 +
 +librewolf-language-description = Enable installation of other language packs from Mozilla
 +librewolf-language-warning1 = ResistFingerprinting is used by many en_US users, but not many other users. Changing your language pack will most likely result in a unique fingerprint.
