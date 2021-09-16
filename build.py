@@ -268,12 +268,15 @@ def execute_lw_do_patches():
         if options.src == 'release':
                 # production patches
                 patches = [
+                    "../common/patches/about-dialog.patch",
+                    "../common/patches/allow_dark_preference_with_rfp.patch",
+#                    "../common/patches/browser-confvars.patch",
                     "../common/patches/context-menu.patch",
-                    "../common/patches/remove_addons.patch",
                     "../common/patches/megabar.patch",
                     "../common/patches/mozilla-vpn-ad.patch",
-                    "../common/patches/allow_dark_preference_with_rfp.patch",
-                    "../common/patches/about-dialog.patch",
+                    "../common/patches/mozilla_dirs.patch",
+                    "../common/patches/remove_addons.patch",
+                    "../common/patches/search-config.patch",
                     
                     # sed patches..
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
@@ -285,18 +288,21 @@ def execute_lw_do_patches():
         elif options.src == 'nightly' or options.src == 'gecko-dev':
                 # patches for future releases are caught with nightly
                 patches = [
-                    "../common/patches/context-menu.patch",
-                    "../patches/remove_addons-91.0a1-nightly.patch",                        
-                    ##"../common/patches/megabar.patch",
-                    "../patches/vpn-patch-91.0a1-nightly.patch",
-                    "../common/patches/allow_dark_preference_with_rfp.patch",
                     "../common/patches/about-dialog.patch",
-                
+                    "../common/patches/allow_dark_preference_with_rfp.patch",
+#                    "../common/patches/browser-confvars.patch",
+                    "../common/patches/context-menu.patch",
+                    "../common/patches/megabar.patch",
+                    "../common/patches/mozilla-vpn-ad.patch",
+                    "../common/patches/mozilla_dirs.patch",
+                    "../common/patches/remove_addons.patch",
+                    "../common/patches/search-config.patch",
+                    
                     # sed patches..
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
                     "../common/patches/sed-patches/disable-pocket.patch",
                     "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
-                    ##"../common/patches/sed-patches/stop-undesired-requests.patch",
+                    "../common/patches/sed-patches/stop-undesired-requests.patch",
                 ]
 
                 
