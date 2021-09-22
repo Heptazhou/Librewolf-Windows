@@ -680,12 +680,17 @@ ac_add_options --enable-application=browser
 
 # This supposedly speeds up compilation (We test through dogfooding anyway)
 ac_add_options --disable-tests
-ac_add_options --disable-debug
-
 ac_add_options --enable-release
 ac_add_options --enable-hardening
+
+ac_add_options --disable-debug
+#ac_add_options --enable-debug
+
 ac_add_options --enable-rust-simd
+#ac_add_options --disable-rust-simd
+
 ac_add_options --enable-optimize
+#ac_add_options --disable-optimize
 
 
 # Branding
