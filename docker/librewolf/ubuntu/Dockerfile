@@ -1,6 +1,8 @@
 FROM ubuntu
 MAINTAINER Bert van der Weerd <bert@stanzabird.nl>
 RUN apt-get -y update && apt-get -y upgrade
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Amsterdam
 
 # Install build dependencies..
 run apt-get -y install wget python3 python3-pip python3-dev mercurial
