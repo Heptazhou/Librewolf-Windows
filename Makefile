@@ -33,7 +33,9 @@ git_init :
 reset :
 	$(BUILD) reset
 
-
-
-
-
+# Building docker files..
+.phony : docker-all docker-clean
+docker-all :
+	make -C docker all
+docker-clean :
+	make -C docker clean
