@@ -270,13 +270,11 @@ def execute_lw_do_patches():
                 patches = [
                     "../common/patches/about-dialog.patch",
                     "../common/patches/allow_dark_preference_with_rfp.patch",
-#                    "../common/patches/browser-confvars.patch",
                     "../common/patches/context-menu.patch",
                     "../common/patches/megabar.patch",
                     "../common/patches/mozilla-vpn-ad.patch",
-                    "../common/patches/mozilla_dirs.patch",
                     "../common/patches/remove_addons.patch",
-#                    "../common/patches/search-config.patch",
+                    "../common/patches/search-config.patch",
                     
                     # sed patches..
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
@@ -293,10 +291,10 @@ def execute_lw_do_patches():
 #                    "../common/patches/browser-confvars.patch",
                     "../common/patches/context-menu.patch",
                     "../common/patches/megabar.patch",
-                    "../common/patches/mozilla-vpn-ad.patch",
-                    "../common/patches/mozilla_dirs.patch",
+##                    "../common/patches/mozilla-vpn-ad.patch",
+#                    "../common/patches/mozilla_dirs.patch",
                     "../common/patches/remove_addons.patch",
-                    "../common/patches/search-config.patch",
+#                    "../common/patches/search-config.patch",
                     
                     # sed patches..
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
