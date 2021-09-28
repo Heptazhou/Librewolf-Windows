@@ -1,3 +1,0 @@
-all :
-#	sudo docker build -t stanzabird/apiserver .
-	sudo docker build -t mozilla/build-nightly-bootstrap .

@@ -1,4 +1,4 @@
-FROM debian
+FROM linuxmintd/mint20.2-amd64
 MAINTAINER Bert van der Weerd <bert@stanzabird.nl>
 RUN apt-get -y update && apt-get -y upgrade
 # Install build dependencies..
