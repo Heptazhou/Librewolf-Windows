@@ -1,9 +1,13 @@
 FROM ubuntu
 MAINTAINER Bert van der Weerd <bert@stanzabird.nl>
 RUN apt-get -y update && apt-get -y upgrade
+
 # Install build dependencies..
-run apt-get -y install wget python3 python3-dev mercurial
+run apt-get -y install wget python3 python3-pip python3-dev mercurial
+
 # Build mozilla nightly..
 run wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py
-run echo '***' python3 bootstrap.py --no-interactive --application-choice=browser
+run python3 bootstrap.py --no-interactive --application-choice=browser
 
+# Build it..
+copy version /
