@@ -1,2 +1,2 @@
 all :
-	sudo docker build -t mozilla/nightly-ubuntu .
+	sudo docker build -t librewolf/release-ubuntu .

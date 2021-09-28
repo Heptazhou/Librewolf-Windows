@@ -1,0 +1,8 @@
+RUN dnf -y install g++ gcc make automake autoconf libtool libcurl-devel
+COPY apiserver-0.1.1.tar.gz /
+WORKDIR /
+RUN tar xvf apiserver-0.1.1.tar.gz
+WORKDIR apiserver-0.1.1
+RUN zsh ./configure --prefix=/usr --disable-dependency-tracking
+RUN ["make", "install"]
+RUN ["make", "dist"]

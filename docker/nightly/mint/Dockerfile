@@ -10,5 +10,5 @@ run wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozbo
 run python3 bootstrap.py --no-interactive --application-choice=browser
 
 # Build it..
-copy version /
+
 
