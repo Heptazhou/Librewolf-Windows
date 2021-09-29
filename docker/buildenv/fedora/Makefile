@@ -1,2 +1,2 @@
 all :
-	sudo docker build --no-cache --rm -t mozilla/buildenv-fedora .
+	sudo docker build -t mozilla/buildenv-fedora .

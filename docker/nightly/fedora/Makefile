@@ -1,2 +1,2 @@
 all :
-	sudo docker build --no-cache --rm -t mozilla/nightly-fedora .
+	sudo docker build -t mozilla/nightly-fedora .
