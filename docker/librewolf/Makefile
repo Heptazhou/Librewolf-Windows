@@ -8,6 +8,5 @@ all :
 	make -C mint
 
 
-
 clean :
 	rm -f version debian/version fedora/version ubuntu/version mint/version
