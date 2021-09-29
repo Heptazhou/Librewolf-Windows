@@ -26,6 +26,7 @@ parser.add_option('-t', '--distro',           dest='distro',        default='aut
 parser.add_option('-T', '--token',            dest='token',         default='')
 parser.add_option('-3', '--i386',             dest='i386',          default=False, action="store_true")
 parser.add_option('-P', '--no-settings-pane', dest='settings_pane', default=True, action="store_false")
+parser.add_option('-v', '--version',          dest='version',       action="store", type="string")
 
 options, remainder = parser.parse_args()
 
@@ -41,8 +42,14 @@ if options.distro == 'autodetect':
 
 
 
+if options.version != None:
+    print('[debug] options.version = ')
+    print(options.version)
+    if options.src != 'release':
+        print('error: cant use --version and --src at the same time')
+        sys.exit(1)
 
-
+    pkgver=options.version
 
 
                 

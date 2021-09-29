@@ -1,2 +1,2 @@
 all :
-	sudo docker build -t mozilla/release-debian .
+	sudo docker build -t librewolf/release-debian .

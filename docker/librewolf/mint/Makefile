@@ -1,2 +1,2 @@
 all :
-	sudo docker build -t mozilla/release-mint .
+	sudo docker build -t librewolf/release-mint .

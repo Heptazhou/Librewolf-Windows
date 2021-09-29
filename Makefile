@@ -2,10 +2,12 @@
 
 BUILD=python3 build.py ${OPTS}
 
+
 all :
 	$(BUILD) all
 clean :
 	$(BUILD) clean
+
 veryclean :
 	$(BUILD) veryclean
 
@@ -32,6 +34,8 @@ git_init :
 	$(BUILD) git_init
 reset :
 	$(BUILD) reset
+
+
 
 # Building docker files..
 .phony : docker-all docker-clean
