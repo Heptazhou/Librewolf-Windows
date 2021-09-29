@@ -7,6 +7,7 @@ all :
 	$(BUILD) all
 clean :
 	$(BUILD) clean
+	make -C docker clean
 
 veryclean :
 	$(BUILD) veryclean
