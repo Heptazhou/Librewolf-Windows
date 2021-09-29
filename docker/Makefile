@@ -1,23 +1,31 @@
-all :
-	cp version release && cp version librewolf && cp version fetched-image
-
-	make -C buildenv
-	make -C fetched-image
-	make -C librewolf
+all : lw
+# for working with the original mozilla source:
+# all : mozilla
 
 clean :
-	rm -f librewolf/version release/version fetched-image/version
+	rm -f librewolf/version release/version
 
 	make -C librewolf clean
 	make -C release clean
 
+lw :
+	cp version librewolf
+
+	make -C buildenv
+	make -C librewolf
+
+mozilla :
+	cp version release
+
+	make -C buildenv
+	make -C nightly
+	make -C release
+
 prune :
 	sudo docker system prune --all --force
 
-mozilla :
-	cp version release && cp version librewolf && cp version fetched-image
+full : prune lw mozilla
 
-	make -C buildenv
-	make -C fetched-image
-	make -C nightly
-	make -C release
+help :
+	@echo "Use: make all help clean lw prune mozilla full"
+

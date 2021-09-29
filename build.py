@@ -84,6 +84,7 @@ def leave_srcdir():
         
 def exec(cmd):
     if cmd != '':
+        cmd = 'bash -c "{}"'.format(cmd)
         print(cmd)
         if not options.no_execute:
                 retval = os.system(cmd)
