@@ -3,7 +3,6 @@ all :
 
 	make -C buildenv
 	make -C fetched-image
-	make -C built-image
 	make -C librewolf
 
 clean :
