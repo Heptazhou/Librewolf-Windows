@@ -84,7 +84,6 @@ def leave_srcdir():
         
 def exec(cmd):
     if cmd != '':
-        cmd = 'bash -c "{}"'.format(cmd)
         print(cmd)
         if not options.no_execute:
                 retval = os.system(cmd)
@@ -268,7 +267,7 @@ def execute_lw_do_patches():
 
         
         # copy branding files..
-        exec("cp -vr ../common/source_files/* .")
+        exec("cp -vr ../common/source_files/browser .")
         exec("cp -v ../files/configure.sh browser/branding/librewolf")
 
         patches = []
