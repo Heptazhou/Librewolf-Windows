@@ -1,3 +1,7 @@
+help :
+	@echo "Use: make all clean lw prune mozilla full"
+	@echo "     make debian fedora mint ubuntu"
+
 all : lw
 # for working with the original mozilla source:
 # all : mozilla
@@ -26,6 +30,18 @@ prune :
 
 full : prune lw mozilla
 
-help :
-	@echo "Use: make all help clean lw prune mozilla full"
+
+
+debian :
+	make -C buildenv/debian
+	make -C librewolf/debian
+fedora :
+	mace -C buildenv/fedora
+	make -C librewolf/fedora
+mint :
+	mace -C buildenv/mint
+	make -C librewolf/mint
+ubuntu :
+	mace -C buildenv/ubuntu
+	make -C librewolf/ubuntu
 

@@ -43,8 +43,6 @@ if options.distro == 'autodetect':
 
 
 if options.version != None:
-    print('[debug] options.version = ')
-    print(options.version)
     if options.src != 'release':
         print('error: cant use --version and --src at the same time')
         sys.exit(1)
@@ -267,6 +265,8 @@ def execute_lw_do_patches():
 
         
         # copy branding files..
+
+        exec('echo +++ && pwd && ls ../common')
         exec("cp -vr ../common/source_files/browser .")
         exec("cp -v ../files/configure.sh browser/branding/librewolf")
 
