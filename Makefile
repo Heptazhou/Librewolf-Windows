@@ -39,8 +39,10 @@ reset :
 
 
 # Building docker files..
-.phony : docker-all docker-clean
+.phony : docker docker-all docker-clean
+docker : docker-all
 docker-all :
 	make -C docker all
 docker-clean :
 	make -C docker clean
+
