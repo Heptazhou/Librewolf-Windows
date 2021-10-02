@@ -47,3 +47,15 @@ ubuntu :
 	cp version librewolf/ubuntu
 	make -C librewolf/ubuntu
 
+low_disk :
+	cp version librewolf
+
+	make prune
+	make debian
+	make prune
+	make fedora
+	make prune
+	make mint
+	make prunt
+	make ubuntu
+	make prune
