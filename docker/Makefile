@@ -1,10 +1,8 @@
+all : lw
+
 help :
 	@echo "Use: make all clean lw prune mozilla full"
 	@echo "     make debian fedora mint ubuntu"
-
-all : lw
-# for working with the original mozilla source:
-# all : mozilla
 
 clean :
 	rm -f librewolf/version release/version
@@ -28,20 +26,24 @@ mozilla :
 prune :
 	sudo docker system prune --all --force
 
-full : prune lw mozilla
+madman : prune lw mozilla
 
 
 
 debian :
 	make -C buildenv/debian
+	cp version librewolf/debian
 	make -C librewolf/debian
 fedora :
-	mace -C buildenv/fedora
+	make -C buildenv/fedora
+	cp version librewolf/fedora
 	make -C librewolf/fedora
 mint :
-	mace -C buildenv/mint
+	make -C buildenv/mint
+	cp version librewolf/mint
 	make -C librewolf/mint
 ubuntu :
-	mace -C buildenv/ubuntu
+	make -C buildenv/ubuntu
+	cp version librewolf/ubuntu
 	make -C librewolf/ubuntu
 
