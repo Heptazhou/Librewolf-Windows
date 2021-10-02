@@ -10,10 +10,14 @@ no-cache :
 	sudo docker build --no-cache -t librewolf/$(docker_stage) .
 	make get_zip
 
-get_zip : artifacts/librewolf-92.0.1.en-US.deb.zip
+get_zip : artifacts/librewolf-92.0.1.en-US.ubuntu.zip
 
-artifacts/librewolf-92.0.1.en-US.deb.zip : 
+
+
+artifacts/librewolf-92.0.1.en-US.ubuntu.zip : 
 	sudo docker create --name extract3 librewolf/$(docker_stage)
 	sudo rm -rf artifacts
 	sudo docker cp extract3:/artifacts .
 	sudo docker rm extract3
+	sudo mv -v artifacts/librewolf-92.0.1.en-US.deb.zip artifacts/librewolf-92.0.1.en-US.ubuntu.zip 
+	sudo chown user:user artifacts/librewolf-92.0.1.en-US.ubuntu.zip 
