@@ -1,4 +1,8 @@
-docker_stage = deb-ubuntu
+distro = ubuntu
+extractor = extract4
+docker_stage = deb-$(distro)
+version = `cat ../version`
+
 
 all : cache
 
@@ -10,14 +14,12 @@ no-cache :
 	sudo docker build --no-cache -t librewolf/$(docker_stage) .
 	make get_zip
 
-get_zip : artifacts/librewolf-92.0.1.en-US.ubuntu.zip
+get_zip : artifacts/librewolf-$(version).en-US.$(distro).zip
 
-
-
-artifacts/librewolf-92.0.1.en-US.ubuntu.zip : 
-	sudo docker create --name extract3 librewolf/$(docker_stage)
+artifacts/librewolf-$(version).en-US.$(distro).zip : 
+	sudo docker create --name $(extractor) librewolf/$(docker_stage)
 	sudo rm -rf artifacts
-	sudo docker cp extract3:/artifacts .
-	sudo docker rm extract3
-	sudo mv -v artifacts/librewolf-92.0.1.en-US.deb.zip artifacts/librewolf-92.0.1.en-US.ubuntu.zip 
-	sudo chown user:user artifacts/librewolf-92.0.1.en-US.ubuntu.zip 
+	sudo docker cp $(extractor):/artifacts .
+	sudo docker rm $(extractor)
+	sudo mv -v artifacts/librewolf-$(version).en-US.deb.zip artifacts/librewolf-$(version).en-US.$(distro).zip 
+	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).zip 

@@ -1,4 +1,8 @@
-docker_stage = rpm-fedora
+distro = fedora
+extractor = extract1
+docker_stage = rpm-$(distro)
+version = `cat ../version`
+
 
 all : cache
 
@@ -10,16 +14,12 @@ no-cache :
 	sudo docker build --no-cache -t librewolf/$(docker_stage) .
 	make get_zip
 
-no-cache :
-	sudo docker build --no-cache -t librewolf/$(docker_stage) .
-	make get_zip
+get_zip : artifacts/librewolf-$(version).en-US.$(distro).zip
 
-get_zip : artifacts/librewolf-92.0.1.en-US.fedora.zip
-
-artifacts/librewolf-92.0.1.en-US.fedora.zip : 
-	sudo docker create --name extract1 librewolf/$(docker_stage)
+artifacts/librewolf-$(version).en-US.$(distro).zip : 
+	sudo docker create --name $(extractor) librewolf/$(docker_stage)
 	sudo rm -rf artifacts
-	sudo docker cp extract1:/artifacts .
-	sudo docker rm extract1
-	sudo mv -v artifacts/librewolf-92.0.1.en-US.deb.zip artifacts/librewolf-92.0.1.en-US.fedora.zip 
-	sudo chown user:user artifacts/librewolf-92.0.1.en-US.fedora.zip 
+	sudo docker cp $(extractor):/artifacts .
+	sudo docker rm $(extractor)
+	sudo mv -v artifacts/librewolf-$(version).en-US.deb.zip artifacts/librewolf-$(version).en-US.$(distro).zip 
+	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).zip 

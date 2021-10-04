@@ -1,3 +1,5 @@
+# This is Debian 11, codenamed bullseye.
+
 FROM debian
 MAINTAINER Bert van der Weerd <bert@stanzabird.nl>
 ENV DEBIAN_FRONTEND=noninteractive
