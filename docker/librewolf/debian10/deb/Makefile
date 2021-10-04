@@ -1,5 +1,5 @@
-distro = ubuntu
-extractor = extract4
+distro = debian10
+extractor = extract5
 docker_stage = deb-$(distro)
 version = `cat ../version`
 
@@ -13,7 +13,6 @@ cache :
 no-cache :
 	sudo docker build --no-cache -t librewolf/$(docker_stage) .
 	make get_zip
-
 
 get_zip : build_tag
 

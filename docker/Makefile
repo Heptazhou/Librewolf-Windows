@@ -30,6 +30,10 @@ madman : prune lw mozilla
 
 
 
+debian10 :
+	make -C buildenv/debian10
+	cp version librewolf/debian10
+	make -C librewolf/debian10
 debian11 :
 	make -C buildenv/debian11
 	cp version librewolf/debian11
@@ -51,7 +55,9 @@ low_disk :
 	cp version librewolf
 
 	make prune
-	make debian
+	make debian10
+	make prune
+	make debian11
 	make prune
 	make fedora
 	make prune
