@@ -1,4 +1,4 @@
-distro = ubuntu
+distro = ubuntu20
 extractor = extract4
 docker_stage = deb-$(distro)
 version = `cat ../version`

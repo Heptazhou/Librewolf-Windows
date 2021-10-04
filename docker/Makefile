@@ -42,10 +42,10 @@ fedora :
 	make -C buildenv/fedora
 	cp version librewolf/fedora
 	make -C librewolf/fedora
-mint :
-	make -C buildenv/mint
-	cp version librewolf/mint
-	make -C librewolf/mint
+mint20 :
+	make -C buildenv/mint20
+	cp version librewolf/mint20
+	make -C librewolf/mint20
 ubuntu :
 	make -C buildenv/ubuntu
 	cp version librewolf/ubuntu
@@ -61,7 +61,7 @@ low_disk :
 	make prune
 	make fedora
 	make prune
-	make mint
+	make mint20
 	make prunt
 	make ubuntu
 	make prune

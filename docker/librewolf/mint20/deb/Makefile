@@ -1,4 +1,4 @@
-distro = mint
+distro = mint20
 extractor = extract7
 docker_stage = deb-$(distro)
 version = `cat ../version`

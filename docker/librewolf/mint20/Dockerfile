@@ -1,4 +1,4 @@
-from mozilla/buildenv-ubuntu
+from mozilla/buildenv-mint20
 run rm -rf mozilla-unified
 
 # Build it..

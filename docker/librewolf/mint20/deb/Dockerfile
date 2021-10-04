@@ -1,4 +1,4 @@
-from librewolf/release-ubuntu
+from librewolf/release-mint20
 run ./build.py --version $(cat /version) lw_artifacts
 run mkdir /artifacts
 run cp librewolf-$(cat /version).en-US.deb.zip /artifacts
