@@ -12,7 +12,7 @@
 /__pycache__
 /sha256sums.txt
 /upload.txt
-/docker/librewolf/debian/deb/artifacts
+/docker/librewolf/debian11/deb/artifacts
 /docker/librewolf/fedora/rpm/artifacts
 /docker/librewolf/mint/deb/artifacts
 /docker/librewolf/ubuntu/deb/artifacts

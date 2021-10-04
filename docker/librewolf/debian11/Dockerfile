@@ -1,4 +1,4 @@
-from mozilla/buildenv-debian
+from mozilla/buildenv-debian11
 run rm -rf mozilla-unified
 
 # Build it..

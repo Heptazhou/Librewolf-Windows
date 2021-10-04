@@ -1,4 +1,4 @@
-from librewolf/release-debian
+from librewolf/release-debian11
 run ./build.py --version $(cat /version) lw_artifacts
 run mkdir /artifacts
 run cp librewolf-$(cat /version).en-US.deb.zip /artifacts
