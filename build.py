@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-pkgver = '92.0.1'
-nightly_ver = '94.0a1'
+pkgver = '93.0'
+nightly_ver = '95.0a1'
 
 #
 # build.py - try move functionality away from that too big/horrible build script.
