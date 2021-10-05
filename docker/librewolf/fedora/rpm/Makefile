@@ -1,10 +1,13 @@
 distro = fedora
 extractor = extract1
 docker_stage = rpm-$(distro)
-version = `cat ../version`
+version = `cat version`
 
 
 all : cache
+
+clean :
+	sudo rm -f build_tag artifacts/build_tag
 
 cache :
 	sudo docker build -t librewolf/$(docker_stage) .
@@ -13,6 +16,8 @@ cache :
 no-cache :
 	sudo docker build --no-cache -t librewolf/$(docker_stage) .
 	make get_zip
+
+dist : clean get_zip
 
 get_zip : build_tag
 
@@ -24,9 +29,9 @@ artifacts/build_tag :
 	sudo rm -rf artifacts
 	sudo docker cp $(extractor):/artifacts .
 	sudo docker rm $(extractor)
-	sudo mv -v artifacts/librewolf-$(version).en-US.deb.zip artifacts/librewolf-$(version).en-US.$(distro).zip 
-#	sudo mv -v artifacts/librewolf.deb artifacts/librewolf-$(version).en-US.$(distro).deb 
+	sudo mv -v artifacts/librewolf-$(version).en-US.rpm.zip artifacts/librewolf-$(version).en-US.$(distro).zip 
+	sudo mv -v artifacts/librewolf-$(version)-1.x86_64.fc34.rpm artifacts/librewolf-$(version).en-US.$(distro).rpm 
 	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).zip 
-#	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).deb
-#	scp artifacts/*.deb vps:pub/pub/librewolf
+	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).rpm
+	scp artifacts/*.rpm vps:pub/pub/librewolf
 
