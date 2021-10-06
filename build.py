@@ -712,6 +712,7 @@ export MOZ_REQUIRE_SIGNING=
 # Features
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
+ac_add_options --disable-default-browser-agent
 
 # Disables crash reporting, telemetry and other data gathering tools
 mk_add_options MOZ_CRASHREPORTER=0
