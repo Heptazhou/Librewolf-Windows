@@ -46,10 +46,10 @@ mint20 :
 	make -C buildenv/mint20
 	cp version librewolf/mint20
 	make -C librewolf/mint20
-ubuntu :
-	make -C buildenv/ubuntu
-	cp version librewolf/ubuntu
-	make -C librewolf/ubuntu
+ubuntu20 :
+	make -C buildenv/ubuntu20
+	cp version librewolf/ubuntu20
+	make -C librewolf/ubuntu20
 
 low_disk :
 	cp version librewolf
@@ -63,5 +63,5 @@ low_disk :
 	make prune
 	make mint20
 	make prunt
-	make ubuntu
+	make ubuntu20
 	make prune

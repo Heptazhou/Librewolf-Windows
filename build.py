@@ -397,8 +397,8 @@ def execute_lw_artifacts():
         if options.distro != 'osx':
             if options.distro == 'win':            
                 exec("mv -v {}/firefox{} {}/librewolf{}".format(librewolfdir,exe,librewolfdir,exe));
-            exec("rm -rf {}/maintainanceservice* {}/pingsender* {}/firefox.*.xml {}/precomplete {}/removed-files {}/uninstall"
-                 .format(librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir))
+            exec("rm -rf {}/default-browser-agent* {}/maintainanceservice* {}/pingsender* {}/firefox.*.xml {}/precomplete {}/removed-files {}/uninstall"
+                 .format(librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir,librewolfdir))
             exec("cp -v common/source_files/browser/branding/librewolf/firefox.ico {}/librewolf.ico".format(librewolfdir))
             if options.distro != 'win':
                 exec("cp -v files/register-librewolf files/start-librewolf files/start-librewolf.desktop.in librewolf")

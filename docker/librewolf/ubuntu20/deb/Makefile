@@ -14,6 +14,9 @@ no-cache :
 	sudo docker build --no-cache -t librewolf/$(docker_stage) .
 	make get_zip
 
+clean :
+	sudo rm -f build_tag artifacts/build_tag
+
 
 get_zip : build_tag
 

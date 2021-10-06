@@ -19,6 +19,11 @@ all :
 clean :
 	rm -f version debian10/version debian11/version fedora/version ubuntu20/version mint20/version arch/version macos/version windows/version portable-linux/version
 	make -C portable-linux clean
+	make -C debian10 clean
+	make -C debian11 clean
+	make -C fedora clean
+	make -C mint20 clean
+	make -C ubuntu20 clean
 
 build.debian10 :
 	make -C debian10

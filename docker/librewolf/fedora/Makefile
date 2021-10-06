@@ -6,3 +6,5 @@ no-cache :
 	sudo docker build --no-cache -t librewolf/release-fedora .
 	make -C rpm no-cache
 
+clean :
+	make -C rpm clean
