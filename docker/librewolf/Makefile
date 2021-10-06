@@ -2,6 +2,7 @@
 
 all :
 
+	cp ../version .
 	cp version debian10/version && cp version debian11/version && cp version fedora/version && cp version ubuntu20/version && cp version mint20/version && cp version arch && cp version macos && cp version windows && cp version portable-linux
 
 	make -C arch

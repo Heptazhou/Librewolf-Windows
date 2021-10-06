@@ -1,5 +1,5 @@
 distro = debian11
-extractor = extract5
+extractor = extract11
 docker_stage = deb-$(distro)
 version = `cat ../version`
 

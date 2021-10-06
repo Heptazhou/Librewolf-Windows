@@ -6,7 +6,7 @@ run cp librewolf-$(cat /version).en-US.rpm.zip /artifacts
 
 run sudo dnf -y install rpm-build
 
-workdir /root
+workdir /
 copy build-rpm.sh .
 copy librewolf.spec .
 run ./build-rpm.sh

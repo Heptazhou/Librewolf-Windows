@@ -64,3 +64,5 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/start-librewolf
 /usr/share/librewolf/start-librewolf.desktop.in
 /usr/bin/librewolf
+/usr/share/applications/librewolf.desktop
+/usr/share/icons/librewolf.png

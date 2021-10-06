@@ -30,8 +30,7 @@ artifacts/build_tag :
 	sudo docker cp $(extractor):/artifacts .
 	sudo docker rm $(extractor)
 	sudo mv -v artifacts/librewolf-$(version).en-US.rpm.zip artifacts/librewolf-$(version).en-US.$(distro).zip 
-	sudo mv -v artifacts/librewolf-$(version)-1.x86_64.fc34.rpm artifacts/librewolf-$(version).en-US.$(distro).rpm 
 	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).zip 
-	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).rpm
+	sudo chown user:user artifacts/librewolf-$(version)-1.fc34.x86_64.rpm
 	scp artifacts/*.rpm vps:pub/pub/librewolf
 
