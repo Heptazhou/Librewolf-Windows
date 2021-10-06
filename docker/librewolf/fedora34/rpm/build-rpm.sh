@@ -57,5 +57,7 @@ echo '---'
 echo "[debug] Running rpmbuild.."
 echo '---'
 
-rpmbuild -v -bb $(pwd)/rpmbuild/SPECS/librewolf.spec
+rpmbuild -v -ba $(pwd)/rpmbuild/SPECS/librewolf.spec
+echo '--- [debug] Copying output files to /artifacts'
 cp -v ~/rpmbuild/RPMS/x86_64/librewolf-*.rpm /artifacts
+cp -v ~/rpmbuild/SRPMS/librewolf-*.rpm /artifacts

@@ -1,4 +1,4 @@
-from mozilla/buildenv-fedora
+from mozilla/buildenv-fedora34
 run rm -rf mozilla-unified
 
 # Build it..

@@ -2,7 +2,7 @@ all : lw
 
 help :
 	@echo "Use: make all clean lw prune mozilla full"
-	@echo "     make debian fedora mint ubuntu"
+	@echo "     make debian10 debian11 fedora34 mint20 ubuntu20"
 
 clean :
 	rm -f librewolf/version release/version
@@ -38,10 +38,10 @@ debian11 :
 	make -C buildenv/debian11
 	cp version librewolf/debian11
 	make -C librewolf/debian11
-fedora :
-	make -C buildenv/fedora
-	cp version librewolf/fedora
-	make -C librewolf/fedora
+fedora34 :
+	make -C buildenv/fedora34
+	cp version librewolf/fedora34
+	make -C librewolf/fedora34
 mint20 :
 	make -C buildenv/mint20
 	cp version librewolf/mint20
@@ -59,7 +59,7 @@ low_disk :
 	make prune
 	make debian11
 	make prune
-	make fedora
+	make fedora34
 	make prune
 	make mint20
 	make prunt

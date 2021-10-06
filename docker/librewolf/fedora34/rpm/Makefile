@@ -1,7 +1,7 @@
-distro = fedora
-extractor = extract1
+distro = fedora34
+extractor = extract12
 docker_stage = rpm-$(distro)
-version = `cat version`
+version = `cat ../version`
 
 
 all : cache
@@ -31,6 +31,6 @@ artifacts/build_tag :
 	sudo docker rm $(extractor)
 	sudo mv -v artifacts/librewolf-$(version).en-US.rpm.zip artifacts/librewolf-$(version).en-US.$(distro).zip 
 	sudo chown user:user artifacts/librewolf-$(version).en-US.$(distro).zip 
-	sudo chown user:user artifacts/librewolf-$(version)-1.fc34.x86_64.rpm
-	scp artifacts/*.rpm vps:pub/pub/librewolf
+	sudo chown user:user artifacts/librewolf-$(version)*.rpm
+	scp artifacts/librewolf-$(version)*.rpm vps:pub/pub/librewolf
 

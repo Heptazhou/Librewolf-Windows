@@ -1,4 +1,4 @@
-from librewolf/release-fedora
+from librewolf/release-fedora34
 
 run ./build.py --version $(cat /version) lw_artifacts
 run mkdir /artifacts

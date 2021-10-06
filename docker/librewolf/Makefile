@@ -3,7 +3,7 @@
 all :
 
 	cp ../version .
-	cp version debian10/version && cp version debian11/version && cp version fedora/version && cp version ubuntu20/version && cp version mint20/version && cp version arch && cp version macos && cp version windows && cp version portable-linux
+	cp version debian10/version && cp version debian11/version && cp version fedora34/version && cp version ubuntu20/version && cp version mint20/version && cp version arch && cp version macos && cp version windows && cp version portable-linux
 
 	make -C arch
 	make -C macos
@@ -12,17 +12,17 @@ all :
 
 	make -C debian10
 	make -C debian11
-	make -C fedora
+	make -C fedora34
 	make -C mint20
 	make -C ubuntu20
 
 
 clean :
-	rm -f version debian10/version debian11/version fedora/version ubuntu20/version mint20/version arch/version macos/version windows/version portable-linux/version
+	rm -f version debian10/version debian11/version fedora34/version ubuntu20/version mint20/version arch/version macos/version windows/version portable-linux/version
 	make -C portable-linux clean
 	make -C debian10 clean
 	make -C debian11 clean
-	make -C fedora clean
+	make -C fedora34 clean
 	make -C mint20 clean
 	make -C ubuntu20 clean
 
@@ -30,8 +30,8 @@ build.debian10 :
 	make -C debian10
 build.debian11 :
 	make -C debian11
-build.fedora :
-	make -C fedora
+build.fedora34 :
+	make -C fedora34
 build.mint20 :
 	make -C mint20
 build.ubuntu :
