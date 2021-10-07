@@ -1,4 +1,4 @@
-FROM fedora
+FROM fedora:34
 MAINTAINER Bert van der Weerd <bert@stanzabird.nl>
 RUN dnf -y update
 

@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:20.04
 MAINTAINER Bert van der Weerd <bert@stanzabird.nl>
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Amsterdam
