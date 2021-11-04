@@ -303,21 +303,29 @@ def execute_lw_do_patches():
         elif options.src == 'nightly' or options.src == 'gecko-dev':
                 # patches for future releases are caught with nightly
                 patches = [
+                    
                     "../common/patches/about-dialog.patch",
+                    "../common/patches/allow-ubo-private-mode.patch",
                     "../common/patches/allow_dark_preference_with_rfp.patch",
-#                    "../common/patches/browser-confvars.patch",
                     "../common/patches/context-menu.patch",
                     "../common/patches/megabar.patch",
-##                    "../common/patches/mozilla-vpn-ad.patch",
-#                    "../common/patches/mozilla_dirs.patch",
+                    "../common/patches/mozilla-vpn-ad.patch",
+                    "../common/patches/mozilla_dirs.patch",
                     "../common/patches/remove_addons.patch",
-#                    "../common/patches/search-config.patch",
-                    
-                    # sed patches..
+                    "../common/patches/search-config.patch",
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
                     "../common/patches/sed-patches/disable-pocket.patch",
                     "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
                     "../common/patches/sed-patches/stop-undesired-requests.patch",
+                    "../common/patches/ui-patches/add-language-warning.patch",
+                    "../common/patches/ui-patches/pref-naming.patch",
+                    "../common/patches/ui-patches/remove-branding-urlbar.patch",
+                    "../common/patches/ui-patches/remove-cfrprefs.patch",
+                    "../common/patches/ui-patches/remove-organization-policy-banner.patch",
+                    "../common/patches/ui-patches/remove-snippets-from-home.patch",
+                    "../common/patches/ui-patches/sanitizing-description.patch",
+                    "../common/patches/urlbarprovider-interventions.patch",
+
                 ]
 
                 
@@ -436,7 +444,7 @@ def execute_lw_artifacts():
             exec("cp -vr librewolf/* librewolf-{}/LibreWolf".format(tmp))
             
             exec("rm -f librewolf-portable.exe")
-            exec("wget -q https://gitlab.com/librewolf-community/browser/windows/uploads/8347381f01806245121adcca11b7f35c/librewolf-portable.exe")
+            exec("wget -q https://gitlab.com/librewolf-community/browser/windows/upload/8347381f01806245121adcca11b7f35c/librewolf-portable.exe")
             exec("mv librewolf-portable.exe librewolf-{}".format(tmp))
 
             exec("rm -f {}".format(zipname))
@@ -496,7 +504,7 @@ def execute_upload():
                 
         zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
         setup_filename = "librewolf-{}.en-US.{}-setup.exe".format(pkgver,ospkg)
-        nightly_setup_filename = "librewolf-{}.en-US.{}-gecko-dev.zip".format(nightly_ver,ospkg)
+#        nightly_setup_filename = "librewolf-{}.en-US.{}-gecko-dev.zip".format(nightly_ver,ospkg)
         
         if not os.path.isfile(zip_filename):
                 print("fatal error: File '{}' not found.".format(zip_filename))
@@ -504,15 +512,15 @@ def execute_upload():
         if not os.path.isfile(setup_filename):
                 print("fatal error: File '{}' not found.".format(setup_filename))
                 script_exit(1)
-        if not os.path.isfile(nightly_setup_filename):
-                print("fatal error: File '{}' not found.".format(nightly_setup_filename))
-                script_exit(1)
+#        if not os.path.isfile(nightly_setup_filename):
+#                print("fatal error: File '{}' not found.".format(nightly_setup_filename))
+#                script_exit(1)
 
-        exec("sha256sum {} {} {} > sha256sums.txt".format(zip_filename,setup_filename,nightly_setup_filename))
+        exec("sha256sum {} {} > sha256sums.txt".format(zip_filename,setup_filename))
         exec("rm -f upload.txt")
         do_upload(setup_filename)
         do_upload(zip_filename)
-        do_upload(nightly_setup_filename)
+#        do_upload(nightly_setup_filename)
         do_upload("sha256sums.txt")
         print("upload.txt: Upload JSON api results are in the file \'upload.txt\'.")
 
