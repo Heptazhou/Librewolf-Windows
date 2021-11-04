@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-pkgver = '93.0'
-nightly_ver = '95.0a1'
+pkgver = '94.0.1'
+nightly_ver = '96.0a1'
 
 #
 # build.py - try move functionality away from that too big/horrible build script.
@@ -275,19 +275,29 @@ def execute_lw_do_patches():
         if options.src == 'release':
                 # production patches
                 patches = [
+                    
                     "../common/patches/about-dialog.patch",
+                    "../common/patches/allow-ubo-private-mode.patch",
                     "../common/patches/allow_dark_preference_with_rfp.patch",
                     "../common/patches/context-menu.patch",
                     "../common/patches/megabar.patch",
                     "../common/patches/mozilla-vpn-ad.patch",
+                    "../common/patches/mozilla_dirs.patch",
                     "../common/patches/remove_addons.patch",
                     "../common/patches/search-config.patch",
-                    
-                    # sed patches..
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
                     "../common/patches/sed-patches/disable-pocket.patch",
                     "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
                     "../common/patches/sed-patches/stop-undesired-requests.patch",
+                    "../common/patches/ui-patches/add-language-warning.patch",
+                    "../common/patches/ui-patches/pref-naming.patch",
+                    "../common/patches/ui-patches/remove-branding-urlbar.patch",
+                    "../common/patches/ui-patches/remove-cfrprefs.patch",
+                    "../common/patches/ui-patches/remove-organization-policy-banner.patch",
+                    "../common/patches/ui-patches/remove-snippets-from-home.patch",
+                    "../common/patches/ui-patches/sanitizing-description.patch",
+                    "../common/patches/urlbarprovider-interventions.patch",
+
                 ]
                 
         elif options.src == 'nightly' or options.src == 'gecko-dev':
