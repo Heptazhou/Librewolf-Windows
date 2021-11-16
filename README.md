@@ -15,3 +15,4 @@
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
 * [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
 * The install instructions for Windows on [librewolf.net](https://librewolf.net/installation/windows/).
+* Want to compile it for yourself or contribute? check [CONTRIBUTING.md](https://gitlab.com/librewolf-community/browser/windows/-/blob/master/CONTRIBUTING.md).
