@@ -1,5 +1,8 @@
-Compiling
----------
+# How to contribute:
+
+If you want to contribute, or just build from source yourself, below are the inistructions to do that. If there is something unclear please type your feedback in [this ticket](https://gitlab.com/librewolf-community/browser/windows/-/issues/112) and we can adress it.
+
+## Compiling
 
 To compile on Windows, you need to:
 
