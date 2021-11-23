@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 pkgver = '94.0.2'
+lwver = "{}.3".format(pkgver)
 nightly_ver = '96.0a1'
 
 #
@@ -421,7 +422,7 @@ def execute_lw_artifacts():
 
         # create zip filename
         if options.src == 'release':
-                zipname = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
+                zipname = "librewolf-{}.en-US.{}.zip".format(lwver,ospkg)
         elif options.src == 'nightly':
                 zipname = "librewolf-{}.en-US.{}-nightly.zip".format(nightly_ver,ospkg)
         elif options.src == 'gecko-dev':
@@ -431,7 +432,7 @@ def execute_lw_artifacts():
         if options.distro == 'win':
             # we need tmp to tell us what portable folder to make
             if options.src == 'release':
-                tmp = pkgver
+                tmp = lwver
             else:
                 tmp = nightly_ver
                 
@@ -455,7 +456,7 @@ def execute_lw_artifacts():
         
         # create installer
         if options.distro == 'win':
-                setupname = "librewolf-{}.en-US.win64-setup.exe".format(pkgver)
+                setupname = "librewolf-{}.en-US.win64-setup.exe".format(lwver)
                 if options.src == 'nightly':
                         if os.path.isfile(setupname):
                                 exec("rm -f tmp.exe")
@@ -468,7 +469,7 @@ def execute_lw_artifacts():
                     setupname = "librewolf-{}.en-US.win64-gecko-dev-setup.exe".format(nightly_ver)
                         
                 exec("rm -f {} tmp.nsi".format(setupname))
-                s = pkgver
+                s = lwver
                 if options.src == 'nightly' or options.src == 'gecko-dev':
                     s = nightly_ver
                 exec("sed \"s/pkg_version/{}/g\" < setup.nsi > tmp.nsi".format(s))
@@ -478,7 +479,7 @@ def execute_lw_artifacts():
                 if from_name != setupname:
                     exec("mv {} {}".format(from_name,setupname))
                 if os.path.isfile("tmp.exe"):
-                        exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(pkgver))
+                        exec("mv tmp.exe librewolf-{}.en-US.win64-setup.exe".format(lwver))
 
 def do_upload(filename):
         exec("echo \".\" >> upload.txt")
@@ -500,8 +501,8 @@ def execute_upload():
                 ospkg = "osx"
 
                 
-        zip_filename = "librewolf-{}.en-US.{}.zip".format(pkgver,ospkg)
-        setup_filename = "librewolf-{}.en-US.{}-setup.exe".format(pkgver,ospkg)
+        zip_filename = "librewolf-{}.en-US.{}.zip".format(lwver,ospkg)
+        setup_filename = "librewolf-{}.en-US.{}-setup.exe".format(lwver,ospkg)
 #        nightly_setup_filename = "librewolf-{}.en-US.{}-gecko-dev.zip".format(nightly_ver,ospkg)
         
         if not os.path.isfile(zip_filename):
@@ -543,7 +544,7 @@ def execute_all():
         execute_lw_artifacts() 
 
 def execute_clean():
-        exec("rm -rf librewolf-{} librewolf-{}".format(pkgver,nightly_ver))
+        exec("rm -rf librewolf-{} librewolf-{} librewolf-{}".format(pkgver,nightly_ver,lwver))
         exec("rm -rf librewolf bootstrap.py tmp.nsi tmp.exe sha256sums.txt upload.txt librewolf-portable.exe")
         for filename in glob.glob("librewolf-*"):
             try:
