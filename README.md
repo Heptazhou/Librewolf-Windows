@@ -9,7 +9,7 @@
 
 # Settings repository
 
-* For all librewolf.cfg issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings)] - _([issue tracker for settings](https://gitlab.com/librewolf-community/settings/-/issues))_
+* For all **about:config** and **librewolf.cfg** issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings)]_
 
 # Community links
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
