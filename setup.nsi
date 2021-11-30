@@ -82,7 +82,7 @@ Section "${PROGNAME}"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationDescription" "Howling to Freedom"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$INSTDIR\librewolf.exe %1"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$INSTDIR\librewolf.exe \"%1\""
 
 SectionEnd
 
