@@ -1,0 +1,1160 @@
+diff --git a/browser/components/preferences/jar.mn b/browser/components/preferences/jar.mn
+index 4f3babe..97c7ec2 100644
+--- a/browser/components/preferences/jar.mn
++++ b/browser/components/preferences/jar.mn
+@@ -11,6 +11,7 @@ browser.jar:
+    content/browser/preferences/home.js
+    content/browser/preferences/search.js
+    content/browser/preferences/privacy.js
++   content/browser/preferences/librewolf.js
+    content/browser/preferences/containers.js
+    content/browser/preferences/sync.js
+    content/browser/preferences/experimental.js
+diff --git a/browser/components/preferences/librewolf.inc.xhtml b/browser/components/preferences/librewolf.inc.xhtml
+new file mode 100644
+index 0000000..74395a0
+--- /dev/null
++++ b/browser/components/preferences/librewolf.inc.xhtml
+@@ -0,0 +1,381 @@
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
++<script src="chrome://browser/content/preferences/librewolf.js"/>
++
++<html:template id="template-paneLibrewolf">
++
++<hbox class="subcategory" hidden="true" data-category="paneLibrewolf">
++  <html:h1 data-l10n-id="librewolf-header"/>
++</hbox>
++
++<groupbox hidden="true" data-category="paneLibrewolf">
++  <html:h2 data-l10n-id="librewolf-general-heading"/>
++
++  <!-- TEMPLATE FOR A NEW PREFERENCE
++  <hbox>
++    <checkbox id="librewolf-LABEL-checkbox" data-l10n-id="librewolf-LABEL-checkbox" preference="PREF" flex="1" />
++    <html:label for="librewolf-LABEL-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-LABEL-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-LABEL-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-LABEL-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="PREF" label="PREF" />
++    </vbox>
++  </vbox>
++  -->
++
++  <hbox>
++    <checkbox id="librewolf-extension-update-checkbox" data-l10n-id="librewolf-extension-update-checkbox" preference="extensions.update.autoUpdateDefault" flex="1" />
++    <html:label for="librewolf-extension-update-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-extension-update-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-extension-update-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-extension-update-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-extension-update-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="extensions.update.autoUpdateDefault" label="extensions.update.autoUpdateDefault" />
++      <checkbox preference="extensions.update.enabled" label="extensions.update.enabled" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-ipv6-checkbox" data-l10n-id="librewolf-ipv6-checkbox" preference="network.dns.disableIPv6" flex="1" />
++    <html:label for="librewolf-ipv6-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-ipv6-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-ipv6-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-ipv6-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="network.dns.disableIPv6" label="network.dns.disableIPv6" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-restore-session-checkbox" data-l10n-id="librewolf-restore-session-checkbox" preference="browser.startup.page" flex="1" />
++    <html:label for="librewolf-restore-session-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-restore-session-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-restore-session-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-restore-session-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-restore-session-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="browser.startup.page" label="browser.startup.page == 3" id="librewolf-restore-session-startup-page" />
++      <checkbox preference="privacy.clearOnShutdown.history" label="privacy.clearOnShutdown.history" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-autocopy-checkbox" data-l10n-id="librewolf-autocopy-checkbox" preference="clipboard.autocopy" flex="1" />
++    <html:label for="librewolf-autocopy-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-autocopy-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-autocopy-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-autocopy-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-autocopy-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="clipboard.autocopy" label="clipboard.autocopy" />
++      <checkbox preference="middlemouse.paste" label="middlemouse.paste" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-styling-checkbox" data-l10n-id="librewolf-styling-checkbox" preference="toolkit.legacyUserProfileCustomizations.stylesheets" flex="1" />
++    <html:label for="librewolf-styling-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-styling-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-styling-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-styling-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-styling-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="toolkit.legacyUserProfileCustomizations.stylesheets" label="toolkit.legacyUserProfileCustomizations.stylesheets" />
++      <checkbox preference="layout.css.backdrop-filter.enabled" label="layout.css.backdrop-filter.enabled" />
++      <checkbox preference="svg.context-properties.content.enabled" label="svg.context-properties.content.enabled" />
++    </vbox>
++  </vbox>
++
++</groupbox>
++
++<groupbox hidden="true" data-category="paneLibrewolf">
++  <html:h2 data-l10n-id="librewolf-broken-heading" />
++  <label data-l10n-id="librewolf-broken-description" />
++
++  <hbox>
++    <checkbox id="librewolf-webgl-checkbox" data-l10n-id="librewolf-webgl-checkbox" preference="webgl.disabled" flex="1" />
++    <html:label for="librewolf-webgl-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-webgl-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-webgl-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-webgl-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="webgl.disabled" label="webgl.disabled" />
++      <checkbox preference="webgl.enable-webgl2" label="webgl.enable-webgl2" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-conferencing-checkbox" data-l10n-id="librewolf-conferencing-checkbox" preference="media.peerconnection.enabled" flex="1" />
++    <html:label for="librewolf-conferencing-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-conferencing-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-conferencing-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-conferencing-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="media.peerconnection.enabled" label="media.peerconnection.enabled" />
++      <checkbox preference="media.peerconnection.ice.no_host" label="media.peerconnection.ice.no_host" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-screensharing-checkbox" data-l10n-id="librewolf-screensharing-checkbox" preference="media.getusermedia.screensharing.enabled" flex="1" />
++    <html:label for="librewolf-screensharing-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-screensharing-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-screensharing-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-screensharing-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-screensharing-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="media.getusermedia.screensharing.enabled" label="media.getusermedia.screensharing.enabled" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-geolocation-checkbox" data-l10n-id="librewolf-geolocation-checkbox" preference="geo.enabled" flex="1" />
++    <html:label for="librewolf-geolocation-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-geolocation-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-geolocation-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-geolocation-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="geo.enabled" label="geo.enabled" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-auto-decline-canvas-checkbox" data-l10n-id="librewolf-auto-decline-canvas-checkbox" preference="privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" flex="1" />
++    <html:label for="librewolf-auto-decline-canvas-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-auto-decline-canvas-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-auto-decline-canvas-description" />
++      <html:div> <label data-l10n-id="librewolf-auto-decline-canvas-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <label data-l10n-id="librewolf-auto-decline-canvas-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" label="privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" />
++    </vbox>
++  </vbox>
++
++  <hbox>
++    <checkbox id="librewolf-drm-checkbox" data-l10n-id="librewolf-drm-checkbox" preference="media.eme.enabled" flex="1" />
++    <html:label for="librewolf-drm-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-drm-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-drm-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-drm-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="media.eme.enabled" label="media.eme.enabled" />
++      <checkbox preference="media.gmp-widevinecdm.enabled" label="media.gmp-widevinecdm.enabled" />
++      <checkbox preference="media.gmp-widevinecdm.visible" label="media.gmp-widevinecdm.visible" />
++      <checkbox preference="media.gmp-provider.enabled" label="media.gmp-provider.enabled" />
++      <checkbox preference="media.gmp-manager.url" label="media.gmp-manager.url" id="librewolf-drm-url" />
++    </vbox>
++  </vbox>
++
++</groupbox>
++
++<groupbox hidden="true" data-category="paneLibrewolf">
++  <html:h2 data-l10n-id="librewolf-hardened-heading" />
++
++  <!-- the html here is constructed a little bit differently because all the preferences except the first only affect one about:config setting -->
++  <hbox>
++    <checkbox id="librewolf-hardened-master-checkbox" data-l10n-id="librewolf-hardened-master-checkbox" preference="privacy.resistFingerprinting.letterboxing" flex="1" />
++  </hbox>
++
++  <vbox class="indent">
++
++    <hbox>
++      <checkbox id="librewolf-letterboxing-checkbox" data-l10n-id="librewolf-letterboxing-checkbox" preference="privacy.resistFingerprinting.letterboxing" flex="1" />
++      <html:label for="librewolf-letterboxing-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++    </hbox>
++    <vbox class="librewolf-collapse indent">
++      <html:input type="checkbox" id="librewolf-letterboxing-collapse" />
++      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++        <label data-l10n-id="librewolf-letterboxing-description" />
++        <checkbox preference="privacy.resistFingerprinting.letterboxing" label="privacy.resistFingerprinting.letterboxing" />
++      </vbox>
++    </vbox>
++
++    <hbox>
++      <checkbox id="librewolf-web-applications-checkbox" data-l10n-id="librewolf-web-applications-checkbox" preference="javascript.options.asmjs" flex="1" />
++      <html:label for="librewolf-web-applications-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++    </hbox>
++    <vbox class="librewolf-collapse indent">
++      <html:input type="checkbox" id="librewolf-web-applications-collapse" />
++      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++        <label data-l10n-id="librewolf-web-applications-description" />
++        <checkbox preference="javascript.options.asmjs" label="javascript.options.asmjs" />
++      </vbox>
++    </vbox>
++
++    <hbox>
++      <checkbox id="librewolf-wasm-checkbox" data-l10n-id="librewolf-wasm-checkbox" preference="javascript.options.wasm" flex="1" />
++      <html:label for="librewolf-wasm-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++    </hbox>
++    <vbox class="librewolf-collapse indent">
++      <html:input type="checkbox" id="librewolf-wasm-collapse" />
++      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++        <label data-l10n-id="librewolf-wasm-description" />
++        <checkbox preference="javascript.options.wasm" label="javascript.options.wasm" />
++      </vbox>
++    </vbox>
++
++  </vbox>
++</groupbox>
++
++<groupbox hidden="true" data-category="paneLibrewolf">
++  <html:h2 data-l10n-id="librewolf-misc-heading" />
++
++  <hbox>
++    <checkbox id="librewolf-goog-safe-checkbox" data-l10n-id="librewolf-goog-safe-checkbox" preference="browser.safebrowsing.malware.enabled" flex="1" />
++    <html:label for="librewolf-goog-safe-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-goog-safe-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-goog-safe-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-goog-safe-warning1" class="librewolf-warning" /> </html:div>
++      <label data-l10n-id="librewolf-goog-safe-warning2" />
++      <checkbox preference="browser.safebrowsing.malware.enabled" label="browser.safebrowsing.malware.enabled" />
++      <checkbox preference="browser.safebrowsing.phishing.enabled" label="browser.safebrowsing.phishing.enabled" />
++      <checkbox preference="browser.safebrowsing.blockedURIs.enabled" label="browser.safebrowsing.blockedURIs.enabled" />
++      <checkbox preference="browser.safebrowsing.provider.google4.gethashURL" label="browser.safebrowsing.provider.google4.gethashURL" id="librewolf-goog-safe-hash4"/>
++      <checkbox preference="browser.safebrowsing.provider.google4.updateURL" label="browser.safebrowsing.provider.google4.updateURL" id="librewolf-goog-safe-up4"/>
++      <checkbox preference="browser.safebrowsing.provider.google.gethashURL" label="browser.safebrowsing.provider.google.gethashURL" id="librewolf-goog-safe-hash"/>
++      <checkbox preference="browser.safebrowsing.provider.google.updateURL" label="browser.safebrowsing.provider.google.updateURL" id="librewolf-goog-safe-up"/>
++    </vbox>
++  </vbox>
++
++  <vbox class="indent">
++    <hbox>
++      <checkbox id="librewolf-goog-safe-download-checkbox" data-l10n-id="librewolf-goog-safe-download-checkbox" preference="browser.safebrowsing.downloads.enabled" flex="1" />
++      <html:label for="librewolf-goog-safe-download-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++    </hbox>
++    <vbox class="librewolf-collapse indent">
++      <html:input type="checkbox" id="librewolf-goog-safe-download-collapse" />
++      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++        <label data-l10n-id="librewolf-goog-safe-download-description" />
++        <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-goog-safe-download-warning1" class="librewolf-warning" /> </html:div>
++        <checkbox preference="browser.safebrowsing.downloads.enabled" label="browser.safebrowsing.downloads.enabled" />
++      </vbox>
++    </vbox>
++  </vbox>
++
++  <!-- TODO commented out because we still are not sure how we want to handle this
++  <hbox>
++    <checkbox id="librewolf-moz-track-prot-checkbox" data-l10n-id="librewolf-moz-track-prot-checkbox" preference="privacy.trackingprotection.enabled" flex="1" />
++    <html:label for="librewolf-moz-track-prot-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-moz-track-prot-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-moz-track-prot-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-moz-track-prot-warning1" class="librewolf-warning" /> </html:div>
++      <checkbox preference="privacy.trackingprotection.enabled" label="privacy.trackingprotection.enabled" />
++      <checkbox preference="browser.contentblocking.cryptomining.preferences.ui.enabled" label="browser.contentblocking.cryptomining.preferences.ui.enabled" />
++      <checkbox preference="browser.contentblocking.fingerprinting.preferences.ui.enabled" label="browser.contentblocking.fingerprinting.preferences.ui.enabled" />
++      <checkbox preference="privacy.trackingprotection.cryptomining.enabled" label="privacy.trackingprotection.cryptomining.enabled" />
++      <checkbox preference="privacy.trackingprotection.fingerprinting.enabled" label="privacy.trackingprotection.fingerprinting.enabled" />
++      <checkbox preference="privacy.trackingprotection.socialtracking.enabled" label="privacy.trackingprotection.socialtracking.enabled" />
++      <checkbox preference="browser.safebrowsing.provider.mozilla.updateURL" label="browser.safebrowsing.provider.mozilla.updateURL" />
++      <checkbox preference="browser.safebrowsing.provider.mozilla.gethashURL" label="browser.safebrowsing.provider.mozilla.gethashURL" />
++    </vbox>
++  </vbox>
++
++  <vbox class="indent">
++    <hbox>
++      <checkbox id="librewolf-moz-track-prot-private-checkbox" data-l10n-id="librewolf-moz-track-prot-private-checkbox" preference="privacy.trackingprotection.pbmode.enabled" flex="1" />
++      <html:label for="librewolf-moz-track-prot-private-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++    </hbox>
++    <vbox class="librewolf-collapse indent">
++      <html:input type="checkbox" id="librewolf-moz-track-prot-private-collapse" />
++      <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++        <label data-l10n-id="librewolf-moz-track-prot-private-description" />
++        <checkbox preference="privacy.trackingprotection.pbmode.enabled" label="privacy.trackingprotection.pbmode.enabled" />
++      </vbox>
++    </vbox>
++  </vbox>
++  -->
++
++  <hbox>
++    <checkbox id="librewolf-language-checkbox" data-l10n-id="librewolf-language-checkbox" preference="extensions.getAddons.langpacks.url" flex="1" />
++    <html:label for="librewolf-language-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-language-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-language-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-language-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-language-warning2" class="librewolf-warning" /> </html:div>
++      <checkbox preference="extensions.getAddons.langpacks.url" label="extensions.getAddons.langpacks.url" id="librewolf-language-url" />
++    </vbox>
++  </vbox>
++
++  <!-- OCSP settings with a radio button (so totally different from everything else - TODO commented out because it has some issues
++  <hbox>
++    <label data-l10n-id="librewolf-OCSP-header" flex="1" />
++    <html:label for="librewolf-OCSP-collapse" class="sidebar-footer-link" pack="end"> <image class="sidebar-footer-icon help-icon"/> </html:label>
++  </hbox>
++  <vbox class="librewolf-collapse indent">
++    <html:input type="checkbox" id="librewolf-OCSP-collapse" />
++    <vbox class="librewolf-collapsed tracking-protection-ui content-blocking-category">
++      <label data-l10n-id="librewolf-OCSP-description" />
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-OCSP-warning1" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-OCSP-warning2" class="librewolf-warning" /> </html:div>
++      <html:div> <image src="chrome://browser/skin/warning.svg" /> <label data-l10n-id="librewolf-OCSP-warning3" class="librewolf-warning" /> </html:div>
++      <vbox>
++        <hbox>
++          <radiogroup id="librewolf-OCSP-radiogroup">
++            <radio data-l10n-id="librewolf-OCSP-option0" value="0"/>
++            <radio data-l10n-id="librewolf-OCSP-option1" value="1"/>
++            <radio data-l10n-id="librewolf-OCSP-option2" value="2"/>
++            <radio data-l10n-id="librewolf-OCSP-option3" value="3"/>
++            <radio data-l10n-id="librewolf-OCSP-unknown" value="unknown"/>
++          </radiogroup>
++        </hbox>
++      </vbox>
++      <label data-l10n-id="librewolf-OCSP-prefs" />
++    </vbox>
++  </vbox>
++  -->
++</groupbox>
++
++<hbox class="subcategory" hidden="true" data-category="paneLibrewolf">
++    <html:h1 data-l10n-id="librewolf-footer"/>
++</hbox>
++
++<groupbox data-category="paneLibrewolf" hidden="true">
++  <hbox>
++    <label id="librewolf-config-link-wrapper" class="sidebar-footer-link" is="text-link" flex="1">
++      <image class="sidebar-footer-icon" src="chrome://browser/skin/ion.svg" /> <!-- TODO not the typical way a picture is defined I think, and also we should copy the svg file in case they change it -->
++      <label id="librewolf-config-link" data-l10n-id="librewolf-config-link"></label>
++    </label>
++    <hbox pack="end">
++      <button id="librewolf-open-profile-button" class="accessory-button" is="highlightable-button" data-l10n-id="librewolf-open-profile"/>
++    </hbox>
++  </hbox>
++</groupbox>
++
++</html:template>
+diff --git a/browser/components/preferences/librewolf.js b/browser/components/preferences/librewolf.js
+new file mode 100644
+index 0000000..6a1f974
+--- /dev/null
++++ b/browser/components/preferences/librewolf.js
+@@ -0,0 +1,381 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
++ * You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++/* import-globals-from extensionControlled.js */
++/* import-globals-from preferences.js */
++
++var { AppConstants } = ChromeUtils.import( "resource://gre/modules/AppConstants.jsm");
++XPCOMUtils.defineLazyGetter(this, "L10n", () => {
++  return new Localization([
++    "branding/brand.ftl",
++    "browser/preferences/preferences.ftl",
++  ]);
++});
++
++Preferences.addAll([
++  // IPv6
++  { id: "network.dns.disableIPv6", type: "bool" },
++  // WebGL
++  { id: "webgl.disabled", type: "bool" },
++  { id: "webgl.enable-webgl2", type: "bool" },
++  // Video Conferencing
++  { id: "media.peerconnection.enabled", type: "bool" },
++  { id: "media.peerconnection.ice.no_host", type: "bool" },
++  { id: "dom.webaudio.enabled", type: "bool" },
++  // Screensharing
++  { id: "media.getusermedia.screensharing.enabled", type: "bool" },
++  // DRM
++  //{ id: "media.eme.enabled", type: "bool" }, //already added
++  { id: "media.gmp-widevinecdm.visible", type: "bool" },
++  { id: "media.gmp-widevinecdm.enabled", type: "bool" },
++  { id: "media.gmp-provider.enabled", type: "bool" },
++  { id: "media.gmp-manager.url", type: "string" },
++  // Automatically Update Extensions
++  { id: "extensions.update.enabled", type: "bool" },
++  { id: "extensions.update.autoUpdateDefault", type: "bool" },
++  // Clipboard autocopy/paste
++  { id: "clipboard.autocopy", type: "bool" },
++  { id: "middlemouse.paste", type: "bool" },
++  // Search Suggestions //This is in the FAQ but it is also in about:preferences#search so I don't think it should be included here
++  //{ id: "browser.search.suggest.enabled", type: "bool" },
++  //{ id: "browser.urlbar.suggest.searches", type: "bool" },
++  // Harden
++  { id: "javascript.options.asmjs", type: "bool" },
++  { id: "javascript.options.wasm", type: "bool" },
++  { id: "privacy.resistFingerprinting.letterboxing", type: "bool" },
++  { id: "dom.event.clipboardevents.enabled", type: "bool" },
++  // OCSP certificate revocation
++  //{ id: "security.OCSP.enabled", type: "int" }, //Already enabled
++  { id: "security.OCSP.require", type: "bool" },
++  { id: "security.pki.crlite_mode", type: "int" },
++  // Google Safe Browsing
++  //{ id: "browser.safebrowsing.malware.enabled", type: "bool" }, // Already loaded
++  //{ id: "browser.safebrowsing.phishing.enabled", type: "bool" },
++  { id: "browser.safebrowsing.blockedURIs.enabled", type: "bool" },
++  { id: "browser.safebrowsing.provider.google4.gethashURL", type: "string" },
++  { id: "browser.safebrowsing.provider.google4.updateURL", type: "string" },
++  { id: "browser.safebrowsing.provider.google.gethashURL", type: "string" },
++  { id: "browser.safebrowsing.provider.google.updateURL", type: "string" },
++  // Restore Previous Session
++  //{ id: "browser.startup.page", type: "int" }, //Already added
++  { id: "privacy.clearOnShutdown.history", type: "bool" },
++  /**** Prefs that require changing a lockPref ****/
++  // Google safe browsing check downloads
++  //{ id: "browser.safebrowsing.downloads.enabled", type: "bool" }, //Also already added
++  // Mozilla Tracking Protection
++  //{ id: "privacy.trackingprotection.enabled", type: "bool" }, //Already added
++  //{ id: "privacy.trackingprotection.pbmode.enabled", type: "bool" }, //already added
++  { id: "browser.contentblocking.cryptomining.preferences.ui.enabled", type: "bool" },
++  { id: "browser.contentblocking.fingerprinting.preferences.ui.enabled", type: "bool" },
++  { id: "browser.safebrowsing.provider.mozilla.updateURL", type: "string" },
++  { id: "browser.safebrowing.provider.mozilla.gethashURL", type: "string" },
++  //{ id: "privacy.trackingprotection.cryptomining.enabled", type: "bool" }, //Already added
++  //{ id: "privacy.trackingprotection.fingerprinting.enabled", type: "bool" }, //Already added
++  //{ id: "privacy.trackingprotection.socialtracking.enabled", type: "bool" }, //Already added
++  { id: "toolkit.legacyUserProfileCustomizations.stylesheets", type: "bool" },
++  { id: "layout.css.backdrop-filter.enabled", type: "bool" },
++  { id: "svg.context-properties.content.enabled", type: "bool" },
++  // Install language packs
++  { id: "extensions.getAddons.langpacks.url", type: "string" },
++  // Canvas UI when blocked
++  { id: "privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts", type: "bool" },
++  // Geolocation data
++  { id: "geo.enabled", type: "bool" },
++]);
++
++var gLibrewolfPane = {
++  _pane: null,
++
++  // called when the document is first parsed
++  init() {
++    this._pane = document.getElementById("paneLibrewolf");
++
++    // Set all event listeners on checkboxes
++    setBoolSyncListeners(
++      "librewolf-extension-update-checkbox",
++      ["extensions.update.autoUpdateDefault", "extensions.update.enabled"],
++      [true,                                  true                       ],
++    );
++    setBoolSyncListeners(
++      "librewolf-ipv6-checkbox",
++      ["network.dns.disableIPv6"],
++      [false,                   ],
++    );
++    setSyncListeners(
++      "librewolf-restore-session-checkbox",
++      ["browser.startup.page", "privacy.clearOnShutdown.history", ],
++      [3,                      false,                             ],
++      [1,                      true,                              ],
++    );
++    setSyncListeners("librewolf-restore-session-startup-page", ["browser.startup.page"], [3], [1]);
++    setBoolSyncListeners(
++      "librewolf-autocopy-checkbox",
++      ["clipboard.autocopy", "middlemouse.paste"],
++      [true,                 true               ],
++    );
++    setBoolSyncListeners(
++      "librewolf-styling-checkbox",
++      ["toolkit.legacyUserProfileCustomizations.stylesheets", "layout.css.backdrop-filter.enabled", "svg.context-properties.content.enabled"],
++      [true,                                                  true,                                 true                                    ],
++    );
++
++    setBoolSyncListeners(
++      "librewolf-webgl-checkbox",
++      ["webgl.disabled", "webgl.enable-webgl2"],
++      [false,            true                 ],
++    );
++    setBoolSyncListeners(
++      "librewolf-conferencing-checkbox",
++      ["media.peerconnection.enabled", "media.peerconnection.ice.no_host"],
++      [true,                           true,                             ],
++    );
++    setBoolSyncListeners(
++      "librewolf-screensharing-checkbox",
++      ["media.getusermedia.screensharing.enabled"],
++      [true                                      ],
++    );
++    setBoolSyncListeners(
++      "librewolf-auto-decline-canvas-checkbox",
++      ["privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts"],
++      [true                                      ],
++    );
++    setSyncListeners(
++      "librewolf-drm-checkbox",
++      ["media.eme.enabled", "media.gmp-widevinecdm.visible", "media.gmp-widevinecdm.enabled", "media.gmp-provider.enabled", "media.gmp-manager.url"],
++      [true,                true,                            true,                            true,                         "https://aus5.mozilla.org/update/3/GMP/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml"],
++      [false,               false,                           false,                           false,                        ""                     ],
++    );
++    setSyncListeners("librewolf-drm-url", ["media.gmp-manager.url"], ["https://aus5.mozilla.org/update/3/GMP/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml"], [""]);
++
++    setBoolSyncListeners(
++      "librewolf-hardened-master-checkbox",
++      ["privacy.resistFingerprinting.letterboxing", "javascript.options.asmjs", "javascript.options.wasm"],
++      [true,                                        false,                      false                    ],
++    );
++    setBoolSyncListeners("librewolf-web-applications-checkbox", ["javascript.options.asmjs"], [false]);
++    setBoolSyncListeners("librewolf-wasm-checkbox", ["javascript.options.wasm"], [false]);
++
++    setSyncListeners(
++      "librewolf-goog-safe-checkbox",
++      [
++        "browser.safebrowsing.malware.enabled",
++        "browser.safebrowsing.phishing.enabled",
++        "browser.safebrowsing.blockedURIs.enabled",
++        "browser.safebrowsing.provider.google4.gethashURL",
++        "browser.safebrowsing.provider.google4.updateURL",
++        "browser.safebrowsing.provider.google.gethashURL",
++        "browser.safebrowsing.provider.google.updateURL",
++      ],
++      [
++        true,
++        true,
++        true,
++        "https://safebrowsing.googleapis.com/v4/fullHashes:find?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST",
++        "https://safebrowsing.googleapis.com/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST",
++        "https://safebrowsing.google.com/safebrowsing/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2",
++        "https://safebrowsing.google.com/safebrowsing/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2&key=%GOOGLE_SAFEBROWSING_API_KEY%",
++      ],
++      [
++        false,
++        false,
++        false,
++        "",
++        "",
++        "",
++        "",
++      ]
++    );
++    /* TODO commented out because lockpref and also unsure what we want to do with it
++    setSyncListeners(
++      "librewolf-moz-track-prot-checkbox",
++      [
++         "privacy.trackingprotection.enabled",
++         "browser.contentblocking.cryptomining.preferences.ui.enabled",
++         "browser.contentblocking.fingerprinting.preferences.ui.enabled",
++         "privacy.trackingprotection.cryptomining.enabled",
++         "privacy.trackingprotection.fingerprinting.enabled",
++         "privacy.trackingprotection.socialtracking.enabled",
++         "browser.safebrowsing.provider.mozilla.updateURL",
++         "browser.safebrowing.provider.mozilla.gethashURL",
++      ],
++      [
++        true,
++        true,
++        true,
++        true,
++        true,
++        true,
++        "https://shavar.services.mozilla.com/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2",
++        "https://shavar.services.mozilla.com/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2",
++      ],
++      [
++        false,
++        false,
++        false,
++        false,
++        false,
++        false,
++        "",
++        "",
++      ]
++    );
++    */
++    setSyncListeners("librewolf-language-checkbox", ["extensions.getAddons.langpacks.url"], ["https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%"], [""]);
++    setSyncListeners("librewolf-language-url", ["extensions.getAddons.langpacks.url"], ["https://services.addons.mozilla.org/api/v3/addons/language-tools/?app=firefox&type=language&appversion=%VERSION%"], [""]);
++
++    // Set event listeners on the radio buttons for OCSP
++    /* TODO commented out because not ready yet
++    syncFromOCSP();
++    setEventListener("librewolf-OCSP-radiogroup", "command", syncToOCSP);
++    // Update radio-value when the pref changes
++    Preferences.get("security.pki.crlite_mode").on("change", syncFromOCSP);
++    Preferences.get("security.OCSP.enabled").on("change", syncFromOCSP);
++    Preferences.get("security.OCSP.require").on("change", syncFromOCSP);
++    */
++
++    // Set event listener on open profile directory button
++    setEventListener("librewolf-open-profile-button", "command", openProfileDirectory);
++    // Set event listener on open about:config button
++    setEventListener("librewolf-config-link", "click", openAboutConfig);
++
++    // Notify observers that the UI is now ready
++    Services.obs.notifyObservers(window, "librewolf-pane-loaded");
++  },
++};
++
++function openProfileDirectory() {
++  // Get the profile directory.
++  let currProfD = Services.dirsvc.get("ProfD", Ci.nsIFile);
++  let profileDir = currProfD.path;
++
++  // Show the profile directory.
++  let nsLocalFile = Components.Constructor(
++    "@mozilla.org/file/local;1",
++    "nsIFile",
++    "initWithPath"
++  );
++  new nsLocalFile(profileDir).reveal();
++}
++
++function openAboutConfig() {
++  window.open("about:config", "_blank");
++}
++
++function setBoolSyncListeners(checkboxid, opts, vals) {
++  setSyncFromPrefListener(checkboxid, () => readGenericBoolPrefs(opts, vals));
++  setSyncToPrefListener(checkboxid, () => writeGenericBoolPrefs(opts, vals, document.getElementById(checkboxid).checked));
++  for (let i = 1; i < opts.length; i++) {
++    Preferences.get(opts[i]).on("change", () => makeMasterCheckboxesReactive(checkboxid, () => readGenericBoolPrefs(opts, vals)));
++  }
++}
++function setSyncListeners(checkboxid, opts, onVals, offVals) {
++  setSyncFromPrefListener(checkboxid, () => readGenericPrefs(opts, onVals, offVals));
++  setSyncToPrefListener(checkboxid, () => writeGenericPrefs(opts, onVals, offVals, document.getElementById(checkboxid).checked));
++  for (let i = 1; i < opts.length; i++) {
++    Preferences.get(opts[i]).on("change", () => makeMasterCheckboxesReactive(checkboxid, () => readGenericPrefs(opts, onVals, offVals)));
++  }
++}
++
++function makeMasterCheckboxesReactive(checkboxid, func) {
++  let shouldBeChecked = func();
++  document.getElementById(checkboxid).checked = shouldBeChecked;
++}
++
++// Wrapper function in case something more is required (as I suspected in the first iteration of this)
++function getPref(pref) {
++  let retval = Preferences.get(pref);
++/*  if (retval === undefined) {
++    return defaultValue;
++  } */
++  return retval._value;
++}
++// Returns true if all the preferences in prefs are equal to onVals, false otherwise TODO may need a third array for their default values because mozilla is dumb, after testing though pretty sure this was misinformation being spread by comments in default FF code that has long since been fixed
++function readGenericBoolPrefs(prefs, onVals) {
++  for (let i = 0; i < prefs.length; i++) {
++    if (getPref(prefs[i]) != onVals[i]) {
++      return false;
++    }
++  }
++  return true;
++}
++function writeGenericBoolPrefs(opts, vals, changeToOn) {
++  valsCopy = [...vals];
++  if (!changeToOn) {
++    for (let i = 0; i < vals.length; i++) {
++      valsCopy[i] = !vals[i];
++    }
++  }
++  // Start at 1 because returning sets the last one
++  for (let i = 1; i < vals.length; i++) {
++    Services.prefs.setBoolPref(opts[i], valsCopy[i]);
++  }
++  return valsCopy[0];
++}
++
++// Returns true if all the preferences in prefs are equal to onVals, false otherwise... currently the same as for Bool as offVals is ignored
++function readGenericPrefs(prefs, onVals, offVals) {
++  for (let i = 0; i < prefs.length; i ++) {
++    let temp = getPref(prefs[i]);
++    if (getPref(prefs[i]) != onVals[i]) {
++      return false;
++    }
++  }
++  return true;
++}
++function writeGenericPrefs(opts, onVals, offVals, changeToOn) {
++  let writeArr = (changeToOn) ? onVals : offVals;
++  for (let i = 1; i < opts.length; i++) {
++    let type = typeof(writeArr[i]);
++    if (type == "number") {
++      Services.prefs.setIntPref(opts[i], writeArr[i]);
++    } else if (type == "boolean") {
++      Services.prefs.setBoolPref(opts[i], writeArr[i]);
++    } else if (type == "string") {
++      Services.prefs.setCharPref(opts[i], writeArr[i]);
++    } else {
++      console.log("BADNESS 10000");
++    }
++  }
++  return writeArr[0];
++}
++
++function syncFromOCSP() {
++  let OCSPpolicy = getPref("security.OCSP.enabled");
++  let OCSPrequire = getPref("security.OCSP.require");
++  let crlitePolicy = getPref("security.pki.crlite_mode");
++  let radioButtons = document.getElementById("librewolf-OCSP-radiogroup");
++
++  if (OCSPpolicy == 0 && OCSPrequire == false && crlitePolicy == 0) {
++    radioButtons.value = "0";
++  } else if (OCSPpolicy == 0 && OCSPrequire == false && crlitePolicy == 1) {
++    radioButtons.value = "1";
++  } else if (OCSPpolicy == 1 && OCSPrequire == true && crlitePolicy == 1) {
++    radioButtons.value = "2";
++  } else if (OCSPpolicy == 1 && OCSPrequire == true && crlitePolicy == 0) {
++    radioButtons.value = "3";
++  } else {
++    radioButtons.value = "unknown";
++  }
++  console.log(radioButtons.value);
++}
++function syncToOCSP() {
++  let value = document.getElementById("librewolf-OCSP-radiogroup").value;
++  if (value == "0") {
++    Services.prefs.setBoolPref("security.OCSP.require", false);
++    Services.prefs.setIntPref("security.OCSP.enabled", 0);
++    Services.prefs.setIntPref("security.pki.crlite_mode", 0);
++  } else if (value == "1") {
++    Services.prefs.setBoolPref("security.OCSP.require", false);
++    Services.prefs.setIntPref("security.OCSP.enabled", 0);
++    Services.prefs.setIntPref("security.pki.crlite_mode", 1);
++  } else if (value == "2") {
++    Services.prefs.setBoolPref("security.OCSP.require", true);
++    Services.prefs.setIntPref("security.OCSP.enabled", 1);
++    Services.prefs.setIntPref("security.pki.crlite_mode", 1);
++  } else if (value == "3") {
++    Services.prefs.setBoolPref("security.OCSP.require", true);
++    Services.prefs.setIntPref("security.OCSP.enabled", 1);
++    Services.prefs.setIntPref("security.pki.crlite_mode", 0);
++  } // else value == "unknown" and do nothing
++}
+diff --git a/browser/components/preferences/preferences.js b/browser/components/preferences/preferences.js
+index 91e9e46..763ab49 100644
+--- a/browser/components/preferences/preferences.js
++++ b/browser/components/preferences/preferences.js
+@@ -8,6 +8,7 @@
+ /* import-globals-from search.js */
+ /* import-globals-from containers.js */
+ /* import-globals-from privacy.js */
++/* import-globals-from librewolf.js */
+ /* import-globals-from sync.js */
+ /* import-globals-from experimental.js */
+ /* import-globals-from findInPage.js */
+@@ -117,6 +118,7 @@ function init_all() {
+   register_module("paneHome", gHomePane);
+   register_module("paneSearch", gSearchPane);
+   register_module("panePrivacy", gPrivacyPane);
++  register_module("paneLibrewolf", gLibrewolfPane);
+   register_module("paneContainers", gContainersPane);
+   if (Services.prefs.getBoolPref("browser.preferences.experimental")) {
+     // Set hidden based on previous load's hidden value.
+diff --git a/browser/components/preferences/preferences.xhtml b/browser/components/preferences/preferences.xhtml
+index aab4a9e..907a631 100644
+--- a/browser/components/preferences/preferences.xhtml
++++ b/browser/components/preferences/preferences.xhtml
+@@ -12,6 +12,7 @@
+ <?xml-stylesheet href="chrome://browser/skin/preferences/search.css"?>
+ <?xml-stylesheet href="chrome://browser/skin/preferences/containers.css"?>
+ <?xml-stylesheet href="chrome://browser/skin/preferences/privacy.css"?>
++<?xml-stylesheet href="chrome://browser/skin/preferences/librewolf.css"?>
+ 
+ <!DOCTYPE html>
+ 
+@@ -128,6 +129,17 @@
+           <label class="category-name" flex="1" data-l10n-id="pane-privacy-title"></label>
+         </richlistitem>
+ 
++        <richlistitem id="category-librewolf"
++                      class="category"
++                      value="paneLibrewolf"
++                      helpTopic="prefs-librewolf"
++                      data-l10n-id="category-librewolf"
++                      data-l10n-attrs="tooltiptext"
++                      align="center">
++          <image class="category-icon"/>
++          <label class="category-name" flex="1" data-l10n-id="pane-librewolf-title"></label>
++        </richlistitem>
++
+         <richlistitem id="category-sync"
+                       class="category"
+                       hidden="true"
+@@ -201,6 +213,7 @@
+ #include home.inc.xhtml
+ #include search.inc.xhtml
+ #include privacy.inc.xhtml
++#include librewolf.inc.xhtml
+ #include containers.inc.xhtml
+ #include sync.inc.xhtml
+ #include experimental.inc.xhtml
+diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
+index d276f7a..9a3bcd3 100644
+--- a/browser/locales/en-US/browser/preferences/preferences.ftl
++++ b/browser/locales/en-US/browser/preferences/preferences.ftl
+@@ -1347,3 +1347,152 @@ choose-download-folder-title = Choose Download Folder:
+ #   $service-name (String) - Name of a cloud storage provider like Dropbox, Google Drive, etc...
+ save-files-to-cloud-storage =
+     .label = Save files to { $service-name }
++
++## LibreWolf preferences
++
++# Sidebar
++pane-librewolf-title = LibreWolf
++category-librewolf =
++    .tooltiptext = about:config changes, logically grouped and easily accessible
++
++# Main content
++librewolf-header = Librewolf Preferences
++librewolf-warning-title = Heads up!
++librewolf-warning-description = We carefully choose default settings to focus on privacy and security. When changing these settings, read the descriptions to understand the implications of those changes.
++
++# Page Layout
++librewolf-general-heading = Browser Behavior
++librewolf-extension-update-checkbox =
++    .label = Extensions & Themes auto-update
++librewolf-ipv6-checkbox =
++    .label = Enable IPv6
++librewolf-restore-session-checkbox =
++    .label = Restore previous session
++librewolf-autocopy-checkbox =
++    .label = Enable Linux-style copy/paste
++librewolf-styling-checkbox = 
++    .label = Advanced CSS styling
++librewolf-search-suggest-checkbox = Search Suggestions
++
++librewolf-broken-heading = Restricted Content
++librewolf-broken-description = There is a reason these are all turned off by default, and unless you require them for some reason, they should probably stay that way.
++librewolf-webgl-checkbox =
++    .label = Enable WebGL
++librewolf-conferencing-checkbox =
++    .label = Peer Connections
++librewolf-screensharing-checkbox =
++    .label = Screensharing
++librewolf-geolocation-checkbox =
++    .label = Geolocation Data
++librewolf-auto-decline-canvas-checkbox =
++    .label = Hide canvas request popups
++
++librewolf-drm-checkbox =
++    .label = Serve DRM-restricted content
++
++librewolf-hardened-heading = Hardened Privacy and Security
++librewolf-hardened-master-checkbox =
++    .label = Select all hardening options
++librewolf-letterboxing-checkbox =
++    .label = Window Letterboxing
++librewolf-web-applications-checkbox =
++    .label = Disable asm.js
++librewolf-wasm-checkbox =
++    .label = Disable Web Assembly
++
++librewolf-misc-heading = Miscellaneous Options
++librewolf-goog-safe-checkbox =
++    .label = Enable Google Safe Browsing
++librewolf-goog-safe-download-checkbox =
++    .label = Allow Google Safe Browsing to view your downloads
++librewolf-moz-track-prot-checkbox =
++    .label = Enable Mozilla Tracking Protection
++librewolf-moz-track-prot-private-checkbox =
++    .label = Mozilla Tracking Protection in private windows
++librewolf-language-checkbox =
++    .label = Allow installation of other language packs
++librewolf-OCSP-checkbox =
++    .label = Change OCSP options
++
++# In-depth descriptions
++librewolf-extension-update-description = Keep Extensions and Themes up to date without manual intervention (recommended)
++librewolf-extension-update-warning1 = When you automatically install anything, you can't review the code before installation
++librewolf-extension-update-warning2 = Will trigger network activity periodically without user input
++
++librewolf-ipv6-description = Allow { -brand-short-name } to connect using IPv6
++librewolf-ipv6-warning1 = IPv6 is often configured in a way that leaks your MAC address, and sometimes doesn't work properly through a VPN
++
++librewolf-restore-session-description = Restores previously opened tabs when you close your browser
++librewolf-restore-session-warning1 = Anyone who may have physical access to your device may see your browsing history
++librewolf-restore-session-warning2 = Forces { -brand-short-name } to store history
++
++librewolf-autocopy-description = Selecting text copies it to your clipboard; middle-mouse pastes text
++librewolf-autocopy-warning1 = Any data copied to the clipboard may be observed by any native applications on your computer
++librewolf-autocopy-warning2 = Highlighting or pasting the wrong information could leak it to a malicious actor
++
++librewolf-styling-description = Allow { -brand-short-name } to load `chrome/userChrome.css` and customize the UI
++librewolf-styling-warning1 = Ensure that you trust any providers of stylesheets that you use
++librewolf-styling-warning2 = The librewolf team has not thoroughly researched these preferences and cannot guarantee there are no security/privacy risks, keep off if you don't use this
++
++librewolf-webgl-description = Run Javascript code that uses WebGL
++librewolf-webgl-warning1 = WebGL can be used for fingerprinting - extensions like Canvas Blocker can help if you need this on
++
++librewolf-conferencing-description = These preferences are required to use certain websites, typically Video Conferencing ones
++librewolf-conferencing-warning1 = WebRTC can leak your IP address, even behind a VPN
++
++librewolf-screensharing-description = Allow websites to share your screen
++librewolf-screensharing-warning1 = Be mindful of which websites you allow to view your screen as that information can be used in ways you may not approve
++librewolf-screensharing-warning2 = You will likely have to enable canvas access after granting permission to screenshare
++
++librewolf-geolocation-description = TODO Enabling this allows websites to access your physical location if they request it
++librewolf-geolocation-warning1 = TODO This may significantly reduce your privacy and give websites information you don't want them to know
++
++librewolf-auto-decline-canvas-description = Remove "Allow X to use your HTML5 canvas image data" popups. Instead, automatically block them.
++librewolf-auto-decline-canvas-warning1 = There is no reason not to select this, it just will require you to click the icon in the URL bar if you want to enable canvas.
++librewolf-auto-decline-canvas-warning2 = Enabling canvas should always be done with caution, as websites can very easily fingerprint your computer via the way it draws a canvas.
++
++librewolf-drm-description = Allow your browser to work against you :(
++librewolf-drm-warning1 = Digital Rights Management does not protect your own digital rights, and it limits the freedom for everyone to share information
++
++librewolf-letterboxing-description = Letterboxing dynamically resizes the inner window by applying margins in stepped ranges, creating a fixed resolution
++librewolf-web-applications-description = asm.js is an older specification, which allows JavaScript to software written in languages like C, C++ etc. It is deprecated in favor of WebAssembly. This preference disables it to improve security.
++librewolf-wasm-description = WebAssembly has powerful low-level access, making certain attacks (brute-force, crytopmining, malware) and security exploits more possible. This preference disables it.
++
++librewolf-goog-safe-description = Enable Google Safe Browsing
++librewolf-goog-safe-warning1 = Turning this preference on may give corporations the power to censor the internet or control what content you view
++librewolf-goog-safe-warning2 = If you are worried about malware, phishing, or do not trust yourself to keep yourself safe, it can be useful
++
++librewolf-goog-safe-download-description = Have Google scan all the files you download to verify their security
++librewolf-goog-safe-download-warning1 = Who does the server really serve?
++
++librewolf-moz-track-prot-description = Enable Mozilla Tracking Protection
++librewolf-moz-track-prot-warning1 = uBlock Origin already provides most of the useful functionality that turning this on will provide
++librewolf-moz-track-prot-private-description = Run Mozilla Tracking Protection in private windows
++
++librewolf-language-description = Enable installation of other language packs from Mozilla
++librewolf-language-warning1 = ResistFingerprinting is used by many en_US users, but not many other users. Changing your language pack will most likely result in a unique fingerprint.
++librewolf-language-warning2 = You are recommended NOT to do this unless you absolutely need to for any reason.
++
++# OCSP settings
++librewolf-OCSP-header = Change OCSP Options
++librewolf-OCSP-description = These settings control how Librewolf tests the certificates of the websites you visit
++librewolf-OCSP-warning1 = This is a tradeoff between security and privacy
++librewolf-OCSP-warning2 = Going to unsigned websites may expose you to a Man-In-The-Middle attack
++librewolf-OCSP-warning3 = Using OCSP will leak information about the sites you visit to the Certificate Authority, though crlite does not
++librewolf-OCSP-prefs = The preferences affected are 'security.pki.crlite_mode', 'security.OCSP.enabled', and 'security.OCSP.require'
++
++librewolf-OCSP-option0 =
++    .label = Do not require signing of certificates
++librewolf-OCSP-option1 =
++    .label = Use crlite, fall back to trusting an unknown certificate
++librewolf-OCSP-option2 =
++    .label = Use crlite, fall back to requiring OCSP verification
++librewolf-OCSP-option3 =
++    .label = Always use OCSP to verify certificates
++librewolf-OCSP-unknown =
++    .label = Unknown (selecting this does nothing)
++
++# Footer
++librewolf-footer = Useful links
++librewolf-config-link = All advanced settings (about:config)
++librewolf-open-profile = Open user profile directory
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index cf1ebf0..336118c 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -105,6 +105,7 @@
+   skin/classic/browser/preferences/category-experiments.svg    (../shared/preferences/category-experiments.svg)
+   skin/classic/browser/preferences/category-general.svg        (../shared/preferences/category-general.svg)
+   skin/classic/browser/preferences/category-privacy-security.svg    (../shared/preferences/category-privacy-security.svg)
++  skin/classic/browser/preferences/category-librewolf.svg    (../shared/preferences/category-librewolf.svg)
+   skin/classic/browser/preferences/category-search.svg         (../shared/preferences/category-search.svg)
+   skin/classic/browser/preferences/category-sync.svg           (../shared/preferences/category-sync.svg)
+   skin/classic/browser/preferences/critters-postcard.jpg       (../shared/preferences/critters-postcard.jpg)
+@@ -119,6 +120,7 @@
+   skin/classic/browser/preferences/search-bar.svg              (../shared/preferences/search-bar.svg)
+   skin/classic/browser/preferences/search.css                  (../shared/preferences/search.css)
+   skin/classic/browser/preferences/siteDataSettings.css        (../shared/preferences/siteDataSettings.css)
++  skin/classic/browser/preferences/librewolf.css               (../shared/preferences/librewolf.css)
+ * skin/classic/browser/preferences/containers.css              (../shared/preferences/containers.css)
+ * skin/classic/browser/preferences/containers-dialog.css       (../shared/preferences/containers-dialog.css)
+   skin/classic/browser/upgradeDialog/highlights-24.svg         (../shared/upgradeDialog/highlights-24.svg)
+diff --git a/browser/themes/shared/preferences/category-librewolf.svg b/browser/themes/shared/preferences/category-librewolf.svg
+new file mode 100644
+index 0000000..8ebf2eb
+--- /dev/null
++++ b/browser/themes/shared/preferences/category-librewolf.svg
+@@ -0,0 +1,96 @@
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. 
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20" fill="context-fill" fill-opacity="context-fill-opacity">
++  <path d="M15.5 9 15 9l0-4A5 5 0 0 0 5 5l0 4-.5 0A2.5 2.5 0 0 0 2 11.5l0 6A2.5 2.5 0 0 0 4.5 20l11 0a2.5 2.5 0 0 0 2.5-2.5l0-6A2.5 2.5 0 0 0 15.5 9zm-9-4c0-1.93 1.57-3.5 3.5-3.5 1.93 0 3.5 1.57 3.5 3.5l0 4-7 0 0-4zm10 12.7-.8.8-11.4 0-.8-.8 0-6.4.8-.8 11.4 0 .8.8 0 6.4z"/>
++</svg>
++-->
++
++<svg
++   xmlns:dc="http://purl.org/dc/elements/1.1/"
++   xmlns:cc="http://creativecommons.org/ns#"
++   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
++   xmlns:svg="http://www.w3.org/2000/svg"
++   xmlns="http://www.w3.org/2000/svg"
++   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
++   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
++   width="67.733337mm"
++   height="67.733337mm"
++   viewBox="0 0 67.733337 67.733337"
++   version="1.1"
++   id="svg8"
++   inkscape:version="0.92.4 5da689c313, 2019-01-14"
++   sodipodi:docname="LibreWolf.svg">
++  <defs
++     id="defs2" />
++  <sodipodi:namedview
++     id="base"
++     pagecolor="#ffffff"
++     bordercolor="#666666"
++     borderopacity="1.0"
++     inkscape:pageopacity="0.0"
++     inkscape:pageshadow="2"
++     inkscape:zoom="0.9899495"
++     inkscape:cx="-15.106575"
++     inkscape:cy="110.91343"
++     inkscape:document-units="mm"
++     inkscape:current-layer="layer1"
++     showgrid="false"
++     inkscape:window-width="1366"
++     inkscape:window-height="711"
++     inkscape:window-x="0"
++     inkscape:window-y="30"
++     inkscape:window-maximized="1"
++     inkscape:showpageshadow="false"
++     units="px"
++     fit-margin-top="0"
++     fit-margin-left="0"
++     fit-margin-right="0"
++     fit-margin-bottom="0" />
++  <metadata
++     id="metadata5">
++    <rdf:RDF>
++      <cc:Work
++         rdf:about="">
++        <dc:format>image/svg+xml</dc:format>
++        <dc:type
++           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
++        <dc:title />
++      </cc:Work>
++    </rdf:RDF>
++  </metadata>
++  <g
++     inkscape:label="Layer 1"
++     inkscape:groupmode="layer"
++     id="layer1"
++     transform="translate(-42.106554,-153.8982)">
++    <circle
++       style="fill:#00acff;fill-opacity:1;stroke:none;stroke-width:0.53545821;stroke-miterlimit:4;stroke-dasharray:none"
++       id="path875"
++       cx="75.973221"
++       cy="187.76486"
++       r="33.866669" />
++    <path
++       style="fill:#ffffff;stroke-width:0.13229167"
++       d="m 72.543594,214.67719 c -4.744093,-0.60875 -9.281981,-2.49991 -13.241953,-5.51858 -1.29157,-0.98455 -3.714943,-3.42363 -4.772834,-4.80375 -2.96241,-3.86476 -4.804479,-8.2508 -5.41218,-12.88661 -0.260164,-1.98464 -0.258719,-5.63349 0.0029,-7.44738 1.308078,-9.0677 7.01463,-16.8454 15.20915,-20.72918 3.811512,-1.80647 7.300266,-2.57114 11.730683,-2.57114 7.165903,0 13.5265,2.56749 18.680882,7.54063 2.483054,2.39575 4.148141,4.66808 5.573968,7.60677 1.92868,3.9751 2.70979,7.43276 2.70979,11.99526 0,6.00619 -1.7345,11.24407 -5.336957,16.11672 -1.070527,1.44797 -3.161747,3.64749 -4.549468,4.78507 -3.806562,3.12041 -8.658642,5.23183 -13.473174,5.86296 -1.663528,0.21807 -5.593318,0.24524 -7.120854,0.0492 z m 10.041381,-4.86547 c 2.898391,-0.91366 5.260364,-2.14146 7.540624,-3.91979 1.212494,-0.9456 3.308223,-3.06144 4.186916,-4.22711 2.38328,-3.16162 4.004927,-7.12196 4.482067,-10.94597 0.229814,-1.84182 0.09634,-5.73827 -0.2545,-7.4296 -0.9294,-4.48046 -2.931647,-8.26499 -6.086007,-11.50342 -1.966575,-2.01898 -3.756882,-3.34972 -6.060203,-4.50458 -3.495001,-1.75236 -6.489835,-2.46043 -10.423481,-2.46442 -4.164073,-0.004 -7.815325,0.95024 -11.429055,2.98766 -3.289753,1.85476 -6.690628,5.25952 -8.553227,8.563 -1.371786,2.43299 -2.37583,5.32029 -2.767595,7.95869 -0.256867,1.72991 -0.261933,5.16508 -0.01006,6.82145 0.504067,3.31489 1.761474,6.59111 3.584314,9.33904 0.995409,1.50058 0.964154,1.48393 1.842248,0.98153 1.570774,-0.8987 1.980396,-1.33342 2.836087,-3.00984 1.000624,-1.96036 2.070459,-3.6735 3.037094,-4.86332 1.115822,-1.37347 1.269228,-1.61793 1.828988,-2.9147 0.281654,-0.65249 0.786977,-1.61074 1.122938,-2.12943 l 0.61084,-0.94309 -0.79023,-0.77671 c -1.049647,-1.03168 -1.922751,-2.2016 -2.087012,-2.79651 -0.167761,-0.60758 0.03021,-0.9466 0.818744,-1.40207 0.797354,-0.46057 1.367585,-0.5929 3.498657,-0.81193 1.037629,-0.10665 2.164153,-0.30199 2.518962,-0.43681 0.353024,-0.13414 1.407825,-0.70824 2.344001,-1.27579 2.702947,-1.63863 2.931619,-1.72344 4.552111,-1.68831 1.368686,0.0297 1.371262,0.0291 2.182813,-0.46143 1.700674,-1.02802 4.14305,-2.88289 7.357044,-5.58733 0.61632,-0.5186 1.21002,-0.92569 1.31934,-0.90464 0.45462,0.0876 1.289567,2.13636 1.416407,3.47562 0.07693,0.81225 -0.08023,1.6155 -0.562014,2.87261 -0.13146,0.34301 -0.19208,0.67043 -0.134706,0.7276 0.13774,0.13726 0.610706,-0.4535 0.610706,-0.76279 0,-0.39435 0.261127,-0.43936 0.616327,-0.10623 0.258235,0.24218 0.480842,0.31151 1.000202,0.31151 0.567073,0 0.707447,0.0526 0.928773,0.3479 0.375574,0.50112 0.463647,1.86688 0.176201,2.73231 -0.279641,0.84191 -1.124801,1.81287 -1.891829,2.17341 -0.686334,0.32262 -2.075841,1.67928 -2.726081,2.66164 -0.248906,0.37604 -0.715586,1.15995 -1.037066,1.74204 -0.321487,0.58208 -0.86074,1.46154 -1.19834,1.95436 -0.664294,0.96972 -1.233147,2.3224 -1.782214,4.23798 -0.322553,1.1253 -0.34962,1.41826 -0.362953,3.92797 -0.01613,3.0317 -0.172894,3.77561 -0.9925,4.7091 -0.931805,1.06126 -1.861937,3.39186 -1.940127,4.8613 -0.04935,0.92751 -0.192246,1.83164 -0.395304,2.50122 -0.08942,0.29484 0.07752,0.2914 1.072102,-0.0221 z"
++       id="path847"
++       inkscape:connector-curvature="0" />
++    <path
++       sodipodi:type="star"
++       style="fill:#00acff;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none"
++       id="path814"
++       sodipodi:sides="4"
++       sodipodi:cx="18.854025"
++       sodipodi:cy="172.98837"
++       sodipodi:r1="1.6036172"
++       sodipodi:r2="1.1339285"
++       sodipodi:arg1="1.5707963"
++       sodipodi:arg2="2.3561945"
++       inkscape:flatsided="true"
++       inkscape:rounded="0"
++       inkscape:randomized="0"
++       d="m 18.854025,174.59199 -1.603617,-1.60362 1.603617,-1.60361 1.603617,1.60361 z"
++       transform="matrix(0.23203125,0.40188991,-0.99392962,0.57384553,246.21921,73.888081)" />
++  </g>
++</svg>
++
+diff --git a/browser/themes/shared/preferences/librewolf.css b/browser/themes/shared/preferences/librewolf.css
+new file mode 100644
+index 0000000..aeb550c
+--- /dev/null
++++ b/browser/themes/shared/preferences/librewolf.css
+@@ -0,0 +1,16 @@
++.librewolf-collapse > input {
++	display: none;
++}
++.librewolf-collapse > input ~ .librewolf-collapsed {
++	display: none;
++	/* max-height: 0; */
++	transition: max-height 0.25s ease-in-out;
++}
++.librewolf-collapse > input:checked ~ .librewolf-collapsed {
++	display: block;
++	/* max-height: 20rem; */
++}
++.librewolf-warning {
++	display: inline;
++	font-size: 0.8em;
++}
+diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
+index 31bffd0..1f9fbcf 100644
+--- a/browser/themes/shared/preferences/preferences.inc.css
++++ b/browser/themes/shared/preferences/preferences.inc.css
+@@ -201,6 +201,10 @@ checkbox {
+   list-style-image: url("chrome://browser/skin/preferences/category-privacy-security.svg");
+ }
+ 
++#category-librewolf > .category-icon {
++  list-style-image: url("chrome://browser/skin/preferences/category-librewolf.svg");
++}
++
+ #category-sync > .category-icon {
+   list-style-image: url("chrome://browser/skin/preferences/category-sync.svg");
+ }

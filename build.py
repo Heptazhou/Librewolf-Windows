@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-pkgver = '94.0.2'
-lwver = "{}.3".format(pkgver)
-nightly_ver = '96.0a1'
+pkgver = '95.0'
+lwver = "{}".format(pkgver)
+nightly_ver = '97.0a1'
 
 #
 # build.py - try move functionality away from that too big/horrible build script.
@@ -212,12 +212,13 @@ def execute_extract():
         
 def execute_build():
         enter_srcdir()
-        exec("bash ./mach build")
+        #exec("bash -c \"MACH_USE_SYSTEM_PYTHON=1 ./mach build\"")
+        exec("bash -c \"./mach build\"")
         leave_srcdir()
         
 def execute_package():
         enter_srcdir()
-        exec("bash ./mach package")
+        exec("bash -c \"./mach package\"")
         leave_srcdir()
 
 
@@ -716,14 +717,21 @@ ac_add_options --enable-optimize
 #ac_add_options --disable-optimize
 
 
+
+
 # Branding
-ac_add_options --enable-update-channel=release
-# theming bugs: ac_add_options --with-app-name=librewolf
-# theming bugs: ac_add_options --with-app-basename=LibreWolf
-ac_add_options --with-branding=browser/branding/librewolf
-ac_add_options --with-distribution-id=io.gitlab.librewolf-community
-ac_add_options --with-unsigned-addon-scopes=app,system
-ac_add_options --allow-addon-sideload
+#ac_add_options --enable-update-channel=release
+## theming bugs: ac_add_options --with-app-name=librewolf
+## theming bugs: ac_add_options --with-app-basename=LibreWolf
+#ac_add_options --with-branding=browser/branding/librewolf
+#ac_add_options --with-distribution-id=io.gitlab.librewolf-community
+#ac_add_options --with-unsigned-addon-scopes=app,system
+#ac_add_options --allow-addon-sideload
+
+
+
+
+
 # see issue # https://gitlab.com/librewolf-community/browser/arch/-/issues/49
 export MOZ_REQUIRE_SIGNING=
 
@@ -741,10 +749,13 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 # testing..
 # MOZ_APP_NAME=librewolf
 # This gives the same theming issue as --with-app-name=librewolf
+
+
+# TODO: find out how to support sandboxed libraries
+#ac_add_options --without-wasm-sandboxed-libraries
+
+
 """
-
-
-
 
 
 main()
