@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-pkgver = '95.0'
+pkgver = '95.0.1'
 lwver = "{}".format(pkgver)
 nightly_ver = '97.0a1'
 
@@ -287,7 +287,7 @@ def execute_lw_do_patches():
                     "../common/patches/mozilla-vpn-ad.patch",
                     "../common/patches/mozilla_dirs.patch",
                     "../common/patches/remove_addons.patch",
-                    "../common/patches/search-config.patch",
+#                    "../common/patches/search-config.patch",
                     "../common/patches/sed-patches/allow-searchengines-non-esr.patch",
                     "../common/patches/sed-patches/disable-pocket.patch",
                     "../common/patches/sed-patches/remove-internal-plugin-certs.patch",
