@@ -1,4 +1,4 @@
-.phony: all clean veryclean  fetch extract lw_do_patches build lw_post_build package lw_artifacts
+.phony: all clean veryclean  fetch extract lw_do_patches build lw_post_build package lw_artifacts commit
 
 BUILD=python3 build.py ${OPTS}
 
@@ -46,3 +46,9 @@ docker-all :
 docker-clean :
 	make -C docker clean
 
+
+# git commit && git push
+
+commit :
+	git commit -am "$$(date)"
+	git push
