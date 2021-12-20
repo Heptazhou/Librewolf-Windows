@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-pkgver = '95.0.1'
+pkgver = '95.0.2'
 lwver = "{}".format(pkgver)
 nightly_ver = '97.0a1'
 
