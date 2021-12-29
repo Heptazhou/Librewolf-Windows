@@ -1,6 +1,6 @@
 # LibreWolf for windows
 
-* Compilation machine failed on: Wed 29 Dec 2021 01:35:38 PM CET, and is reduced to amorhous silicon. So we can't create new builds right now.
+* Compilation machine failed on: Wed 29 Dec 2021 01:35:38 PM CET, and is reduced to sand. So we can't create new builds right now.
 
 * **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**
 * Visit [the FAQ](https://librewolf.net/docs/faq/).
