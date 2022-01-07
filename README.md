@@ -1,7 +1,5 @@
 # LibreWolf for windows
 
-#### [ticket #142](https://gitlab.com/librewolf-community/browser/windows/-/issues/142) - Compilation machine failed
-
 * **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**
 * Visit [the FAQ](https://librewolf.net/docs/faq/).
 * Install via _[chocolatey](https://community.chocolatey.org/packages/librewolf)_: `choco install librewolf`
