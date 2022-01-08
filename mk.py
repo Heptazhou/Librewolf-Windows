@@ -27,22 +27,20 @@ def exec(cmd):
 # main functions
 
 def fetch():
-    exec('rm -rf version release')
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
-    exec('wget -q -O release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
-    exec('rm -f librewolf-$(cat version)-$(cat release).source.tar.gz')
-    exec('wget -O librewolf-$(cat version)-$(cat release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat release).source.tar.gz?job=build-job')
+    exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
+    exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=build-job')
 
 def build():
     exec('rm -rf librewolf-$(cat version)')
     exec('tar xf librewolf-$(cat version)-$(cat release).source.tar.gz')
     with open('version','r') as file:
         version = file.read().rstrip()
-        os.chdir('librewolf-{}'.format(version))    
+        os.chdir('librewolf-{}'.format(version))
         exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
         exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
 
-def artifact():
+def artifacts():
     bash('# you gotta figure that out from the previous ./build.py')
     pass
 
@@ -54,7 +52,7 @@ Use: ./mk.py <command> ...
 commands:
   fetch
   build
-  artifact
+  artifacts
 
 '''
 
@@ -67,8 +65,8 @@ for arg in sys.argv:
     elif arg == 'build':
         build()
         done_something = True
-    elif arg == 'artifact':
-        artifact()
+    elif arg == 'artifacts':
+        artifacts()
         done_something = True
     else:
         if arg == sys.argv[0]:
