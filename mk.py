@@ -39,8 +39,8 @@ def build():
     with open('version','r') as file:
         version = file.read().rstrip()
         os.chdir('librewolf-{}'.format(version))    
-        exec('./mach build')
-        exec('./mach package')
+        exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
+        exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
 
 def artifact():
     bash('# you gotta figure that out from the previous ./build.py')
