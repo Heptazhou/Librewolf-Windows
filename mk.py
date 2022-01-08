@@ -22,9 +22,16 @@ def exec(cmd):
         return native(cmd)
     return bash(cmd)
 
+#
+# windows specific actions
+#
 
+def win_before_build():
+    exec('cp -v assets/mozconfig.windows librewolf-$(cat version)/mozconfig')
 
+#
 # main functions
+#
 
 def fetch():
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
@@ -32,19 +39,29 @@ def fetch():
     exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=build-job')
 
 def build():
+    
     exec('rm -rf librewolf-$(cat version)')
-    exec('tar xf librewolf-$(cat version)-$(cat release).source.tar.gz')
+    exec('tar xf librewolf-$(cat version)-$(cat source_release).source.tar.gz')
+    
+    win_before_build()
+    
     with open('version','r') as file:
         version = file.read().rstrip()
         os.chdir('librewolf-{}'.format(version))
+        
         exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
         exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
+
+
 
 def artifacts():
     bash('# you gotta figure that out from the previous ./build.py')
     pass
 
+
+#
 # parse commandline for commands
+#
 
 help_msg = '''
 Use: ./mk.py <command> ...

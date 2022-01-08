@@ -1,4 +1,4 @@
-.PHONY : help all clean veryclean fetch build artifact
+.PHONY : help all clean veryclean fetch build artifacts
 
 help :
 	@echo "Use: make [all] [clean] [veryclean]"
@@ -9,15 +9,16 @@ help :
 	@echo ""
 	@echo "  fetch     - Fetch the latest librewolf source."
 	@echo "  build     - Perform './mach build && ./mach package' on it."
-	@echo "  artifact  - Create the setup.exe and the portable.zip."
+	@echo "  artifacts - Create the setup.exe and the portable.zip."
 	@echo ""
 
 all : fetch build artifact
 
 clean :
+	rm -rf librewolf-$(shell cat version)
 
 veryclean :
-	rm -f librewolf-*.source.tar.gz
+	rm -f source_release librewolf-$(shell cat version)-*.source.tar.gz
 
 fetch :
 	python3 mk.py fetch
@@ -25,6 +26,6 @@ fetch :
 build :
 	python3 mk.py build
 
-artifact :
-	python3 mk.py artifact
+artifacts :
+	python3 mk.py artifacts
 
