@@ -2,6 +2,10 @@
 
 import os,sys,subprocess
 
+# note: change this to True when *not* on windows
+_native = False
+
+# native()/bash()/exec() utility functions
 def native(cmd):
     print(cmd)
     retval = os.system(cmd)
@@ -16,7 +20,6 @@ def bash(cmd):
     if retval != 0:
         sys.exit(retval)
 
-_native = False # modify this when needed
 def exec(cmd):
     if _native:
         return native(cmd)
