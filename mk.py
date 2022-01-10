@@ -97,7 +97,10 @@ def artifacts():
         # let's get 'release'.
         with open('release','r') as file2:
             release = file2.read().rstrip()
-            full_version = '{}.{}'.format(version,release)
+            if release == '0' :
+                full_version = '{}'.format(version)
+            else:
+                full_version = '{}.{}'.format(version,release)
 
             # let's copy in the .ico icon.
             exec('cp -v assets/librewolf.ico work/librewolf')

@@ -20,7 +20,7 @@ all : fetch build artifacts
 
 clean :
 	rm -rf work
-	rm -f librewolf-$(shell cat version).*.en-US.win64* md5sums.txt upload.txt
+	rm -f librewolf-$(shell cat version).*.en-US.win64* md5sums.txt upload.txt firefox-$(shell cat version).en-US.win64.zip
 
 veryclean : clean
 	rm -rf librewolf-$(shell cat version)
