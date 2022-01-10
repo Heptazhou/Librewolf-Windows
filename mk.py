@@ -86,14 +86,51 @@ def build():
 
 
 def artifacts():
-    bash('# guide - you gotta figure this out from the previous ./build.py')
+    print('[debug] # guide - you gotta figure this out from the previous ./build.py')
     pass
 
-    with open('version','r') as file:
-        version = file.read().rstrip()
-        exec('cp -v librewolf-{}/obj-x86_64-pc-mingw32/dist/firefox-{}.en-US.win64.zip .'.format(version,version))
+    with open('version','r') as file1:
+        version = file1.read().rstrip()
+        buildzip_filename = 'firefox-{}.en-US.win64.zip'.format(version)
+        exec('cp -v librewolf-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,buildzip_filename))
+        exec('rm -rf work && mkdir work')
+        os.chdir('work')
+        exec('unzip ../{}'.format(buildzip_filename))
+        exec('mv firefox librewolf')
+        os.chdir('librewolf')
+        exec('mv firefox.exe librewolf.exe')
+        os.chdir('..')
+        os.chdir('..')
 
-        print('mk.py:artifacts(): done.')
+        # let's get 'release'.
+        with open('release','r') as file2:
+            release = file2.read().rstrip()
+            full_version = '{}.{}'.format(version,release)
+            print('[debug] mk.py: artifacts(): Building for ful version: {}'.format(full_version))
+
+            # let's copy in the .ico icon.
+            exec('cp -v assets/librewolf.ico work/librewolf')
+
+            # Let's make the portable zip first.
+            os.chdir('work')
+            exec('rm -rf librewolf-{}'.format(version))
+            os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
+            os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
+            exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
+            exec('wget -q -O librewolf-{}/librewolf-portable.exe https://gitlab.com/librewolf-community/browser/windows/uploads/8347381f01806245121adcca11b7f35c/librewolf-portable.exe'.format(version))
+            zipname = '../librewolf-{}.en-US.win64.zip'.format(full_version)
+            exec("rm -f {}".format(zipname))
+            exec("zip -qr9 {} librewolf-{}".format(zipname,version))            
+            os.chdir('..')
+
+            # With that out of the way, we need to create the nsis setup.
+            os.chdir('work')
+            setupname = "librewolf-{}.en-US.win64-setup.exe".format(full_version)
+            exec("sed \"s/pkg_version/{}/g\" < ../assets/setup.nsi > tmp.nsi".format(full_version))
+            exec('makensis-3.01.exe -V1 tmp.nsi')
+            exec('rm -f tmp.nsi')
+            exec("mv {} ..".format(setupname))
+            os.chdir('..')
 
 #
 # parse commandline for commands
