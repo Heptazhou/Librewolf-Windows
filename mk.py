@@ -3,35 +3,33 @@
 import os,sys,subprocess
 
 # native()/bash()/exec() utility functions
-def native(cmd):
+def native(cmd,do_print=True):
     sys.stdout.flush()
-    print(cmd)
-    sys.stdout.flush()
+    if do_print:
+        print(cmd)
+        sys.stdout.flush()
    
     retval = os.system(cmd)
     if retval != 0:
         sys.exit(retval)
 
-_no_exit = False
-def bash(cmd):
+def bash(cmd,do_print=True):
     tmp = []
     tmp += ['c:/mozilla-build/msys/bin/bash.exe', '-c', cmd]
     sys.stdout.flush()
-    print(cmd)
-    sys.stdout.flush()
+    if do_print:
+        print(cmd)
+        sys.stdout.flush()
     
     retval = subprocess.run(tmp).returncode
-    if _no_exit:
-        return
     if retval != 0:
         sys.exit(retval)
 
-_native = False
-_no_exit = False
-def exec(cmd):
+_native = False # set to True if you don't want the win-specific bash.exe
+def exec(cmd,do_print=True):
     if _native:
-        return native(cmd)
-    return bash(cmd)
+        return native(cmd,do_print)
+    return bash(cmd,do_print)
 
 def patch(patchfile):
     cmd = "patch -p1 -i {}".format(patchfile)
@@ -54,16 +52,14 @@ def patch(patchfile):
 
 
 def fetch():
-    print('mk.py: fetch(): Disabled due to "artifacts" now has priority.')
-    sys.exit(1)
     
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
     exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
     exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=build-job')
 
+
+    
 def build():
-    print('mk.py: build(): Disabled due to "artifacts" now has priority.')
-    sys.exit(1)
     
     exec('rm -rf librewolf-$(cat version)')
     exec('tar xf librewolf-$(cat version)-$(cat source_release).source.tar.gz')
@@ -75,12 +71,10 @@ def build():
         # patches
         exec('cp -v ../assets/mozconfig.windows mozconfig')
         patch('../assets/package-manifest.patch')
-        
+
+        # perform the build and package
         exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
-        _no_exit = True
         exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
-        _no_exit = False
-        exec('cp -v obj-x86_64-pc-mingw32/dist/firefox-{}.en-US.win64.zip ..'.format(version))
         os.chdir('..')
 
 
@@ -131,11 +125,12 @@ def artifacts():
 
 
 
-
+# utility function
 def do_upload(filename,token):
     exec('echo _ >> upload.txt')
-    exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt'.format(token,filename))
+    exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt'.format(token,filename),False)
     exec('echo _ >> upload.txt')
+
 
 def upload(token):
 
@@ -153,7 +148,8 @@ def upload(token):
             do_upload(setup_filename,token)
             do_upload(zip_filename,token)
             do_upload('md5sums.txt',token)
-    
+
+            
 #
 # parse commandline for commands
 #
