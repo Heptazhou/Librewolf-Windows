@@ -31,3 +31,6 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 # - no need to specify wasi sdk folder
 #
 
+ac_add_options --disable-installer
+ac_add_options --disable-updater
+ac_add_options --disable-maintenance-service

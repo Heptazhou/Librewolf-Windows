@@ -22,7 +22,7 @@ clean :
 	rm -rf work
 	rm -f librewolf-$(shell cat version).*.en-US.win64* md5sums.txt upload.txt
 
-veryclean :
+veryclean : clean
 	rm -rf librewolf-$(shell cat version)
 	rm -f source_release librewolf-$(shell cat version)-*.source.tar.gz
 
