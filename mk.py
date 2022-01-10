@@ -86,9 +86,7 @@ def build():
 
 
 def artifacts():
-    print('[debug] # guide - you gotta figure this out from the previous ./build.py')
-    pass
-
+    
     with open('version','r') as file1:
         version = file1.read().rstrip()
         buildzip_filename = 'firefox-{}.en-US.win64.zip'.format(version)
@@ -106,7 +104,6 @@ def artifacts():
         with open('release','r') as file2:
             release = file2.read().rstrip()
             full_version = '{}.{}'.format(version,release)
-            print('[debug] mk.py: artifacts(): Building for ful version: {}'.format(full_version))
 
             # let's copy in the .ico icon.
             exec('cp -v assets/librewolf.ico work/librewolf')
@@ -118,20 +115,45 @@ def artifacts():
             os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
             exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
             exec('wget -q -O librewolf-{}/librewolf-portable.exe https://gitlab.com/librewolf-community/browser/windows/uploads/8347381f01806245121adcca11b7f35c/librewolf-portable.exe'.format(version))
-            zipname = '../librewolf-{}.en-US.win64.zip'.format(full_version)
-            exec("rm -f {}".format(zipname))
-            exec("zip -qr9 {} librewolf-{}".format(zipname,version))            
+            zipname = 'librewolf-{}.en-US.win64.zip'.format(full_version)
+            exec("rm -f ../{}".format(zipname))
+            exec("zip -qr9 ../{} librewolf-{}".format(zipname,version))            
             os.chdir('..')
 
             # With that out of the way, we need to create the nsis setup.
             os.chdir('work')
-            setupname = "librewolf-{}.en-US.win64-setup.exe".format(full_version)
-            exec("sed \"s/pkg_version/{}/g\" < ../assets/setup.nsi > tmp.nsi".format(full_version))
+            setupname = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
+            exec('sed \"s/pkg_version/{}/g\" < ../assets/setup.nsi > tmp.nsi'.format(full_version))
             exec('makensis-3.01.exe -V1 tmp.nsi')
             exec('rm -f tmp.nsi')
             exec("mv {} ..".format(setupname))
             os.chdir('..')
 
+
+
+
+def do_upload(filename,token):
+    exec('echo _ >> upload.txt')
+    exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt'.format(token,filename))
+    exec('echo _ >> upload.txt')
+
+def upload(token):
+
+    with open('version','r') as file1:
+        version = file1.read().rstrip()
+        with open('release','r') as file2:
+            release = file2.read().rstrip()
+            full_version = '{}.{}'.format(version,release)
+
+            # Files we need to upload..
+            zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
+            setup_filename = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
+            exec('md5sum {} {} > md5sums.txt'.format(setup_filename,zip_filename))
+            exec('rm -f upload.txt')
+            do_upload(setup_filename,token)
+            do_upload(zip_filename,token)
+            do_upload('md5sums.txt',token)
+    
 #
 # parse commandline for commands
 #
@@ -143,13 +165,18 @@ commands:
   fetch
   build
   artifacts
+  upload <token>
 
 '''
 
 done_something = False
 
+in_upload=False
 for arg in sys.argv:
-    if arg == 'fetch':
+    if in_upload:
+        upload(arg)
+        done_something=True
+    elif arg == 'fetch':
         fetch()
         done_something = True
     elif arg == 'build':
@@ -158,6 +185,8 @@ for arg in sys.argv:
     elif arg == 'artifacts':
         artifacts()
         done_something = True
+    elif arg == 'upload':
+        in_upload = True
     else:
         if arg == sys.argv[0]:
             pass

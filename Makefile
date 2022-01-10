@@ -11,6 +11,10 @@ help :
 	@echo "  build     - Perform './mach build && ./mach package' on it."
 	@echo "  artifacts - Create the setup.exe and the portable.zip."
 	@echo ""
+	@echo "Note: to upload, after artifacts, into the windows repo, use:"
+	@echo ""
+	@echo " python3 mk.py upload <token>"
+	@echo ""
 
 all : fetch build artifacts
 
