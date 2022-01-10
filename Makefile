@@ -12,7 +12,7 @@ help :
 	@echo "  artifacts - Create the setup.exe and the portable.zip."
 	@echo ""
 
-all : fetch build artifact
+all : fetch build artifacts
 
 clean :
 	rm -rf librewolf-$(shell cat version)
