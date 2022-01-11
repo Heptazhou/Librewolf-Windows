@@ -25,8 +25,10 @@ def bash(cmd,do_print=True):
     if retval != 0:
         sys.exit(retval)
 
-_native = False # set to True if you don't want the win-specific bash.exe
 def exec(cmd,do_print=True):
+    _native = False
+    if not os.path.isFile('c:/mozilla-build/msys/bin/bash.exe'):
+        _native = True
     if _native:
         return native(cmd,do_print)
     return bash(cmd,do_print)
@@ -141,7 +143,10 @@ def upload(token):
         version = file1.read().rstrip()
         with open('release','r') as file2:
             release = file2.read().rstrip()
-            full_version = '{}.{}'.format(version,release)
+            if release == '0' :
+                full_version = '{}'.format(version)
+            else:
+                full_version = '{}.{}'.format(version,release)
 
             # Files we need to upload..
             zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
