@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-sed "s,MYDIR,$(pwd),g" < start-librewolf.desktop.in > start-librewolf.desktop
-
-mkdir -p "$HOME/.local/share/applications/"
-cp -v ./start-librewolf.desktop "$HOME/.local/share/applications/"
-update-desktop-database "$HOME/.local/share/applications/"
