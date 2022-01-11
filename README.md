@@ -16,4 +16,24 @@
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
 * [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
 * The install instructions for Windows on [librewolf.net](https://librewolf.net/installation/windows/).
-* Want to compile it for yourself or contribute? check [CONTRIBUTING.md](https://gitlab.com/librewolf-community/browser/windows/-/blob/master/CONTRIBUTING.md).
+
+# Compiling the windows version
+
+This segment is for people who want to build LibreWolf for themselves. The build of the LibreWolf source tarball is in public CI, so you can use that. Given that you have followed the steps in the Mozilla setup guide:
+
+* [Building Firefox On Windows](https://firefox-source-docs.mozilla.org/setup/windows_build.html)
+
+Once that works, you can check out and compile LibreWolf like this:
+
+```
+git clone https://gitlab.com/librewolf-community/browser/windows.git
+cd windows
+make fetch build
+```
+
+Currently a bug in `./mach package` makes this build fail, but it did produce the distribution .zip file that we're after. So after this, you can just:
+
+```
+make artifacts
+```
+This will produce the -setup.exe and portable .zip. Have fun!
