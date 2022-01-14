@@ -82,17 +82,23 @@ def build():
 
 
 def artifacts():
+
+    _with_app_name = True # Trying to fix issue #146 -> https://gitlab.com/librewolf-community/browser/windows/-/issues/146
     
     with open('version','r') as file1:
         version = file1.read().rstrip()
         buildzip_filename = 'firefox-{}.en-US.win64.zip'.format(version)
+        if _with_app_name:
+            buildzip_filename = 'librewolf-{}.en-US.win64.zip'.format(version)
         exec('cp -v librewolf-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,buildzip_filename))
         exec('rm -rf work && mkdir work')
         os.chdir('work')
         exec('unzip ../{}'.format(buildzip_filename))
-        exec('mv firefox librewolf')
+        if not _with_app_name:
+            exec('mv firefox librewolf')
         os.chdir('librewolf')
-        exec('mv firefox.exe librewolf.exe')
+        if not _with_app_name:
+            exec('mv firefox.exe librewolf.exe')
         os.chdir('..')
         os.chdir('..')
 

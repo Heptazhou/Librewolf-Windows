@@ -17,10 +17,10 @@ ac_add_options --with-branding=browser/branding/librewolf
 ac_add_options --with-unsigned-addon-scopes=app,system
 
 # see issue # https://gitlab.com/librewolf-community/browser/arch/-/issues/49
-export MOZ_REQUIRE_SIGNING=
-
 mk_add_options MOZ_CRASHREPORTER=0
 mk_add_options MOZ_DATA_REPORTING=0
+mk_add_options MOZ_NORMANTY=0
+mk_add_options MOZ_REQUIRE_SIGNING=
 mk_add_options MOZ_SERVICES_HEALTHREPORT=0
 mk_add_options MOZ_TELEMETRY_REPORTING=0
 
@@ -32,3 +32,6 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 
 ac_add_options --disable-updater
 ac_add_options --disable-maintenance-service
+ac_add_options --enable-strip
+
+ac_add_options --enable-default-toolkit=cairo-windows
