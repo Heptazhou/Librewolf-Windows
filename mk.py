@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os,sys,subprocess
+import os,sys,subprocess,os.path
 
 # native()/bash()/exec() utility functions
 def native(cmd,do_print=True):
@@ -27,7 +27,7 @@ def bash(cmd,do_print=True):
 
 def exec(cmd,do_print=True):
     _native = False
-    if not os.path.isFile('c:/mozilla-build/msys/bin/bash.exe'):
+    if not os.path.isfile('c:/mozilla-build/msys/bin/bash.exe'):
         _native = True
     if _native:
         return native(cmd,do_print)
