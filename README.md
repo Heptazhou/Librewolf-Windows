@@ -37,3 +37,15 @@ Currently a bug in `./mach package` makes this build fail, but it did produce th
 make artifacts
 ```
 This will produce the -setup.exe and portable .zip. Have fun!
+
+# Uploading a release
+
+To actually submit these artifacts to the Windows repository as release files, use:
+```
+python3 mk.py upload <token>
+```
+This would involve having a valid token, ofcourse, but also something more: [Git for Windows](https://git-scm.com/). From this package, we only need `sha256sum.exe` to calculate our checksums. Mozilla provides only `md5sum.exe` in their very old version of the mingw tools. Simply installing Git won't be enough to get `sha256sum.exe` in our path, the `C:\mozilla-build\start-shell.bat` file needs a little tweak at line 55, to read:
+```
+SET "PATH=%PATH%;!GITDIR!;c:\Program Files\Git\usr\bin"
+```
+This should put `sha256sum.exe` in your path.

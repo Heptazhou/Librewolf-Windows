@@ -159,11 +159,11 @@ def upload(token):
             # Files we need to upload..
             zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
             setup_filename = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
-            exec('md5sum {} {} > md5sums.txt'.format(setup_filename,zip_filename))
+            exec('sha256sum {} {} > sha256sums.txt'.format(setup_filename,zip_filename))
             exec('rm -f upload.txt')
             do_upload(setup_filename,token)
             do_upload(zip_filename,token)
-            do_upload('md5sums.txt',token)
+            do_upload('sha256sums.txt',token)
 
             
 #
