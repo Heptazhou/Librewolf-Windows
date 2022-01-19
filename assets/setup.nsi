@@ -1,31 +1,66 @@
-#
-# Change these values to fit your application...
-#
+!include "MUI2.nsh"
+!include "LogicLib.nsh"
+!addplugindir .
 
-!define APPNAME "LibreWolf"        # Full app name, like: "Gtk+ 2.0 Hello World"
-!define PROGNAME "librewolf"       # executable name, like: gtk2hello
-!define PROG_VERSION "pkg_version" # the program version, like: 0.3.0
-!define ICON_NAME "librewolf.ico"  # filename of icon to use for this app
-!define COMPANYNAME "LibreWolf"    # Your name, or company (or just the program name)
-!define ESTIMATED_SIZE 190000      # Estimated size (in KB) of installed program for use in "add or remove programs" / 190 MB
+!define APPNAME "LibreWolf"
+!define PROGNAME "librewolf"
+!define EXECUTABLE "${PROGNAME}.exe"
+!define PROG_VERSION "pkg_version"
+!define COMPANYNAME "LibreWolf"
+!define ESTIMATED_SIZE 190000
+!define MUI_ICON "librewolf.ico"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "banner.bmp"
 
-#
-# The actual installer/uninstaller, you should not need to change much here below
-#
-
-Name "${PROGNAME}"
+Name "${APPNAME}"
 OutFile "${PROGNAME}-${PROG_VERSION}.en-US.win64-setup.exe"
 InstallDir $PROGRAMFILES64\${APPNAME}
 RequestExecutionLevel admin
 
-Page directory
-Page instfiles
+# Pages
 
-function .onInit
-	setShellVarContext all
-functionEnd
- 
-Section "${PROGNAME}"
+!define MUI_ABORTWARNING
+
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "English"
+
+Section
+
+	# Make sure LibreWolf is closed before the installation
+	nsProcess::_FindProcess "${EXECUTABLE}"
+	Pop $R0
+	${If} $R0 = 0
+		IfSilent 0 +4
+		DetailPrint "${APPNAME} is still running, aborting because of silent install."
+		SetErrorlevel 2
+		Abort
+
+		DetailPrint "${APPNAME} is still running. Closing it gracefully..."
+		nsProcess::_CloseProcess "${EXECUTABLE}"
+		Pop $R0
+		Sleep 2000
+		nsProcess::_FindProcess "${EXECUTABLE}"
+		Pop $R0
+		${If} $R0 = 0
+			DetailPrint "Failed to close ${APPNAME}, killing it..."
+			nsProcess::_KillProcess "${EXECUTABLE}"
+			Sleep 2000
+			nsProcess::_FindProcess "${EXECUTABLE}"
+			Pop $R0
+			${If} $R0 = 0
+				DetailPrint "Failed to kill ${APPNAME}, aborting"
+				MessageBox MB_ICONSTOP "LibreWolf is still running and can't be closed by the installer. Please close it manually and try again."
+				SetErrorlevel 2
+				Abort
+			${EndIf}
+		${EndIf}
+	${EndIf}
 
 	# Copy files
 	SetOutPath $INSTDIR
@@ -33,7 +68,7 @@ Section "${PROGNAME}"
 
 	# Start Menu
 	createDirectory "$SMPROGRAMS\${COMPANYNAME}"
-	createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\${PROGNAME}.exe" "" "$INSTDIR\${ICON_NAME}"
+	createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\${PROGNAME}.exe" "" "$INSTDIR\${MUI_ICON}"
 	createShortCut "$SMPROGRAMS\${COMPANYNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" ""
 
 	# Uninstaller 
@@ -44,7 +79,7 @@ Section "${PROGNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation" "$\"$INSTDIR$\""
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayIcon" "$\"$INSTDIR\${ICON_NAME}$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayIcon" "$\"$INSTDIR\${MUI_ICON}$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "Publisher" "${COMPANYNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayVersion" "${PROG_VERSION}"
 	# There is no option for modifying or repairing the install
@@ -87,20 +122,18 @@ Section "${PROGNAME}"
 
 SectionEnd
 
-# Before uninstall, ask for confirmation
-function un.onInit
-	SetShellVarContext all
- 
-	# Verify the uninstaller - last chance to back out
-	# (commented this out, it causes problems with Chocolatey.)
-	# MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?" IDOK next
-	# 	Abort
-	# next:
-	
-functionEnd
 
 # Uninstaller
-section "uninstall"
+section "Uninstall"
+
+	# Kill LibreWolf if it is still running
+	nsProcess::_FindProcess "${EXECUTABLE}"
+	Pop $R0
+	${If} $R0 = 0
+		DetailPrint "${APPNAME} is still running, killing it..."
+		nsProcess::_KillProcess "${EXECUTABLE}"
+		Sleep 2000
+	${EndIf}
 
 	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk"

@@ -129,10 +129,14 @@ def artifacts():
 
             # With that out of the way, we need to create the nsis setup.
             os.chdir('work')
+            exec("mkdir x86-ansi")
+            exec("wget -q -O ./x86-ansi/nsProcess.dll https://shorsh.de/upload/we7v/nsProcess.dll")
             setupname = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
             exec('sed \"s/pkg_version/{}/g\" < ../assets/setup.nsi > tmp.nsi'.format(full_version))
+            exec('cp -v ../assets/librewolf.ico .')
+            exec('cp -v ../assets/banner.bmp .')
             exec('makensis-3.01.exe -V1 tmp.nsi')
-            exec('rm -f tmp.nsi')
+            exec('rm -rf tmp.nsi librewolf.ico banner.bmp x86-ansi')
             exec("mv {} ..".format(setupname))
             os.chdir('..')
 
