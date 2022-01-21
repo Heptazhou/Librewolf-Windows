@@ -1,6 +1,7 @@
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 !addplugindir .
+!addplugindir x86-ansi
 
 !define APPNAME "LibreWolf"
 !define PROGNAME "librewolf"
