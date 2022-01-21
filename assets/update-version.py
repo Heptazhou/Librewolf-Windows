@@ -4,21 +4,65 @@ import os
 import sys
 import optparse
 
+import subprocess,os.path
+
 parser = optparse.OptionParser()
 parser.add_option('-n', '--no-execute', dest='no_execute', default=False, action="store_true")
 options, remainder = parser.parse_args()
 
-def exec(cmd, exit_on_fail = True, do_print = True):
-    if cmd != '':
-        if do_print:
-            print(cmd)
-        if not options.no_execute:
-            retval = os.system(cmd)
-            if retval != 0 and exit_on_fail:
-                    print("fatal error: command '{}' failed".format(cmd))
-                    sys.exit(1)
-            return retval
-    return None
+
+
+# native()/bash()/exec() utility functions
+def native(cmd,exit_on_fail = True,do_print=True):
+    sys.stdout.flush()
+    if do_print:
+        print(cmd)
+        sys.stdout.flush()
+   
+    retval = os.system(cmd)
+    if retval != 0 and exit_on_fail:
+        sys.exit(retval)
+    return retval
+
+def bash(cmd,exit_on_fail = True,do_print=True):
+    tmp = []
+    tmp += ['c:/mozilla-build/msys/bin/bash.exe', '-c', cmd]
+    sys.stdout.flush()
+    if do_print:
+        print(cmd)
+        sys.stdout.flush()
+    
+    retval = subprocess.run(tmp).returncode
+    if retval != 0 and exit_on_fail:
+        sys.exit(retval)
+    return retval
+
+def exec(cmd,exit_on_fail = True, do_print=True):
+    _native = False
+    if not os.path.isfile('c:/mozilla-build/msys/bin/bash.exe'):
+        _native = True
+    if _native:
+        return native(cmd,exit_on_fail,do_print)
+    return bash(cmd,exit_on_fail,do_print)
+
+
+
+#
+#
+#def exec(cmd, exit_on_fail = True, do_print = True):
+#    if cmd != '':
+#        if do_print:
+#            print(cmd)
+#        if not options.no_execute:
+#            retval = os.system(cmd)
+#            if retval != 0 and exit_on_fail:
+#                    print("fatal error: command '{}' failed".format(cmd))
+#                    sys.exit(1)
+#            return retval
+#    return None
+#
+#
+
 
 def get_version_from_file(version_filename = './version'):
     with open(version_filename) as f:
@@ -39,7 +83,10 @@ def firefox_release_url(ver):
     return 'https://archive.mozilla.org/pub/firefox/releases/{}/source/firefox-{}.source.tar.xz'.format(ver, ver)
 
 def check_url_exists(url):
-    i = exec('wget --spider {} 2>/dev/null'.format(url), exit_on_fail=False, do_print=False)
+    print('[debug] checking url: {}'.format(url))
+    #i = exec('wget --spider {} 2>/dev/null'.format(url), exit_on_fail=False)
+    i = exec('wget --spider {}'.format(url), exit_on_fail=False)
+    print('[debug] return value: {}'.format(i))
     if i == 0:
         return True
     else:
@@ -71,7 +118,7 @@ elif len(split_version) == 3:
 
 # now check if this version exists with Mozilla
 if not check_url_exists(firefox_release_url(make_version_string(major,minor,patch))):
-    sys.stderr.write('error: The current version is unavailable.')
+    sys.stderr.write('error: The current version is unavailable.\n')
     sys.exit(1)
 
 # Check for releases..
