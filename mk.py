@@ -57,11 +57,11 @@ def fetch():
     
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
     exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
-    exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=build-job')
+    exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=Build')
 
 
     
-def build():
+def build(debug=False):
     
     exec('rm -rf librewolf-$(cat version)')
     exec('tar xf librewolf-$(cat version)-$(cat source_release).source.tar.gz')
@@ -71,7 +71,11 @@ def build():
         os.chdir('librewolf-{}'.format(version))
 
         # patches
-        exec('cp -v ../assets/mozconfig.windows mozconfig')
+        if debug:
+            exec('cp -v ../assets/mozconfig.windows.debug mozconfig')
+        else:
+            exec('cp -v ../assets/mozconfig.windows mozconfig')
+            
         patch('../assets/package-manifest.patch')
 
         # perform the build and package
@@ -142,7 +146,7 @@ def artifacts():
 
 
 
-# utility function
+# Utility function to upload() function.
 def do_upload(filename,token):
     exec('echo _ >> upload.txt')
     exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt'.format(token,filename),False)
@@ -180,6 +184,7 @@ Use: ./mk.py <command> ...
 commands:
   fetch
   build
+  build-debug
   artifacts
   upload <token>
 
@@ -197,6 +202,9 @@ for arg in sys.argv:
         done_something = True
     elif arg == 'build':
         build()
+        done_something = True
+    elif arg == 'build-debug':
+        build(True)
         done_something = True
     elif arg == 'artifacts':
         artifacts()

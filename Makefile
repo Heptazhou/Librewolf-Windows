@@ -10,6 +10,7 @@ help :
 	@echo ""
 	@echo "  fetch     - Fetch the latest librewolf source."
 	@echo "  build     - Perform './mach build && ./mach package' on it."
+	@echo "  debug     - Perform a debug build with different 'mozconfig'."
 	@echo "  artifacts - Create the setup.exe and the portable.zip."
 	@echo ""
 	@echo "Note: to upload, after artifacts, into the windows repo, use:"
@@ -32,6 +33,9 @@ fetch :
 
 build :
 	python3 mk.py build
+
+debug :
+	python3 mk.py build-debug
 
 artifacts :
 	python3 mk.py artifacts
