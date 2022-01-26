@@ -17,6 +17,10 @@
 * [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
 * The install instructions for Windows on [librewolf.net](https://librewolf.net/installation/windows/).
 
+# Community contributions
+
+* Guillaume created a windows updater script for the Task Scheduler. You might find this handy, and it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
+
 # Compiling the windows version
 
 This segment is for people who want to build LibreWolf for themselves. The build of the LibreWolf source tarball is in public CI, so you can use that. Given that you have followed the steps in the Mozilla setup guide:
