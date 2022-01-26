@@ -93,9 +93,12 @@ def artifacts():
     
     with open('version','r') as file1:
         version = file1.read().rstrip()
-        buildzip_filename = 'firefox-{}.en-US.win64.zip'.format(version)
+        source_release = ''
+        with open('source_release','r') as file3:
+            source_release = file3.read().rstrip()
+        buildzip_filename = 'firefox-{}-{}.en-US.win64.zip'.format(version,source_release)
         if _with_app_name:
-            buildzip_filename = 'librewolf-{}.en-US.win64.zip'.format(version)
+            buildzip_filename = 'librewolf-{}-{}.en-US.win64.zip'.format(version,source_release)
         exec('cp -v librewolf-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,buildzip_filename))
         exec('rm -rf work && mkdir work')
         os.chdir('work')
