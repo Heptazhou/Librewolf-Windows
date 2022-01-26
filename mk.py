@@ -128,7 +128,7 @@ def artifacts():
             os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
             os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
             exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
-            exec('wget -q -O librewolf-{}/librewolf-portable.exe https://gitlab.com/librewolf-community/browser/windows/uploads/8347381f01806245121adcca11b7f35c/librewolf-portable.exe'.format(version))
+            exec('wget -q -O librewolf-{}/librewolf-portable.exe https://gitlab.com/librewolf-community/browser/windows/uploads/64b929c39999d00efb56419f963e1b22/librewolf-portable.exe'.format(version))
             zipname = 'librewolf-{}.en-US.win64.zip'.format(full_version)
             exec("rm -f ../{}".format(zipname))
             exec("zip -qr9 ../{} librewolf-{}".format(zipname,version))            
