@@ -1,55 +1,47 @@
 // librewolf-portable.cpp : Run librewolf.exe with -profile parameter.
 //
 
-
-#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 
-
-int fileExists(TCHAR* file)
+int 
+fileExists(TCHAR* file)
 {
   WIN32_FIND_DATA FindFileData;
   HANDLE handle = FindFirstFile(file, &FindFileData);
-  int found = handle != INVALID_HANDLE_VALUE;
+  int found = (handle != INVALID_HANDLE_VALUE);
+
   if (found)
-  {
-    //FindClose(&handle); this will crash
     FindClose(handle);
-  }
+
   return found;
 }
 
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+int APIENTRY 
+wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
   //https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=cmd
-  //constexpr int max_path = _MAX_PATH+1;
-  constexpr int max_path = 32767+1;  
-  static wchar_t path[max_path], dir[max_path], exe[max_path], cmdline[max_path];
+  constexpr DWORD max_path = 32767;
+  static TCHAR path[max_path], dir[max_path], exe[max_path], cmdline[max_path];
 
-  
-
-  GetModuleFileName(NULL, path, _MAX_PATH);
+  GetModuleFileName(NULL, path, max_path);
   *wcsrchr(path,L'\\') = L'\0';
   
-  wcscpy(dir, path);
-  wcscat(dir, L"\\Profiles\\Default");
+  wcscpy_s(dir, path);
+  wcscat_s(dir, L"\\Profiles\\Default");
 
-  wcscpy(exe, path);
-  wcscat(exe, L"\\librewolf.exe");
+  wcscpy_s(exe, path);
+  wcscat_s(exe, L"\\librewolf.exe");
   if (!fileExists(exe)) {
-    wcscpy(exe, path);
-    wcscat(exe, L"\\LibreWolf\\librewolf.exe");
+    wcscpy_s(exe, path);
+    wcscat_s(exe, L"\\LibreWolf\\librewolf.exe");
     if (!fileExists(exe)) {
-      MessageBox(NULL, L"Can\'t find librewolf.exe in . or LibreWolf", path, MB_OK);
+      MessageBox(NULL, L"Can\'t find librewolf.exe in the current or LibreWolf folder.", path, MB_OK);
       return 1;
     }
   }
-  
-  wsprintf(cmdline, L"\"%s\" -profile \"%s\"", exe, dir);
+
+  wsprintf(cmdline, L"\"%s\" -profile \"%s\" %s", exe, dir, lpCmdLine);
 
   STARTUPINFOW siStartupInfo;
   PROCESS_INFORMATION piProcessInfo;
@@ -64,6 +56,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MessageBox(NULL, dir, L"librewolf-portable", MB_OK);
     return 1;
   }
+
+  CloseHandle(piProcessInfo.hProcess);
+  CloseHandle(piProcessInfo.hThread);
 
   return 0;
 }
