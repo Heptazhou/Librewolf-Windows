@@ -20,4 +20,3 @@ build_tag
 /docker/librewolf/mint20/deb/artifacts
 /docker/librewolf/ubuntu20/deb/artifacts
 /docker/*.log
-/source_release

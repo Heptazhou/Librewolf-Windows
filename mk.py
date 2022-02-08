@@ -68,20 +68,22 @@ def build(debug=False):
     
     with open('version','r') as file:
         version = file.read().rstrip()
-        os.chdir('librewolf-{}'.format(version))
+        with open('source_release','r') as file:
+            source_release = file.read().rstrip()
+            os.chdir('librewolf-{}-{}'.format(version,source_release))
 
-        # patches
-        if debug:
-            exec('cp -v ../assets/mozconfig.windows.debug mozconfig')
-        else:
-            exec('cp -v ../assets/mozconfig.windows mozconfig')
+            # patches
+            if debug:
+                exec('cp -v ../assets/mozconfig.windows.debug mozconfig')
+            else:
+                exec('cp -v ../assets/mozconfig.windows mozconfig')
             
-        patch('../assets/package-manifest.patch')
+                patch('../assets/package-manifest.patch')
 
-        # perform the build and package
-        exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
-        exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
-        os.chdir('..')
+                # perform the build and package
+                exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
+                exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
+                os.chdir('..')
 
 
 
@@ -99,7 +101,7 @@ def artifacts():
         buildzip_filename = 'firefox-{}-{}.en-US.win64.zip'.format(version,source_release)
         if _with_app_name:
             buildzip_filename = 'librewolf-{}-{}.en-US.win64.zip'.format(version,source_release)
-        exec('cp -v librewolf-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,buildzip_filename))
+        exec('cp -v librewolf-{}-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,source_release,buildzip_filename))
         exec('rm -rf work && mkdir work')
         os.chdir('work')
         exec('unzip ../{}'.format(buildzip_filename))

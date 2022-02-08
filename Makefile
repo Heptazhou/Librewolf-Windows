@@ -22,10 +22,10 @@ all : fetch build artifacts
 
 clean :
 	rm -rf work
-	rm -f librewolf-$(shell cat version)*.en-US.win64* sha256sums.txt upload.txt firefox-$(shell cat version).en-US.win64.zip
+	rm -f librewolf-$(shell cat version)*.en-US.win64* sha256sums.txt upload.txt firefox-$(shell cat version)*.en-US.win64.zip
 
 veryclean : clean
-	rm -rf librewolf-$(shell cat version)
+	rm -rf librewolf-$(shell cat version)-$(shell cat source_release)
 	rm -f source_release librewolf-$(shell cat version)-*.source.tar.gz
 
 fetch :
@@ -42,6 +42,8 @@ artifacts :
 
 check : README.md
 	@python3 assets/update-version.py
+	@wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release
+	@echo ""
 	@echo "Current release:" $$(cat ./release)
 
 

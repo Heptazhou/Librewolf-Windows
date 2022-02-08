@@ -83,10 +83,7 @@ def firefox_release_url(ver):
     return 'https://archive.mozilla.org/pub/firefox/releases/{}/source/firefox-{}.source.tar.xz'.format(ver, ver)
 
 def check_url_exists(url):
-    print('[debug] checking url: {}'.format(url))
-    #i = exec('wget --spider {} 2>/dev/null'.format(url), exit_on_fail=False)
-    i = exec('wget --spider {}'.format(url), exit_on_fail=False)
-    print('[debug] return value: {}'.format(i))
+    i = exec('wget --spider {} 2>/dev/null'.format(url), exit_on_fail=False)
     if i == 0:
         return True
     else:
