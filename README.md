@@ -19,7 +19,8 @@
 
 # Community contributions
 
-* Guillaume created a windows updater script for the Task Scheduler. You might find this handy, and it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
+* Defkev created a LibreWolf updater plugin, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
+* Guillaume created a windows updater script for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
 
 # Compiling the windows version
 
