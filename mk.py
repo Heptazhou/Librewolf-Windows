@@ -2,6 +2,8 @@
 
 import os,sys,subprocess,os.path
 
+bash_loc = 'd:/mozilla-build/msys/bin/bash.exe'
+
 # native()/bash()/exec() utility functions
 def native(cmd,do_print=True):
     sys.stdout.flush()
@@ -15,7 +17,7 @@ def native(cmd,do_print=True):
 
 def bash(cmd,do_print=True):
     tmp = []
-    tmp += ['c:/mozilla-build/msys/bin/bash.exe', '-c', cmd]
+    tmp += [bash_loc, '-c', cmd]
     sys.stdout.flush()
     if do_print:
         print(cmd)
@@ -27,7 +29,7 @@ def bash(cmd,do_print=True):
 
 def exec(cmd,do_print=True):
     _native = False
-    if not os.path.isfile('c:/mozilla-build/msys/bin/bash.exe'):
+    if not os.path.isfile(bash_loc):
         _native = True
     if _native:
         return native(cmd,do_print)
