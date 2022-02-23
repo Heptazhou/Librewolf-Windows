@@ -26,7 +26,7 @@ def native(cmd,exit_on_fail = True,do_print=True):
 
 def bash(cmd,exit_on_fail = True,do_print=True):
     tmp = []
-    tmp += ['c:/mozilla-build/msys/bin/bash.exe', '-c', cmd]
+    tmp += ['d:/mozilla-build/msys/bin/bash.exe', '-c', cmd]
     sys.stdout.flush()
     if do_print:
         print(cmd)
@@ -39,7 +39,7 @@ def bash(cmd,exit_on_fail = True,do_print=True):
 
 def exec(cmd,exit_on_fail = True, do_print=True):
     _native = False
-    if not os.path.isfile('c:/mozilla-build/msys/bin/bash.exe'):
+    if not os.path.isfile('d:/mozilla-build/msys/bin/bash.exe'):
         _native = True
     if _native:
         return native(cmd,exit_on_fail,do_print)
