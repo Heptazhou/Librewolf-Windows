@@ -10,7 +10,7 @@ parser = optparse.OptionParser()
 parser.add_option('-n', '--no-execute', dest='no_execute', default=False, action="store_true")
 options, remainder = parser.parse_args()
 
-
+bash_loc = 'd:/mozilla-build/msys/bin/bash.exe'
 
 # native()/bash()/exec() utility functions
 def native(cmd,exit_on_fail = True,do_print=True):
@@ -26,7 +26,7 @@ def native(cmd,exit_on_fail = True,do_print=True):
 
 def bash(cmd,exit_on_fail = True,do_print=True):
     tmp = []
-    tmp += ['d:/mozilla-build/msys/bin/bash.exe', '-c', cmd]
+    tmp += [bash_loc, '-c', cmd]
     sys.stdout.flush()
     if do_print:
         print(cmd)
@@ -39,7 +39,7 @@ def bash(cmd,exit_on_fail = True,do_print=True):
 
 def exec(cmd,exit_on_fail = True, do_print=True):
     _native = False
-    if not os.path.isfile('d:/mozilla-build/msys/bin/bash.exe'):
+    if not os.path.isfile(bash_lcc):
         _native = True
     if _native:
         return native(cmd,exit_on_fail,do_print)

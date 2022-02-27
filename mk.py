@@ -138,7 +138,7 @@ def artifacts():
             exec("zip -qr9 ../{} librewolf-{}".format(zipname,version))            
             os.chdir('..')
 
-            # With that out of the way, we need to create the nsis setup.
+            # With that out of the way, we need to create the main nsis setup.
             os.chdir('work')
             exec("mkdir x86-ansi")
             exec("wget -q -O ./x86-ansi/nsProcess.dll https://shorsh.de/upload/we7v/nsProcess.dll")
@@ -150,6 +150,31 @@ def artifacts():
             exec('rm -rf tmp.nsi librewolf.ico banner.bmp x86-ansi')
             exec("mv {} ..".format(setupname))
             os.chdir('..')
+
+            # Latest addition: PortableApps.com
+            os.chdir('work')
+
+            exec('rm -rf librewolf-{}'.format(version))
+            os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
+            os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
+            exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
+            # on gitlab: https://gitlab.com/ltGuillaume
+            exec('git clone https://github.com/ltGuillaume/LibreWolf-Portable')
+            exec('cp -v LibreWolf-Portable/LibreWolf-Portable.* librewolf-{}/'.format(version))
+            exec('cp -v LibreWolf-Portable/*.exe librewolf-{}/'.format(version))
+            os.chdir('librewolf-{}'.format(version))
+            # installed from: https://www.autohotkey.com/
+            exec('"c:/Program Files/AutoHotkey/Compiler/Ahk2Exe.exe" /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico')
+            # let's remove the ahk and icon to make things clearer for the users on what to click.
+            exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico')
+            os.chdir('..')
+
+            pa_zipname = 'librewolf-{}.en-US.win64.PortableApps.zip'.format(full_version)
+            exec("rm -f ../{}".format(pa_zipname))
+            exec("zip -qr9 ../{} librewolf-{}".format(pa_zipname,version))            
+            
+            os.chdir('..')
+
 
 
 
@@ -174,10 +199,12 @@ def upload(token):
             # Files we need to upload..
             zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
             setup_filename = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
-            exec('sha256sum {} {} > sha256sums.txt'.format(setup_filename,zip_filename))
+            pazip_filename = 'librewolf-{}.en-US.win64.PortableApps.zip'.format(full_version)
+            exec('sha256sum {} {} {} > sha256sums.txt'.format(setup_filename,zip_filename,pazip_filename))
             exec('rm -f upload.txt')
             do_upload(setup_filename,token)
             do_upload(zip_filename,token)
+            do_upload(pazip_filename,token)
             do_upload('sha256sums.txt',token)
 
             
