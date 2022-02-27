@@ -151,7 +151,7 @@ def artifacts():
             exec("mv {} ..".format(setupname))
             os.chdir('..')
 
-            # Latest addition: PortableApps.com
+            # Latest addition: better portable app
             os.chdir('work')
 
             exec('rm -rf librewolf-{}'.format(version))
@@ -160,16 +160,15 @@ def artifacts():
             exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
             # on gitlab: https://gitlab.com/ltGuillaume
             exec('git clone https://github.com/ltGuillaume/LibreWolf-Portable')
-            exec('cp -v LibreWolf-Portable/LibreWolf-Portable.* librewolf-{}/'.format(version))
-            exec('cp -v LibreWolf-Portable/*.exe librewolf-{}/'.format(version))
+            exec('cp -v LibreWolf-Portable/LibreWolf-Portable.* LibreWolf-Portable/*.exe librewolf-{}/'.format(version))
             os.chdir('librewolf-{}'.format(version))
             # installed from: https://www.autohotkey.com/
             exec('"c:/Program Files/AutoHotkey/Compiler/Ahk2Exe.exe" /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico')
-            # let's remove the ahk and icon to make things clearer for the users on what to click.
-            exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico')
+            # let's remove the ahk and icon and embedded executables
+            exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico *lz4.exe')
             os.chdir('..')
 
-            pa_zipname = 'librewolf-{}.en-US.win64.PortableApps.zip'.format(full_version)
+            pa_zipname = 'librewolf-{}.en-US.win64.portable.zip'.format(full_version)
             exec("rm -f ../{}".format(pa_zipname))
             exec("zip -qr9 ../{} librewolf-{}".format(pa_zipname,version))            
             
@@ -199,7 +198,7 @@ def upload(token):
             # Files we need to upload..
             zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
             setup_filename = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
-            pazip_filename = 'librewolf-{}.en-US.win64.PortableApps.zip'.format(full_version)
+            pazip_filename = 'librewolf-{}.en-US.win64.portable.zip'.format(full_version)
             exec('sha256sum {} {} {} > sha256sums.txt'.format(setup_filename,zip_filename,pazip_filename))
             exec('rm -f upload.txt')
             do_upload(setup_filename,token)
