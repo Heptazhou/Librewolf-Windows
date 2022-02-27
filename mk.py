@@ -165,7 +165,7 @@ def artifacts():
             # installed from: https://www.autohotkey.com/
             exec('"c:/Program Files/AutoHotkey/Compiler/Ahk2Exe.exe" /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico')
             # let's remove the ahk and icon and embedded executables
-            exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico *lz4.exe')
+            exec('rm -vf LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe')
             os.chdir('..')
 
             pa_zipname = 'librewolf-{}.en-US.win64.portable.zip'.format(full_version)
