@@ -3,6 +3,7 @@
 import os,sys,subprocess,os.path
 
 bash_loc = 'd:/mozilla-build/msys/bin/bash.exe'
+do_zip = False
 
 # native()/bash()/exec() utility functions
 def native(cmd,do_print=True):
@@ -106,7 +107,7 @@ def artifacts():
         exec('cp -v librewolf-{}-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,source_release,buildzip_filename))
         exec('rm -rf work && mkdir work')
         os.chdir('work')
-        exec('unzip ../{}'.format(buildzip_filename))
+        exec('unzip -q ../{}'.format(buildzip_filename))
         if not _with_app_name:
             exec('mv firefox librewolf')
         os.chdir('librewolf')
@@ -127,16 +128,17 @@ def artifacts():
             exec('cp -v assets/librewolf.ico work/librewolf')
 
             # Let's make the portable zip first.
-            os.chdir('work')
-            exec('rm -rf librewolf-{}'.format(version))
-            os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
-            os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
-            exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
-            exec('wget -q -O librewolf-{}/librewolf-portable.exe https://gitlab.com/librewolf-community/browser/windows/uploads/64b929c39999d00efb56419f963e1b22/librewolf-portable.exe'.format(version))
-            zipname = 'librewolf-{}.en-US.win64.zip'.format(full_version)
-            exec("rm -f ../{}".format(zipname))
-            exec("zip -qr9 ../{} librewolf-{}".format(zipname,version))            
-            os.chdir('..')
+            if do_zip:
+                os.chdir('work')
+                exec('rm -rf librewolf-{}'.format(version))
+                os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
+                os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
+                exec('cp -r librewolf/* librewolf-{}/LibreWolf'.format(version))
+                exec('wget -q -O librewolf-{}/librewolf-portable.exe https://gitlab.com/librewolf-community/browser/windows/uploads/64b929c39999d00efb56419f963e1b22/librewolf-portable.exe'.format(version))
+                zipname = 'librewolf-{}.en-US.win64.zip'.format(full_version)
+                exec("rm -f ../{}".format(zipname))
+                exec("zip -qr9 ../{} librewolf-{}".format(zipname,version))            
+                os.chdir('..')
 
             # With that out of the way, we need to create the main nsis setup.
             os.chdir('work')
@@ -157,7 +159,7 @@ def artifacts():
             exec('rm -rf librewolf-{}'.format(version))
             os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
             os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
-            exec('cp -vr librewolf/* librewolf-{}/LibreWolf'.format(version))
+            exec('cp -r librewolf/* librewolf-{}/LibreWolf'.format(version))
             # on gitlab: https://gitlab.com/ltGuillaume
             exec('git clone https://github.com/ltGuillaume/LibreWolf-Portable')
             exec('cp -v LibreWolf-Portable/LibreWolf-Portable.* LibreWolf-Portable/*.exe librewolf-{}/'.format(version))
@@ -165,10 +167,10 @@ def artifacts():
             # installed from: https://www.autohotkey.com/
             exec('"c:/Program Files/AutoHotkey/Compiler/Ahk2Exe.exe" /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico')
             # let's remove the ahk and icon and embedded executables
-            exec('rm -vf LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe')
+            exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe')
             os.chdir('..')
 
-            pa_zipname = 'librewolf-{}.en-US.win64.portable.zip'.format(full_version)
+            pa_zipname = 'librewolf-{}.en-US.win64-portable.zip'.format(full_version)
             exec("rm -f ../{}".format(pa_zipname))
             exec("zip -qr9 ../{} librewolf-{}".format(pa_zipname,version))            
             
@@ -196,13 +198,18 @@ def upload(token):
                 full_version = '{}.{}'.format(version,release)
 
             # Files we need to upload..
-            zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
+            if do_zip:
+                zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
             setup_filename = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
-            pazip_filename = 'librewolf-{}.en-US.win64.portable.zip'.format(full_version)
-            exec('sha256sum {} {} {} > sha256sums.txt'.format(setup_filename,zip_filename,pazip_filename))
+            pazip_filename = 'librewolf-{}.en-US.win64-portable.zip'.format(full_version)
+            if do_zip:
+                exec('sha256sum {} {} {} > sha256sums.txt'.format(setup_filename,zip_filename,pazip_filename))
+            else:
+                exec('sha256sum {} {} > sha256sums.txt'.format(setup_filename,pazip_filename))
             exec('rm -f upload.txt')
             do_upload(setup_filename,token)
-            do_upload(zip_filename,token)
+            if do_zip:
+                do_upload(zip_filename,token)
             do_upload(pazip_filename,token)
             do_upload('sha256sums.txt',token)
 

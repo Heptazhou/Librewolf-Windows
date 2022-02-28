@@ -10,7 +10,7 @@ parser = optparse.OptionParser()
 parser.add_option('-n', '--no-execute', dest='no_execute', default=False, action="store_true")
 options, remainder = parser.parse_args()
 
-bash_loc = 'd:/mozilla-build/msys/bin/bash.exe'
+bash_loc = 'c:/mozilla-build/msys/bin/bash.exe'
 
 # native()/bash()/exec() utility functions
 def native(cmd,exit_on_fail = True,do_print=True):
@@ -39,7 +39,7 @@ def bash(cmd,exit_on_fail = True,do_print=True):
 
 def exec(cmd,exit_on_fail = True, do_print=True):
     _native = False
-    if not os.path.isfile(bash_lcc):
+    if not os.path.isfile(bash_loc):
         _native = True
     if _native:
         return native(cmd,exit_on_fail,do_print)
@@ -83,7 +83,7 @@ def firefox_release_url(ver):
     return 'https://archive.mozilla.org/pub/firefox/releases/{}/source/firefox-{}.source.tar.xz'.format(ver, ver)
 
 def check_url_exists(url):
-    i = exec('wget --spider {} 2>/dev/null'.format(url), exit_on_fail=False)
+    i = exec('wget --spider {} 2>/dev/null'.format(url), do_print=False, exit_on_fail=False)
     if i == 0:
         return True
     else:
@@ -131,12 +131,12 @@ else:
     s = base_version
     
 if s != base_version:
-    print('The wheel has turned, and version {} has been released.'.format(s))
+    print('~ The wheel has turned, and version {} has been released. ~'.format(s))
 
     with open('./version', 'w') as f:
         f.write(s)
     exec('echo 0 > release')
 else:
-    print('Latest Firefox release is still {}.'.format(base_version))
+    print('- Latest Firefox release is still {}. -'.format(base_version))
     
 sys.exit(0) # ensure 0 exit code

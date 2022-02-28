@@ -28,7 +28,7 @@ veryclean : clean
 	rm -rf librewolf-$(shell cat version)-$(shell cat source_release)
 	rm -f librewolf-$(shell cat version)-*.source.tar.gz
 
-fetch :
+fetch : 
 	python3 mk.py fetch
 
 build :
@@ -43,7 +43,6 @@ artifacts :
 check : README.md
 	@python3 assets/update-version.py
 	@wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release
-	@echo ""
-	@echo "Current release:" $$(cat ./release)
+	@echo "  Current Windows release:" $$(cat ./release)
 
 
