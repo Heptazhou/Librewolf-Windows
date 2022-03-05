@@ -14,6 +14,7 @@
 
 Name "${APPNAME}"
 OutFile "${PROGNAME}-${PROG_VERSION}.en-US.win64-setup.exe"
+InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation"
 InstallDir $PROGRAMFILES64\${APPNAME}
 RequestExecutionLevel admin
 
