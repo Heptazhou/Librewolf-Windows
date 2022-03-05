@@ -2,7 +2,7 @@
 
 import os,sys,subprocess,os.path
 
-bash_loc = 'd:/mozilla-build/msys/bin/bash.exe'
+bash_loc = 'c:/mozilla-build/msys/bin/bash.exe'
 do_zip = False
 
 # native()/bash()/exec() utility functions
@@ -165,7 +165,9 @@ def artifacts():
             exec('cp -v LibreWolf-Portable/LibreWolf-Portable.* LibreWolf-Portable/*.exe librewolf-{}/'.format(version))
             os.chdir('librewolf-{}'.format(version))
             # installed from: https://www.autohotkey.com/
-            exec('"c:/Program Files/AutoHotkey/Compiler/Ahk2Exe.exe" /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico')
+            exec('echo \\"c:/Program Files/AutoHotkey/Compiler/Ahk2Exe.exe\\" /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico > tmp.bat')
+            exec('cmd /c tmp.bat')
+            exec('rm -f tmp.bat')
             # let's remove the ahk and icon and embedded executables
             exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe')
             os.chdir('..')
