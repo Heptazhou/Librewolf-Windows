@@ -3,9 +3,10 @@
 * **[download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)**
 * Visit [the FAQ](https://librewolf.net/docs/faq/).
 * Install via _[chocolatey](https://community.chocolatey.org/packages/librewolf)_: `choco install librewolf`
+* or install via _[scoop](https://scoop.sh)_: `scoop bucket add extras`, then `scoop install librewolf`
 * or install via _winget_: `winget install librewolf`
-* **If your LibreWolf crashes on startup**, you probably miss the right [Visual C++ Runtime](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0). You want the _Visual Studio 2015, 2017 and 2019_ version for **x64**, which would be **[this file](https://aka.ms/vs/16/release/vc_redist.x64.exe)**.
-* The latest type **.zip files** are _'portable zip files'_ that allows for a user profile in the extracted zip file folders. It is _self-contained_ and runs on an usb stick.
+* **If your LibreWolf crashes on startup**, you're probably missing the right [Visual C++ Runtime](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0). You'll want the _Visual Studio 2015, 2017 and 2019_ version for **x64**, which would be **[this file](https://aka.ms/vs/16/release/vc_redist.x64.exe)**.
+* The latest type of **.zip files** allows for a user profile inside the extracted folder. It is _self-contained_ and runs on removable storage.
 
 # Where to submit tickets
 
