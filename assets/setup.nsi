@@ -120,7 +120,7 @@ Section
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationDescription" "Start the LibreWolf Browser"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf Community"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$INSTDIR\librewolf.exe %1"
+	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$\"$INSTDIR\librewolf.exe$\" -osint -url $\"%1$\""
 
 SectionEnd
 
