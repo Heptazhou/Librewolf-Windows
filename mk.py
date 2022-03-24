@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 
 import os,sys,subprocess,os.path
 
@@ -56,8 +56,11 @@ def patch(patchfile):
 #
 
 
+def deps_win32():
+    exec('rustup target add i686-pc-windows-msvc')
+
+
 def fetch():
-    
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
     exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
     exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=Build')
@@ -66,7 +69,7 @@ def fetch():
     
 def build(debug=False):
     
-    exec('rm -rf librewolf-$(cat version)')
+    exec('rm -rf librewolf-$(cat version)-$(cat source_release)')
     exec('tar xf librewolf-$(cat version)-$(cat source_release).source.tar.gz')
     
     with open('version','r') as file:
