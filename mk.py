@@ -63,7 +63,10 @@ def deps_win32():
 def fetch():
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
     exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
+    exec('wget -q -O librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum?job=Build')
     exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=Build')
+    exec('sha256sum -c librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum')
+    exec('cat librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum')
 
 
     
