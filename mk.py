@@ -1,4 +1,4 @@
- #!/usr/bin/env python3
+#!/usr/bin/env python3
 
 import os,sys,subprocess,os.path
 
@@ -64,7 +64,7 @@ def fetch():
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
     exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
     exec('wget -q -O librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum?job=Build')
-    exec('wget -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=Build')
+    exec('wget -q -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=Build')
     exec('sha256sum -c librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum')
     exec('cat librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum')
 
@@ -111,6 +111,7 @@ def artifacts():
         if _with_app_name:
             buildzip_filename = 'librewolf-{}-{}.en-US.win64.zip'.format(version,source_release)
         exec('cp -v librewolf-{}-{}/obj-x86_64-pc-mingw32/dist/{} .'.format(version,source_release,buildzip_filename))
+        exec('cp -v librewolf-{}-{}/obj-x86_64-pc-mingw32/dist/install/sea/firefox-{}-{}.en-US.win64.installer.exe .'.format(version,source_release,version,source_release))
         exec('rm -rf work && mkdir work')
         os.chdir('work')
         exec('unzip -q ../{}'.format(buildzip_filename))
