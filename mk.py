@@ -2,8 +2,8 @@
 
 import os,sys,subprocess,os.path
 
-import tools
-from tools import exec, patch
+import assets.tools
+from assets.tools import exec, patch
 
 #
 # main functions

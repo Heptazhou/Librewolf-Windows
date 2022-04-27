@@ -1,4 +1,4 @@
-.PHONY : help all clean veryclean fetch build artifacts check
+.PHONY : help all clean veryclean fetch build artifacts update
 
 help :
 	@echo "Use: make [all] [clean] [veryclean] [check] ..."
@@ -6,7 +6,7 @@ help :
 	@echo "  all       - Build librewolf and it's windows artifacts."
 	@echo "  clean     - Remove output files and temporary files."
 	@echo "  veryclean - Like 'clean', but also remove all downloaded files."
-	@echo "  check     - Check if there is a new version of Firefox."
+	@echo "  update    - update 'version' and 'source_release' files."
 	@echo ""
 	@echo "  fetch     - Fetch the latest librewolf source."
 	@echo "  build     - Perform './mach build && ./mach package' on it."
@@ -28,6 +28,14 @@ veryclean : clean
 	rm -rf librewolf-$(shell cat version)-$(shell cat source_release)
 	rm -f librewolf-$(shell cat version)-*.source.tar.gz*
 
+update :
+	@echo "Fetching from gitlab.."
+	@wget -q -O version "https://gitlab.com/librewolf-community/browser/source/-/raw/main/version"
+	@wget -q -O source_release "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
+	@echo ""
+	@echo Version: $(shell cat version)-$(shell cat source_release)
+	@echo Windows release version: $(shell cat release)
+
 fetch : 
 	python3 mk.py fetch
 
@@ -39,10 +47,3 @@ debug :
 
 artifacts :
 	python3 mk.py artifacts
-
-check : README.md
-	@python3 assets/update-version.py
-	@wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release
-	@echo "  Current Windows release:" $$(cat ./release)
-
-
