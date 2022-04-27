@@ -13,6 +13,9 @@ from assets.tools import exec, patch
 def deps_win32():
     exec('rustup target add i686-pc-windows-msvc')
 
+def serve_mar():
+    pass
+
 def full_mar():
     with open('version','r') as file:
         version = file.read().rstrip()
@@ -27,12 +30,38 @@ def full_mar():
             # version already set
             channel = 'default'
 
-            exec('mkdir -p MAR') # output folder
-            
+            exec('mkdir -p MAR') # output folder           
             exec('touch {}/dist/firefox/precomplete'.format(objdir))
             exec('MAR={}/dist/host/bin/mar.exe MOZ_PRODUCT_VERSION={}-{} MAR_CHANNEL_ID={} ./tools/update-packaging/make_full_update.sh {} {}/dist/firefox'.format(objdir,version,source_release,channel,mar_output_path,objdir))
 
-            # restore state
+            # create config.xml
+            mar_name = 'output.mar'
+            
+            # sha512sum
+            hash_sha512 = ''
+            exec("cat MAR/{} | sha512sum | awk '{}' > tmpfile78419".format(mar_name,'{print $1}'))
+            with open('tmpfile78419', 'r') as tmpfile:
+                data = tmpfile.read().rstrip()
+                hash_sha512 = data
+            exec('rm -f tmpfile78419')
+
+            # size in bytes
+            size = os.path.getsize('MAR/{}'.format(mar_name))
+            mar_version = '2000.0a1'
+            build_id = '21181002100236'
+            update_url = 'http://127.0.0.1:8000' # no trailing slash
+            config_xml = '''<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+    <update type="minor" displayVersion="{}" appVersion="{}" platformVersion="{}" buildID="{}">
+        <patch type="complete" URL="{}/{}" hashFunction="sha512" hashValue="{}" size="{}"/>
+    </update>
+</updates>
+'''.format(mar_version,mar_version,mar_version,build_id,update_url,mar_name,hash_sha512,size)
+            textfile = open('MAR/update.xml','w')
+            textfile.write(config_xml)
+            textfile.close()
+
+# restore state
             os.chdir('..')
     pass
 
@@ -239,6 +268,9 @@ for arg in sys.argv:
         done_something = True
     elif arg == 'full-mar':
         full_mar()
+        done_something = True
+    elif arg == 'serve-mar':
+        serve_mar()
         done_something = True
     elif arg == 'upload':
         in_upload = True
