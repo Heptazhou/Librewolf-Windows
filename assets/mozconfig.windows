@@ -34,3 +34,11 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 ac_add_options --disable-updater
 ac_add_options --disable-maintenance-service
 ac_add_options --enable-strip
+
+# needed for windows/mac auto update ONLY. it's a security risk so other OSses don't need it
+# https://firefox-source-docs.mozilla.org/taskcluster/setting-up-an-update-server.html
+
+ac_add_options --disable-verify-mar
+
+
+
