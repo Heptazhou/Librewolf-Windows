@@ -40,7 +40,9 @@ def build(debug=False):
                 exec('cp -v ../assets/mozconfig.windows.debug mozconfig')
             else:
                 exec('cp -v ../assets/mozconfig.windows mozconfig')
-            
+
+                # two patches for windows only, currently
+                patch('../assets/disable-verify-mar.patch')
                 patch('../assets/package-manifest.patch')
 
                 # perform the build and package
