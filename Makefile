@@ -1,4 +1,4 @@
-.PHONY : help all clean veryclean fetch build artifacts update
+.PHONY : help all clean veryclean fetch build artifacts update full-mar
 
 help :
 	@echo "Use: make [all] [clean] [veryclean] [check] ..."
@@ -7,6 +7,7 @@ help :
 	@echo "  clean     - Remove output files and temporary files."
 	@echo "  veryclean - Like 'clean', but also remove all downloaded files."
 	@echo "  update    - update 'version' and 'source_release' files."
+	@echo "  full-mar  - create mar setup file."
 	@echo ""
 	@echo "  fetch     - Fetch the latest librewolf source."
 	@echo "  build     - Perform './mach build && ./mach package' on it."
@@ -47,3 +48,6 @@ debug :
 
 artifacts :
 	python3 mk.py artifacts
+
+full-mar :
+	python3 mk.py full-mar

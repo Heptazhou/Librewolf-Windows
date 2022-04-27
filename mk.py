@@ -13,6 +13,28 @@ from assets.tools import exec, patch
 def deps_win32():
     exec('rustup target add i686-pc-windows-msvc')
 
+def full_mar():
+    with open('version','r') as file:
+        version = file.read().rstrip()
+        with open('source_release','r') as file:
+            source_release = file.read().rstrip()
+            os.chdir('librewolf-{}-{}'.format(version,source_release))
+
+            # see https://firefox-source-docs.mozilla.org/taskcluster/setting-up-an-update-server.html
+
+            objdir = 'obj-x86_64-pc-mingw32'
+            mar_output_path = 'MAR'
+            # version already set
+            channel = 'default'
+
+            exec('mkdir -p MAR') # output folder
+            
+            exec('touch {}/dist/firefox/precomplete'.format(objdir))
+            exec('MAR={}/dist/host/bin/mar.exe MOZ_PRODUCT_VERSION={}-{} MAR_CHANNEL_ID={} ./tools/update-packaging/make_full_update.sh {} {}/dist/firefox'.format(objdir,version,source_release,channel,mar_output_path,objdir))
+
+            # restore state
+            os.chdir('..')
+    pass
 
 def fetch():
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
@@ -214,6 +236,9 @@ for arg in sys.argv:
         done_something = True
     elif arg == 'artifacts':
         artifacts()
+        done_something = True
+    elif arg == 'full-mar':
+        full_mar()
         done_something = True
     elif arg == 'upload':
         in_upload = True
