@@ -28,7 +28,7 @@ def full_mar():
             objdir = 'obj-x86_64-pc-mingw32'
             mar_output_path = 'MAR'
             # version already set
-            channel = 'default'
+            channel = 'DeFauLT'
 
             exec('mkdir -p MAR') # output folder           
             exec('touch {}/dist/firefox/precomplete'.format(objdir))
@@ -65,6 +65,10 @@ def full_mar():
             os.chdir('..')
     pass
 
+
+
+
+
 def fetch():
     exec('wget -q -O version https://gitlab.com/librewolf-community/browser/source/-/raw/main/version')
     exec('wget -q -O source_release https://gitlab.com/librewolf-community/browser/source/-/raw/main/release')
@@ -72,6 +76,10 @@ def fetch():
     exec('wget -q -O librewolf-$(cat version)-$(cat source_release).source.tar.gz https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(cat version)-$(cat source_release).source.tar.gz?job=Build')
     exec('sha256sum -c librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum')
     exec('cat librewolf-$(cat version)-$(cat source_release).source.tar.gz.sha256sum')
+
+
+
+
 
 
     
@@ -95,6 +103,8 @@ def build(debug=False):
                 # two patches for windows only, currently
                 patch('../assets/disable-verify-mar.patch')
                 patch('../assets/package-manifest.patch')
+                # hack out our custom about box
+                exec('cd browser/base/content && unzip -o ../../../../assets/aboutDialog.zip')
 
                 # perform the build and package
                 exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
