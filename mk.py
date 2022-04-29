@@ -103,8 +103,6 @@ def build(debug=False):
                 # two patches for windows only, currently
                 patch('../assets/disable-verify-mar.patch')
                 patch('../assets/package-manifest.patch')
-                # hack out our custom about box
-                exec('cd browser/base/content && unzip -o ../../../../assets/aboutDialog.zip')
 
                 # perform the build and package
                 exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
