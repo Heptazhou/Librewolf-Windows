@@ -1,4 +1,4 @@
-.PHONY : help all clean veryclean fetch build artifacts update full-mar serve-mar
+.PHONY : help all clean veryclean fetch build artifacts update full-mar serve-mar langpacks
 
 help :
 	@echo "Use: make [all] [clean] [veryclean] [check] ..."
@@ -9,6 +9,7 @@ help :
 	@echo "  update    - update 'version' and 'source_release' files."
 	@echo "  full-mar  - create mar setup file, and update.xml."
 	@echo "  serve-mar - serve the update files"
+	@echo "  langpacks - build language packs."
 	@echo ""
 	@echo "  fetch     - Fetch the latest librewolf source."
 	@echo "  build     - Perform './mach build && ./mach package' on it."
@@ -55,3 +56,6 @@ full-mar :
 
 serve-mar :
 	(cd librewolf-$(shell cat version)-$(shell cat source_release)/MAR && python3 -m http.server 8000)
+
+langpacks :
+	(cd librewolf-$(shell cat version)-$(shell cat source_release) && cat browser/locales/shipped-locales | xargs ./mach package-multi-locale --locales)

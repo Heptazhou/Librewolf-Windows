@@ -100,9 +100,10 @@ def build(debug=False):
             else:
                 exec('cp -v ../assets/mozconfig.windows mozconfig')
 
-                # two patches for windows only, currently
-                patch('../assets/disable-verify-mar.patch')
+                # patches for windows only
                 patch('../assets/package-manifest.patch')
+                patch('../assets/disable-verify-mar.patch')
+                patch('../assets/tryfix-reslink-fail.patch')
 
                 # perform the build and package
                 exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
