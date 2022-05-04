@@ -5,6 +5,7 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
 ac_add_options --disable-default-browser-agent
 ac_add_options --disable-tests
+ac_add_options --disable-updater
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
 ac_add_options --enable-release
@@ -30,6 +31,7 @@ mk_add_options MOZ_TELEMETRY_REPORTING=0
 # - no need to specify wasi sdk folder
 #
 
+ac_add_options --disable-maintenance-service
 ac_add_options --enable-strip
 
 # needed for windows/mac auto update ONLY. it's a security risk so other OSses don't need it
