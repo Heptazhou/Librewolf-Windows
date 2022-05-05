@@ -43,7 +43,13 @@ Section
 		SetErrorlevel 2
 		Abort
 
-		DetailPrint "${APPNAME} is still running. Closing it gracefully..."
+		DetailPrint "${APPNAME} is still running"
+		MessageBox MB_OKCANCEL "LibreWolf is still running and has to be closed for the setup to continue." IDOK continue IDCANCEL break
+break:
+		SetErrorlevel 1
+		Abort
+continue:
+		DetailPrint "Closing ${APPNAME} gracefully..."
 		nsProcess::_CloseProcess "${EXECUTABLE}"
 		Pop $R0
 		Sleep 2000
