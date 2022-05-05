@@ -10,6 +10,9 @@ from assets.tools import exec, patch
 #
 
 
+do_zip = False
+
+
 def deps_win32():
     exec('rustup target add i686-pc-windows-msvc')
 
@@ -151,7 +154,6 @@ def artifacts():
             exec('cp -v assets/librewolf.ico work/librewolf')
 
             # Let's make the portable zip first.
-            do_zip = True
             if do_zip:
                 os.chdir('work')
                 exec('rm -rf librewolf-{}'.format(version))
