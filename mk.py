@@ -217,10 +217,15 @@ def upload(token):
         version = file1.read().rstrip()
         with open('release','r') as file2:
             release = file2.read().rstrip()
-            if release == '0' :
-                full_version = '{}'.format(version)
+            
+            source_release = ''
+            with open('source_release','r') as file3:
+                source_release = file3.read().rstrip()
+                
+            if release == '1' :
+                full_version = '{}-{}'.format(version,source_release)
             else:
-                full_version = '{}.{}'.format(version,release)
+                full_version = '{}-{}'.format(version,source_release,release)
 
             # Files we need to upload..
             if do_zip:
