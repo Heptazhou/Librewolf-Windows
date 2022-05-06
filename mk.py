@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import os,sys,subprocess,os.path
-
-import assets.tools
 from assets.tools import exec, patch
 
 #
@@ -12,9 +10,6 @@ from assets.tools import exec, patch
 
 def deps_win32():
     exec('rustup target add i686-pc-windows-msvc')
-
-def serve_mar():
-    pass
 
 def full_mar():
     with open('version','r') as file:
@@ -28,7 +23,7 @@ def full_mar():
             objdir = 'obj-x86_64-pc-mingw32'
             mar_output_path = 'MAR'
             # version already set
-            channel = 'DeFauLT'
+            channel = 'default'
 
             exec('mkdir -p MAR') # output folder           
             exec('touch {}/dist/firefox/precomplete'.format(objdir))
@@ -100,16 +95,15 @@ def build(debug=False):
             else:
                 exec('cp -v ../assets/mozconfig.windows mozconfig')
 
-                # patches for windows only
-                patch('../assets/package-manifest.patch')
-                patch('../assets/disable-verify-mar.patch')
-                patch('../assets/tryfix-reslink-fail.patch')
+            # patches for windows only
+            patch('../assets/package-manifest.patch')
+            patch('../assets/disable-verify-mar.patch')
+            patch('../assets/tryfix-reslink-fail.patch')
 
-                # perform the build and package
-                exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
-                exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
-                os.chdir('..')
-
+            # perform the build and package.
+            exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
+            exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
+            os.chdir('..')
 
 
 def artifacts():
@@ -142,10 +136,13 @@ def artifacts():
         # let's get 'release'.
         with open('release','r') as file2:
             release = file2.read().rstrip()
-            if release == '0' :
-                full_version = '{}'.format(version)
+            source_release = ''
+            with open('source_release','r') as file5:
+                source_release = file5.read().rstrip()
+            if release == '1' :
+                full_version = '{}-{}'.format(version,source_release)
             else:
-                full_version = '{}.{}'.format(version,release)
+                full_version = '{}-{}-{}'.format(version,source_release,release)
 
             # let's copy in the .ico icon.
             exec('cp -v assets/librewolf.ico work/librewolf')
@@ -277,9 +274,6 @@ for arg in sys.argv:
         done_something = True
     elif arg == 'full-mar':
         full_mar()
-        done_something = True
-    elif arg == 'serve-mar':
-        serve_mar()
         done_something = True
     elif arg == 'upload':
         in_upload = True
