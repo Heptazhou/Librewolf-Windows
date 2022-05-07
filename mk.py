@@ -104,8 +104,8 @@ def build(debug=False):
             patch('../assets/tryfix-reslink-fail.patch')
 
             # perform the build and package.
-            exec('MACH_USE_SYSTEM_PYTHON=1 ./mach build')
-            exec('MACH_USE_SYSTEM_PYTHON=1 ./mach package')
+            exec('./mach build')
+            exec('./mach package')
             os.chdir('..')
 
 
