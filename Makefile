@@ -50,6 +50,7 @@ debug :
 
 artifacts :
 	python3 mk.py artifacts
+	(cd librewolf-$(shell cat version)-$(shell cat source_release) && ./mach build && cat browser/locales/shipped-locales | xargs ./mach package-multi-locale --locales)
 
 full-mar :
 	python3 mk.py full-mar
