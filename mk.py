@@ -102,7 +102,8 @@ def build(debug=False):
             patch('../assets/package-manifest.patch')
             patch('../assets/disable-verify-mar.patch')
             patch('../assets/tryfix-reslink-fail.patch')
-
+            patch('../assets/fix-l10n-package-cmd.patch')
+            
             # perform the build and package.
             exec('./mach build')
             exec('./mach package')
