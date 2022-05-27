@@ -8,9 +8,6 @@ from assets.tools import exec, patch
 #
 
 
-do_zip = False
-
-
 def deps_win32():
     exec('rustup target add i686-pc-windows-msvc')
 
@@ -152,7 +149,7 @@ def artifacts():
             exec('cp -v assets/librewolf.ico work/librewolf')
 
             # Let's make the portable zip first.
-            if do_zip:
+            if False:
                 os.chdir('work')
                 exec('rm -rf librewolf-{}'.format(version))
                 os.makedirs('librewolf-{}/Profiles/Default'.format(version), exist_ok=True)
@@ -229,19 +226,27 @@ def upload(token):
                 full_version = '{}-{}'.format(version,source_release,release)
 
             # Files we need to upload..
-            if do_zip:
+            if False:
                 zip_filename = 'librewolf-{}.en-US.win64.zip'.format(full_version)
             setup_filename = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
             pazip_filename = 'librewolf-{}.en-US.win64-portable.zip'.format(full_version)
-            if do_zip:
+            if False:
                 exec('sha256sum {} {} {} > sha256sums.txt'.format(setup_filename,zip_filename,pazip_filename))
             else:
                 exec('sha256sum {} {} > sha256sums.txt'.format(setup_filename,pazip_filename))
+
+            # create signatures
+            exec('gpg --detach-sign {}'.format(setup_filename))
+            exec('gpg --detach-sign {}'.format(pazip_filename))
+
+            # upload everything
             exec('rm -f upload.txt')
             do_upload(setup_filename,token)
             if do_zip:
                 do_upload(zip_filename,token)
             do_upload(pazip_filename,token)
+            do_upload('{}.sig'.format(setup_filename),token)
+            do_upload('{}.sig'.format(pazip_filename),token)
             do_upload('sha256sums.txt',token)
 
             
