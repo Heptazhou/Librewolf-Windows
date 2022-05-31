@@ -70,6 +70,12 @@ continue:
 		${EndIf}
 	${EndIf}
 
+	# Install Visual C++ Redistributable (only if not silent)
+	IfSilent +4 0
+	InitPluginsDir
+	File /oname=$PLUGINSDIR\vc_redist.x64.exe vc_redist.x64.exe
+	ExecWait "$PLUGINSDIR\vc_redist.x64.exe /install /quiet /norestart"
+
 	# Copy files
 	SetOutPath $INSTDIR
 	File /r librewolf\*.*

@@ -165,6 +165,7 @@ def artifacts():
             os.chdir('work')
             exec("mkdir x86-ansi")
             exec("wget -q -O ./x86-ansi/nsProcess.dll https://shorsh.de/upload/we7v/nsProcess.dll")
+            exec("wget -q -O ./vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe")
             setupname = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
             exec('sed \"s/pkg_version/{}/g\" < ../assets/setup.nsi > tmp.nsi'.format(full_version))
             exec('cp -v ../assets/librewolf.ico .')
