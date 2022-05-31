@@ -22,6 +22,10 @@ RequestExecutionLevel admin
 
 !define MUI_ABORTWARNING
 
+!define MUI_WELCOMEPAGE_TITLE "Welcome to the LibreWolf Setup"
+!define MUI_WELCOMEPAGE_TEXT "This setup will guide you through the installation of LibreWolf.$\r$\n$\r$\n\
+If you don't have it installed already, this will also install the latest Visual C++ Redistributable.$\r$\n$\r$\n\
+Click Next to continue."
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
