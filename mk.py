@@ -237,14 +237,13 @@ def upload(token):
                 exec('sha256sum {} {} > sha256sums.txt'.format(setup_filename,pazip_filename))
 
             # create signatures
-            exec('gpg --detach-sign {}'.format(setup_filename))
-            exec('gpg --detach-sign {}'.format(pazip_filename))
+            exec('gpg --yes --detach-sign {}'.format(setup_filename))
+            exec('echo Press any key... ; cat > /dev/null')
+            exec('gpg --yes --detach-sign {}'.format(pazip_filename))
 
             # upload everything
             exec('rm -f upload.txt')
             do_upload(setup_filename,token)
-            if do_zip:
-                do_upload(zip_filename,token)
             do_upload(pazip_filename,token)
             do_upload('{}.sig'.format(setup_filename),token)
             do_upload('{}.sig'.format(pazip_filename),token)
