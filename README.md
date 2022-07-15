@@ -8,6 +8,12 @@
 * **If your LibreWolf crashes on startup**, you're probably missing the right [Visual C++ Runtime](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0). You'll want the _Visual Studio 2015, 2017 and 2019_ version for **x64**, which would be **[this file](https://aka.ms/vs/16/release/vc_redist.x64.exe)**.
 * The latest type of **.zip files** allows for a user profile inside the extracted folder. It is _self-contained_ and runs on removable storage.
 
+# Help wanted
+
+If you want to contribute, we are moving this repository from building natively from windows 11 to cross-build from Linux/Docker in our cool gitlab CI[[here](https://gitlab.com/librewolf-community/browser/bsys5/-/issues/12)]. At the same time, we want to make auto-update work[[here](https://gitlab.com/librewolf-community/browser/windows/-/issues/237)]. People want it, and on Windows I guess it's the easiest option.
+
+Thanks!
+
 # Where to submit tickets
 
 * For all **about:config** and **librewolf.cfg** issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings/-/issues)].
