@@ -97,7 +97,7 @@ def build(debug=False):
 
             # patches for windows only
             patch('../assets/package-manifest.patch')
-            patch('../assets/disable-verify-mar.patch')
+            #patch('../assets/disable-verify-mar.patch')
             patch('../assets/tryfix-reslink-fail.patch')
             patch('../assets/fix-l10n-package-cmd.patch')
             
