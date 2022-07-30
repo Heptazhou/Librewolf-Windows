@@ -97,9 +97,10 @@ def build(debug=False):
 
             # patches for windows only
             patch('../assets/package-manifest.patch')
-            #patch('../assets/disable-verify-mar.patch')
             patch('../assets/tryfix-reslink-fail.patch')
-            patch('../assets/fix-l10n-package-cmd.patch')
+            
+            # patch('../assets/disable-verify-mar.patch')
+            # patch('../assets/fix-l10n-package-cmd.patch')
             
             # perform the build and package.
             exec('./mach build')
@@ -164,13 +165,14 @@ def artifacts():
             # With that out of the way, we need to create the main nsis setup.
             os.chdir('work')
             exec("mkdir x86-ansi")
-            exec("wget -q -O ./x86-ansi/nsProcess.dll https://shorsh.de/upload/we7v/nsProcess.dll")
+            #exec("wget -q -O ./x86-ansi/nsProcess.dll https://shorsh.de/upload/we7v/nsProcess.dll") # suspect?
+            exec("( cd x86-ansi ; unzip ../../assets/nsProcess.zip )")
             exec("wget -q -O ./vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe")
             setupname = 'librewolf-{}.en-US.win64-setup.exe'.format(full_version)
             exec('sed \"s/pkg_version/{}/g\" < ../assets/setup.nsi > tmp.nsi'.format(full_version))
             exec('cp -v ../assets/librewolf.ico .')
             exec('cp -v ../assets/banner.bmp .')
-            exec('makensis-3.01.exe -V1 tmp.nsi')
+            exec('~/.mozbuild/nsis/makensis.exe -V1 tmp.nsi')
             exec('rm -rf tmp.nsi librewolf.ico banner.bmp x86-ansi')
             exec("mv {} ..".format(setupname))
             os.chdir('..')
@@ -183,7 +185,7 @@ def artifacts():
             os.makedirs('librewolf-{}/LibreWolf'.format(version), exist_ok=True)
             exec('cp -r librewolf/* librewolf-{}/LibreWolf'.format(version))
             # on gitlab: https://gitlab.com/ltGuillaume
-            exec('git clone https://github.com/ltGuillaume/LibreWolf-Portable')
+            exec('"/c/Program Files/Git/bin/git.exe" clone https://github.com/ltGuillaume/LibreWolf-Portable')
             exec('cp -v LibreWolf-Portable/LibreWolf-Portable.* LibreWolf-Portable/*.exe librewolf-{}/'.format(version))
             os.chdir('librewolf-{}'.format(version))
             # installed from: https://www.autohotkey.com/

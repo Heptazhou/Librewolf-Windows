@@ -1,6 +1,6 @@
 import os,sys,subprocess,os.path
 
-bash_loc = 'c:/mozilla-build/msys/bin/bash.exe'
+bash_loc = 'c:/mozilla-build/msys2/usr/bin/bash.exe'
 do_zip = False
 
 # native()/bash()/exec() utility functions
