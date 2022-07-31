@@ -1,3 +1,8 @@
+!include "MUI2.nsh"
+!include "LogicLib.nsh"
+!addplugindir .
+!addplugindir x86-ansi
+
 !define APPNAME "LibreWolf"
 !define PROGNAME "librewolf"
 !define EXECUTABLE "${PROGNAME}.exe"
@@ -15,7 +20,65 @@ RequestExecutionLevel admin
 
 # Pages
 
+!define MUI_ABORTWARNING
+
+!define MUI_WELCOMEPAGE_TITLE "Welcome to the LibreWolf Setup"
+!define MUI_WELCOMEPAGE_TEXT "This setup will guide you through the installation of LibreWolf.$\r$\n$\r$\n\
+If you don't have it installed already, this will also install the latest Visual C++ Redistributable.$\r$\n$\r$\n\
+Click Next to continue."
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "English"
+
 Section
+
+	# Make sure LibreWolf is closed before the installation
+	nsProcess::_FindProcess "${EXECUTABLE}"
+	Pop $R0
+	${If} $R0 = 0
+		IfSilent 0 +4
+		DetailPrint "${APPNAME} is still running, aborting because of silent install."
+		SetErrorlevel 2
+		Abort
+
+		DetailPrint "${APPNAME} is still running"
+		MessageBox MB_OKCANCEL "LibreWolf is still running and has to be closed for the setup to continue." IDOK continue IDCANCEL break
+break:
+		SetErrorlevel 1
+		Abort
+continue:
+		DetailPrint "Closing ${APPNAME} gracefully..."
+		nsProcess::_CloseProcess "${EXECUTABLE}"
+		Pop $R0
+		Sleep 2000
+		nsProcess::_FindProcess "${EXECUTABLE}"
+		Pop $R0
+		${If} $R0 = 0
+			DetailPrint "Failed to close ${APPNAME}, killing it..."
+			nsProcess::_KillProcess "${EXECUTABLE}"
+			Sleep 2000
+			nsProcess::_FindProcess "${EXECUTABLE}"
+			Pop $R0
+			${If} $R0 = 0
+				DetailPrint "Failed to kill ${APPNAME}, aborting"
+				MessageBox MB_ICONSTOP "LibreWolf is still running and can't be closed by the installer. Please close it manually and try again."
+				SetErrorlevel 2
+				Abort
+			${EndIf}
+		${EndIf}
+	${EndIf}
+
+	# Install Visual C++ Redistributable (only if not silent)
+	IfSilent +4 0
+	InitPluginsDir
+	File /oname=$PLUGINSDIR\vc_redist.x64.exe vc_redist.x64.exe
+	ExecWait "$PLUGINSDIR\vc_redist.x64.exe /install /quiet /norestart"
 
 	# Copy files
 	SetOutPath $INSTDIR
@@ -80,6 +143,15 @@ SectionEnd
 
 # Uninstaller
 section "Uninstall"
+
+	# Kill LibreWolf if it is still running
+	nsProcess::_FindProcess "${EXECUTABLE}"
+	Pop $R0
+	${If} $R0 = 0
+		DetailPrint "${APPNAME} is still running, killing it..."
+		nsProcess::_KillProcess "${EXECUTABLE}"
+		Sleep 2000
+	${EndIf}
 
 	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk"
