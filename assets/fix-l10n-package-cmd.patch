@@ -18,11 +18,3 @@ index 10d7a8f..610a4fa 100644
                  mozpath.join(command_context.topsrcdir, "mach"),
                  "android",
                  "assemble-app",
-@@ -2525,6 +2527,7 @@ def package_l10n(command_context, verbose=False, locales=[]):
-         )
-         command_context.run_process(
-             [
-+                "python3",
-                 mozpath.join(command_context.topsrcdir, "mach"),
-                 "android",
-                 "archive-geckoview",
