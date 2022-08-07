@@ -40,4 +40,4 @@ ac_add_options --enable-strip
 #ac_add_options --disable-verify-mar
 
 # Internationalization
-ac_add_options --with-l10n-base=c:/mozilla-source/librewolf/windows/librewolf-103.0-3/browser/locales/l10n
+ac_add_options --with-l10n-base=$PWD/browser/locales/l10n
