@@ -100,7 +100,8 @@ def build(debug=False):
             #patch('../assets/disable-verify-mar.patch')
             patch('../assets/tryfix-reslink-fail.patch')
             patch('../assets/fix-l10n-package-cmd.patch')
-            
+            exec("cp -v ../assets/private_browsing.VisualElementsManifest.xml ../assets/PrivateBrowsing_150.png ../assets/PrivateBrowsing_70.png browser/branding/librewolf")
+
             # perform the build and package.
             exec('./mach build')
             exec('./mach package')
