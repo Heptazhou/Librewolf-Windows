@@ -29,6 +29,8 @@ clean :
 	rm -rf work
 
 veryclean : clean
+	cp version source_release linux && cp version source_release linux-mar
+	$(MAKE) -C linux veryclean && $(MAKE) -C linux-mar veryclean
 	rm -f librewolf-$(shell cat version)*.en-US.win64* sha256sums.txt upload.txt firefox-$(shell cat version)*.en-US.win64.zip firefox-$(shell cat version)*.en-US.win64.installer.exe
 	rm -rf librewolf-$(shell cat version)-$(shell cat source_release)
 	rm -f librewolf-$(shell cat version)-*.source.tar.gz*
