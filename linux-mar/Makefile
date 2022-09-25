@@ -11,9 +11,10 @@ help :
 	@echo "use: make [help] [all] [clean] [build] [package] [artifacts]"
 	@echo ""
 	@echo "  fetch     - get the latest tarball. must be done first, at least once."
+	@echo ""
 	@echo "  all       - Build librewolf and it's windows artifacts."
 	@echo "  build     - Perform './mach build' on the extracted tarball."
-	@echo "  package   - multilocale package."
+	@echo "  package   - Make the multilocale package."
 	@echo "  artifacts - Create the setup.exe and the portable.zip."
 	@echo ""
 	@echo "  clean     - Remove output files and temporary files."
@@ -45,7 +46,6 @@ build : dir
 	(cd librewolf-$(full_version) && ./mach build)
 
 package : dir
-#	(cd librewolf-$(full_version) && ./mach package)
 	( cd librewolf-$(full_version) && echo 'Packaging... (output hidden)' && \
 	  cat browser/locales/shipped-locales | xargs ./mach package-multi-locale --locales >/dev/null )
 
@@ -82,10 +82,10 @@ bootstrap : dir winsdk
 	  true )
 
 setup-debian :
-	apt-get -y install mercurial python3 python3-dev python3-pip curl wget dpkg-sig msitools p7zip-full upx-ucl libssl-dev zstd
+	apt-get -y install mercurial python3 python3-dev python3-pip curl wget dpkg-sig msitools p7zip-full upx-ucl libssl-dev zstd wine
 
 setup-fedora :
-	dnf -y install python3 curl wget zstd python3-devel python3-pip mercurial msitools p7zip upx openssl-devel
+	dnf -y install python3 curl wget zstd python3-devel python3-pip mercurial msitools p7zip upx openssl-devel wine
 
 #
 # Build the artifacts in a seperate Makefile
