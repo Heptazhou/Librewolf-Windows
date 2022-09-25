@@ -65,7 +65,7 @@ ac_add_options --enable-strip
 # needed for windows/mac auto update ONLY. it's a security risk so other OSses don't need it
 # https://firefox-source-docs.mozilla.org/taskcluster/setting-up-an-update-server.html
 
-#ac_add_options --disable-verify-mar
+ac_add_options --disable-verify-mar
 
 # Internationalization
 ac_add_options --with-l10n-base=$(pwd)/browser/locales/l10n
