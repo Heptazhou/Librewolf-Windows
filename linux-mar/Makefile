@@ -91,9 +91,11 @@ setup-fedora :
 # Build the artifacts in a seperate Makefile
 #
 
-firefox-$(full_version).en-US.win64.zip : # build stage output artifact
-	cp -v librewolf-$(full_version)/obj-x86_64-pc-mingw32/dist/firefox-$(version)-$(source_release).en-US.win64.zip .
-artifacts : firefox-$(full_version).en-US.win64.zip
+librewolf-$(full_version).en-US.win64.installer.exe :
+	cp librewolf-$(full_version)/obj-x86_64-pc-mingw32/dist/install/sea/librewolf-$(full_version).en-US.win64.installer.exe .
+
+artifacts : librewolf-$(full_version).en-US.win64.installer.exe
 	${MAKE} -f assets/artifacts.mk artifacts
+
 
 
