@@ -11,6 +11,7 @@ help :
 	@echo "use: make [help] [all] [clean] [build] [package] [artifacts]"
 	@echo ""
 	@echo "  fetch     - get the latest tarball. must be done first, at least once."
+	@echo ""
 	@echo "  all       - Build librewolf and it's windows artifacts."
 	@echo "  build     - Perform './mach build' on the extracted tarball."
 	@echo "  package   - multilocale package."
