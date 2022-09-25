@@ -1,4 +1,4 @@
-.PHONY : help all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -10,6 +10,7 @@ help :
 
 	@echo "use: make [help] [all] [clean] [build] [package] [artifacts]"
 	@echo ""
+	@echo "  fetch     - get the latest tarball. must be done first, at least once."
 	@echo "  all       - Build librewolf and it's windows artifacts."
 	@echo "  build     - Perform './mach build' on the extracted tarball."
 	@echo "  package   - multilocale package."
@@ -24,12 +25,21 @@ help :
 
 all : build package artifacts
 
+fetch :
+	wget -q -O version "https://gitlab.com/librewolf-community/browser/source/-/raw/main/version"
+	wget -q -O source_release "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
+	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum?job=Build"
+	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz" "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz?job=Build"
+	cat "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
+	sha256sum -c "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
+
 clean :
 	rm -rf librewolf-$(full_version) work
 
 veryclean : clean
 	rm -rf firefox-$(full_version).en-US.win64.zip librewolf-$(full_version).en-US.win64-setup.exe librewolf-$(full_version).en-US.win64-portable.zip
-
+	rm -f "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz" "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
+	rm -f version source_release
 
 build : dir
 	(cd librewolf-$(full_version) && ./mach build)
