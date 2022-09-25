@@ -24,6 +24,8 @@ help :
 all : fetch build artifacts
 
 clean :
+	cp version source_release linux && cp version source_release linux-mar
+	$(MAKE) -C linux clean && $(MAKE) -C linux-mar clean
 	rm -rf work
 
 veryclean : clean
