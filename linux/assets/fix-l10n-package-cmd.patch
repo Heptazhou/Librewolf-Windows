@@ -1,0 +1,20 @@
+diff --git a/python/mozbuild/mozbuild/mach_commands.py b/python/mozbuild/mozbuild/mach_commands.py
+index 10d7a8f..610a4fa 100644
+--- a/python/mozbuild/mozbuild/mach_commands.py
++++ b/python/mozbuild/mozbuild/mach_commands.py
+@@ -2457,6 +2457,7 @@ def package_l10n(command_context, verbose=False, locales=[]):
+         )
+         command_context.run_process(
+             [
++                "python3",
+                 mozpath.join(command_context.topsrcdir, "mach"),
+                 "build",
+                 "chrome-{}".format(locale),
+@@ -2476,6 +2477,7 @@ def package_l10n(command_context, verbose=False, locales=[]):
+         )
+         command_context.run_process(
+             [
++                "python3",
+                 mozpath.join(command_context.topsrcdir, "mach"),
+                 "android",
+                 "assemble-app",
