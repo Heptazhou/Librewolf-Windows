@@ -195,6 +195,14 @@ def artifacts():
             exec('rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe')
             os.chdir('..')
 
+            # issue #244
+            os.chdir('librewolf-{}/LibreWolf'.format(version))
+            exec('wget -q -O ./vc_redist.x64-extracted.zip "https://gitlab.com/librewolf-community/browser/windows/uploads/7106b776dc663d985bb88eabeb4c5d7d/vc_redist.x64-extracted.zip"')
+            exec('unzip vc_redist.x64-extracted.zip')
+            exec('rm vc_redist.x64-extracted.zip')
+            os.chdir('../..')
+
+            # make final zip
             pa_zipname = 'librewolf-{}.en-US.win64-portable.zip'.format(full_version)
             exec("rm -f ../{}".format(pa_zipname))
             exec("zip -qr9 ../{} librewolf-{}".format(pa_zipname,version))            
