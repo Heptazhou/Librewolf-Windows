@@ -39,5 +39,9 @@ artifacts :
 	( mkdir work/ahk && cd work/ahk && unzip -q ../ahk.zip )
 	( cd work/librewolf-$(full_version) && wine64 ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico )
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
-	rm -f $(zipname)
-	( cd work && zip -qr9 ../$(zipname) librewolf-$(full_version) )
+# issue #224 - Consider including msvcp140 & vcruntime140 in portable package	
+	( cd work/librewolf-$(full_version)/LibreWolf && \
+	wget -q -O ./vc_redist.x64-extracted.zip "https://gitlab.com/librewolf-community/browser/windows/uploads/7106b776dc663d985bb88eabeb4c5d7d/vc_redist.x64-extracted.zip" && \
+	unzip vc_redist.x64-extracted.zip && \\
+	rm vc_redist.x64-extracted.zip )
+	( rm -f $(zipname) && cd work && zip -qr9 ../$(zipname) librewolf-$(full_version) )
