@@ -61,7 +61,7 @@ librewolf-$(full_version) : librewolf-$(full_version).source.tar.gz
 winsdk : $(mozbuild)/vs.tar.zst
 	(mkdir -p $(mozbuild)/win-cross && cd $(mozbuild)/win-cross && rm -rf vs && tar xf ../vs.tar.zst)
 $(mozbuild)/vs.tar.zst : # cache this file
-	(cd librewolf-$(full_version) && ./mach python --virtualenv build build/vs/pack_vs.py build/vs/vs2019.yaml -o $(mozbuild)/vs.tar.zst)
+	(cd librewolf-$(full_version) && ./mach --no-interactive python --virtualenv build build/vs/pack_vs.py build/vs/vs2019.yaml -o $(mozbuild)/vs.tar.zst)
 
 bootstrap : dir winsdk
 	(cd librewolf-$(full_version) && ./mach --no-interactive bootstrap --application-choice=browser)
