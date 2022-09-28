@@ -70,13 +70,3 @@ make fetch build artifacts
 ```
 
 This will produce the -setup.exe and portable .zip. Have fun!
-
-# Uploading a release
-
-To actually submit these artifacts to the Windows repository for release, use:
-
-```
-python3 mk.py upload <token>
-```
-
-This produces an `upload.txt` file that contains all needed information about the uploaded files. Please note that this script not only requires a gitlab token, but also a gpg signing key.
