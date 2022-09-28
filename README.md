@@ -57,6 +57,8 @@ That should produce the (non-updating) setup.exe and the community portable zip.
 
 # Compiling the windows version
 
+(With the arrival of the linux cross-compiled builds, this is no longer preferred.)
+
 This segment is for people who want to build LibreWolf for themselves. The build of the LibreWolf source tarball is in public CI, so you can use that. Given that you have followed the steps in the Mozilla setup guide:
 
 * [Building Firefox On Windows](https://firefox-source-docs.mozilla.org/setup/windows_build.html)
