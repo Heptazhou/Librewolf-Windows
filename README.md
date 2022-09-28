@@ -66,19 +66,17 @@ Once that works, you can check out and compile LibreWolf like this:
 ```
 git clone https://gitlab.com/librewolf-community/browser/windows.git
 cd windows
-make fetch build
+make fetch build artifacts
 ```
 
-Currently a bug in `./mach package` makes this build fail, but it did produce the distribution .zip file that we're after. So after this, you can just:
-
-```
-make artifacts
-```
 This will produce the -setup.exe and portable .zip. Have fun!
 
 # Uploading a release
 
-To actually submit these artifacts to the Windows repository as release files, use:
+To actually submit these artifacts to the Windows repository for release, use:
+
 ```
 python3 mk.py upload <token>
 ```
+
+This produces an `upload.txt` file that contains all needed information about the uploaded files. Please note that this script not only requires a gitlab token, but also a gpg signing key.
