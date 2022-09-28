@@ -53,11 +53,6 @@ You can force a rebuild with `make clean all`. Please always use `make fetch` as
 * For all **about:config** and **librewolf.cfg** issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings/-/issues)].
 * For _all other issues_ and **setup/install** issues, go here: [[issues for windows repository](https://gitlab.com/librewolf-community/browser/windows/-/issues)].
 
-# Community links
-* [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
-* [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
-* The install instructions for Windows on [librewolf.net](https://librewolf.net/installation/windows/).
-
 # Compiling the windows version
 
 (With the arrival of the linux cross-compiled builds, this is no longer preferred.)
