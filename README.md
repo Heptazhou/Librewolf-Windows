@@ -11,6 +11,15 @@ There are plugins that help update librewolf, which helps improve securitiy.
 * Guillaume created a windows updater script for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
 * Defkev created a LibreWolf updater plugin, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
 
+# LibreWolf for windows
+
+* The latest type of **.zip files** allows for a user profile inside the extracted folder. It is _self-contained_ and runs on removable storage. LibreWolf has many ui languages built-in, available in the settings.
+
+# Where to submit tickets
+
+* For all **about:config** and **librewolf.cfg** issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings/-/issues)].
+* For _all other issues_ and **setup/install** issues, go here: [[issues for windows repository](https://gitlab.com/librewolf-community/browser/windows/-/issues)].
+
 # Linux builds
 
 Tested on: fedora36, ubuntu22
@@ -20,7 +29,7 @@ vm/vps minimal-ish specs:
 * 17gb RAM
 * 50gb storage
 
-It's mostly a matter of doing once:
+On the commandline, it's mostly a matter of doing once:
 ```
 ## pick build type:
 # cd linux
@@ -42,18 +51,7 @@ That should produce the (non-updating) setup.exe and the community portable zip.
 
 You can force a rebuild with `make clean all`. Please always use `make fetch` as a single make command, else there might be bugs in the version files.
 
-# LibreWolf for windows
-
-
-* **If your LibreWolf crashes on startup**, you're probably missing the right [Visual C++ Runtime](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0). You'll want the _Visual Studio 2015, 2017 and 2019_ version for **x64**, which would be **[this file](https://aka.ms/vs/16/release/vc_redist.x64.exe)**.
-* The latest type of **.zip files** allows for a user profile inside the extracted folder. It is _self-contained_ and runs on removable storage.
-
-# Where to submit tickets
-
-* For all **about:config** and **librewolf.cfg** issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings/-/issues)].
-* For _all other issues_ and **setup/install** issues, go here: [[issues for windows repository](https://gitlab.com/librewolf-community/browser/windows/-/issues)].
-
-# Compiling the windows version
+# Compiling the windows version natively
 
 (With the arrival of the linux cross-compiled builds, this is no longer preferred.)
 
