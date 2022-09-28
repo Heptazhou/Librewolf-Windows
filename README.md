@@ -17,8 +17,8 @@ There are plugins that help update librewolf, which helps improve securitiy.
 
 # Where to submit tickets
 
-* For all **about:config** and **librewolf.cfg** issues, go here: [[settings repository](https://gitlab.com/librewolf-community/settings/-/issues)].
-* For _all other issues_ and **setup/install** issues, go here: [[issues for windows repository](https://gitlab.com/librewolf-community/browser/windows/-/issues)].
+* When you have problems with the Settings, or the Advanced Settings (`about:config`), please submit these issues to the [settings repository](https://gitlab.com/librewolf-community/settings/-/issues).
+* For all other problems, such as crashes/theme issues/graphics/speed problems, please submit them to [issues for windows repository](https://gitlab.com/librewolf-community/browser/windows/-/issues).
 
 # Linux builds
 
