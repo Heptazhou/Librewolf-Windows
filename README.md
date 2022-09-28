@@ -47,9 +47,11 @@ Then, to build:
 ```
 make all
 ```
-That should produce the (non-updating) setup.exe and the community portable zip. There is a second directory `linux-mar` where you can build the so-called `.mar` version of LibreWolf. This is te version that will be auto-updating someday. It's great, but it's main drawback is theming bugs. 
+That should produce the (non-updating) setup.exe and the community portable zip. 
 
-You can force a rebuild with `make clean all`. Please always use `make fetch` as a single make command, else there might be bugs in the version files.
+There is a second directory `linux-mar` where you can build the so-called `.mar` version of LibreWolf. This is te version that will be auto-updating someday. It's great, but it's main drawback is theming bugs. 
+
+You can force a rebuild with `make clean all`. Please always use `make fetch` as a single make command, else there might be bugs in the version files. The `make fetch` command gets you the current latest version.
 
 # Compiling the windows version natively
 
