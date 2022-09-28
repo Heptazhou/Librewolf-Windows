@@ -5,10 +5,16 @@
 * Or install via _winget_: `winget install librewolf`
 * Or install via _[scoop](https://scoop.sh)_: `scoop bucket add extras`, then `scoop install librewolf`
 
+# Update plugins
+There are plugins that help update librewolf, which helps improve securitiy.
+
+* Guillaume created a windows updater script for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
+* Defkev created a LibreWolf updater plugin, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
+
 # Linux builds
 
 Tested on: fedora36, ubuntu22
-vm minimalish specs:
+vm/vps minimal-ish specs:
 
 * 4 core cpu
 * 17gb RAM
@@ -32,7 +38,9 @@ Then, to build:
 ```
 make all
 ```
-That should produce the (non-updating) setup.exe and the community portable zip. There is a second directory `linux-mar` where you can build the so-called `.mar` version of LibreWolf. This is te version that will be auto-updating someday. It's main drawback is some nasty theming bug.
+That should produce the (non-updating) setup.exe and the community portable zip. There is a second directory `linux-mar` where you can build the so-called `.mar` version of LibreWolf. This is te version that will be auto-updating someday. It's great, but it's main drawback is theming bugs. 
+
+You can force a rebuild with `make clean all`. Please always use `make fetch` as a single make command, else there might be bugs in the version files.
 
 # LibreWolf for windows
 
@@ -49,11 +57,6 @@ That should produce the (non-updating) setup.exe and the community portable zip.
 * [[reddit](https://www.reddit.com/r/LibreWolf/)] - [r/LibreWolf](https://www.reddit.com/r/LibreWolf/) 😺
 * [[gitter](https://gitter.im/librewolf-community/librewolf)], and the same room on [matrix](https://app.element.io/#/room/#librewolf-community_librewolf:gitter.im) (element.io).
 * The install instructions for Windows on [librewolf.net](https://librewolf.net/installation/windows/).
-
-# Community contributions
-
-* Defkev created a LibreWolf updater plugin, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
-* Guillaume created a windows updater script for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
 
 # Compiling the windows version
 
