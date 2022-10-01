@@ -8,8 +8,13 @@
 # Update plugins
 There are plugins that help update librewolf, which helps improve securitiy.
 
-* Guillaume created a windows updater script for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater).
-* Defkev created a LibreWolf updater plugin, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
+
+
+* Guillaume created a windows *updater script* for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater). 
+* Defkev created a LibreWolf *updater plugin*, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
+
+Please note the distinction between the *task scheduler updater script* ([LibreWolf-WinUpdater](https://github.com/ltGuillaume/LibreWolf-WinUpdater)) and the *librewolf extension* ([LibreWolf Updater](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/)), in that the latter only checks for updates, but will not install them automatically, while the former does. There's quite a bit of confusion about that on Reddit, GitHub and Gitlab.
+
 
 # LibreWolf for windows
 
