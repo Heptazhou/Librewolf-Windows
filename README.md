@@ -70,8 +70,8 @@ Once that works, you can check out and compile LibreWolf like this:
 
 ```
 git clone https://gitlab.com/librewolf-community/browser/windows.git
-cd windows
-make fetch build artifacts
+cd windows/winbuild
+make all
 ```
 
 This will produce the -setup.exe and portable .zip. Have fun!
