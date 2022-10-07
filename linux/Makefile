@@ -1,10 +1,12 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune
 
 version:=$(shell cat version)
 release:=$(shell cat release)
 source_release:=$(shell cat source_release)
 full_version:=$(version)-$(source_release)$(shell [ $(release) -gt 1 ] && echo "-$(release)")
 mozbuild=~/.mozbuild
+
+docker_image_name=lw-win-x64
 
 help :
 
@@ -22,6 +24,11 @@ help :
 	@echo "  dir       - just extract and patch the LW tarball."
 	@echo "  bootstrap - try to set up the build environment."
 	@echo "  setup-debian, setup-fedora - needed packages."
+	@echo ""
+	@echo "  docker-build - Run 'docker build' for" $(docker_image_name)  "image."
+	@echo "  docker-run   - Run LW build using 'docker run' on" $(docker_image_name)  "image."
+	@echo "  docker-clean - Remove" $(docker_image_name) "docker image."
+	@echo "  docker-prune - Delete ALL docker data: images, containers, networks, etc."
 	@echo ""
 
 all : build package artifacts
@@ -98,3 +105,11 @@ artifacts : firefox-$(full_version).en-US.win64.zip
 	${MAKE} -f assets/artifacts.mk artifacts
 
 
+docker-build :
+	docker build -t $(docker_image_name) - < assets/Dockerfile
+docker-run :
+	docker run --rm $(docker_image_name) sh -c "make fetch && make build"
+docker-clean :
+	docker rmi $(docker_image_name)
+docker-prune :
+	docker system prune --all --force
