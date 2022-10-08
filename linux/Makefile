@@ -1,4 +1,4 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -27,6 +27,7 @@ help :
 	@echo ""
 	@echo "  docker-build - Run 'docker build' for" $(docker_image_name)  "image."
 	@echo "  docker-run   - Run LW build using 'docker run' on" $(docker_image_name)  "image."
+	@echo "  docker-shell - Run shell in" $(docker_image_name)  "image, to debug why docker-run fails."
 	@echo "  docker-clean - Remove" $(docker_image_name) "docker image."
 	@echo "  docker-prune - Delete ALL docker data: images, containers, networks, etc."
 	@echo ""
@@ -109,6 +110,8 @@ docker-build :
 	docker build -t $(docker_image_name) - < assets/Dockerfile
 docker-run :
 	docker run --rm $(docker_image_name) sh -c "make fetch && make build"
+docker-shell :
+	docker run -it --rm $(docker_image_name) /bin/bash -i
 docker-clean :
 	docker rmi $(docker_image_name)
 docker-prune :
