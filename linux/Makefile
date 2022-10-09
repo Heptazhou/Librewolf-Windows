@@ -51,7 +51,7 @@ veryclean : clean
 	rm -f version source_release
 
 build : dir
-	(cd librewolf-$(full_version) && ./mach build)
+	(cd librewolf-$(full_version) && ./mach build -v -j 1)
 
 package : dir
 #	(cd librewolf-$(full_version) && ./mach package)
