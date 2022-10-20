@@ -109,7 +109,7 @@ artifacts : firefox-$(full_version).en-US.win64.zip
 docker-build :
 	docker build -t $(docker_image_name) - < assets/Dockerfile
 docker-run :
-	docker run --rm $(docker_image_name) sh -c "make fetch && make build"
+	docker run --rm $(docker_image_name) sh -c "git pull && make fetch && make build"
 docker-shell :
 	docker run -it --rm $(docker_image_name) /bin/bash -i
 docker-clean :
