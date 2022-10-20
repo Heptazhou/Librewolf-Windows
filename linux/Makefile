@@ -91,10 +91,10 @@ bootstrap : dir winsdk
 	  true )
 
 setup-debian :
-	apt-get -y install mercurial python3 python3-dev python3-pip curl wget dpkg-sig msitools p7zip-full upx-ucl libssl-dev zstd wine
+	apt-get -y install mercurial python3 python3-dev python3-pip curl wget dpkg-sig msitools p7zip-full upx-ucl libssl-dev zstd wine64-tools
 
 setup-fedora :
-	dnf -y install python3 curl wget zstd python3-devel python3-pip mercurial msitools p7zip upx openssl-devel wine
+	dnf -y install python3 curl wget zstd python3-devel python3-pip mercurial msitools p7zip upx openssl-devel wine wine-devel
 
 #
 # Build the artifacts in a seperate Makefile
