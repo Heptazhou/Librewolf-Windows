@@ -15,7 +15,9 @@ export HOST_CC="$MOZBUILD/clang/bin/clang"
 export HOST_CXX="$MOZBUILD/clang/bin/clang++"
 
 export WINE="$MOZBUILD/wine/bin/wine64"
-export MIDL=widl
+export MIDL="$MOZBUILD/wine/bin/widl"
+#export MIDL=midl
+#export MIDL=widl
 
 ###
 # TODO : fixme
