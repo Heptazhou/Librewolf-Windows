@@ -73,6 +73,7 @@ $(mozbuild)/vs.tar.zst : # cache this file
 
 bootstrap : dir winsdk
 	(cd librewolf-$(full_version) && ./mach --no-interactive bootstrap --application-choice=browser)
+# Rust supports aarch64-linux-android, arm-linux-androideabi, i686-linux-android, thumbv7neon-linux-androideabi, x86_64-linux-android, x86_64-pc-windows-msvc, x86_64-unknown-linux-gnu targets.
 	~/.cargo/bin/rustup target add x86_64-pc-windows-msvc
 	( export t=$$(pwd)/librewolf-$(full_version) && \
 	  cd $(mozbuild) && \
