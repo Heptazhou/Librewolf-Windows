@@ -247,7 +247,7 @@ def upload(token):
 
             # create signatures
             exec('gpg --yes --detach-sign {}'.format(setup_filename))
-            exec('echo Press any key... ; cat > /dev/null')
+            exec('echo Press Control-D to continue (is this still needed?)... ; cat > /dev/null')
             exec('gpg --yes --detach-sign {}'.format(pazip_filename))
 
             # upload everything
