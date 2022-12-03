@@ -214,9 +214,9 @@ def artifacts():
 
 # Utility function to upload() function.
 def do_upload(filename,token):
-    exec('echo _ >> upload.txt')
-    exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" >> upload.txt'.format(token,filename),False)
-    exec('echo _ >> upload.txt')
+    exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" > tmp.json'.format(token,filename), False)
+    exec('echo $(cat tmp.json | jq .alt | cut -c 2- | sed \'s/.$//\') \'--->\' https://gitlab.com$(cat tmp.json | jq .full_path | cut -c 2- | sed \'s/.$//\') ')
+    exec('echo "" && rm -f tmp.json')
 
 
 def upload(token):
