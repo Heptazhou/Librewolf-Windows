@@ -3,17 +3,17 @@
 !addplugindir .
 !addplugindir x86-ansi
 
-!define APPNAME "LibreWolf"
-!define PROGNAME "librewolf"
+!define APPNAME "Snowfox"
+!define PROGNAME "snowfox"
 !define EXECUTABLE "${PROGNAME}.exe"
 !define PROG_VERSION "pkg_version"
-!define COMPANYNAME "LibreWolf"
+!define COMPANYNAME "Snowfox"
 !define ESTIMATED_SIZE 190000
-!define MUI_ICON "librewolf.ico"
+!define MUI_ICON "snowfox.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "banner.bmp"
 
 Name "${APPNAME}"
-OutFile "${PROGNAME}-${PROG_VERSION}.en-US.win64-setup.exe"
+OutFile "${PROGNAME}-${PROG_VERSION}.win64.exe"
 InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation"
 InstallDir $PROGRAMFILES64\${APPNAME}
 RequestExecutionLevel admin
@@ -22,9 +22,9 @@ RequestExecutionLevel admin
 
 !define MUI_ABORTWARNING
 
-!define MUI_WELCOMEPAGE_TITLE "Welcome to the LibreWolf Setup"
-!define MUI_WELCOMEPAGE_TEXT "This setup will guide you through the installation of LibreWolf.$\r$\n$\r$\n\
-If you don't have it installed already, this will also install the latest Visual C++ Redistributable.$\r$\n$\r$\n\
+!define MUI_WELCOMEPAGE_TITLE "Welcome to the Snowfox Setup"
+!define MUI_WELCOMEPAGE_TEXT "This setup will guide you through the installation of Snowfox.$\r$\n$\r$\n\
+If you do not have it installed already, this will also install the latest Visual C++ Redistributable.$\r$\n$\r$\n\
 Click Next to continue."
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
@@ -38,7 +38,7 @@ Click Next to continue."
 
 Section
 
-	# Make sure LibreWolf is closed before the installation
+	# Make sure Snowfox is closed before the installation
 	nsProcess::_FindProcess "${EXECUTABLE}"
 	Pop $R0
 	${If} $R0 = 0
@@ -48,7 +48,7 @@ Section
 		Abort
 
 		DetailPrint "${APPNAME} is still running"
-		MessageBox MB_OKCANCEL "LibreWolf is still running and has to be closed for the setup to continue." IDOK continue IDCANCEL break
+		MessageBox MB_OKCANCEL "Snowfox is still running and has to be closed for the setup to continue." IDOK continue IDCANCEL break
 break:
 		SetErrorlevel 1
 		Abort
@@ -67,7 +67,7 @@ continue:
 			Pop $R0
 			${If} $R0 = 0
 				DetailPrint "Failed to kill ${APPNAME}, aborting"
-				MessageBox MB_ICONSTOP "LibreWolf is still running and can't be closed by the installer. Please close it manually and try again."
+				MessageBox MB_ICONSTOP "Snowfox is still running and cannot be closed by the installer. Please close it manually and try again."
 				SetErrorlevel 2
 				Abort
 			${EndIf}
@@ -82,14 +82,14 @@ continue:
 
 	# Copy files
 	SetOutPath $INSTDIR
-	File /r librewolf\*.*
+	File /r snowfox\*.*
 
 	# Start Menu
 	createDirectory "$SMPROGRAMS\${COMPANYNAME}"
 	createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\${PROGNAME}.exe" "" "$INSTDIR\${MUI_ICON}"
 	createShortCut "$SMPROGRAMS\${COMPANYNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" ""
 
-	# Uninstaller 
+	# Uninstaller
 	writeUninstaller "$INSTDIR\uninstall.exe"
 
 	# Registry information for add/remove programs
@@ -110,33 +110,33 @@ continue:
 	#
 	# Registry information to let Windows pick us up in the list of available browsers
 	#
-	
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf" "" "LibreWolf"	
 
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationDescription" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationName" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".htm" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".html" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".pdf" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\Startmenu" "StartMenuInternet" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\URLAssociations" "http" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\URLAssociations" "https" "LibreWolfHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox" "" "Snowfox"
 
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\shell\open\command" "" "$INSTDIR\librewolf.exe"
-	
-	WriteRegStr HKLM "Software\RegisteredApplications" "LibreWolf" "Software\Clients\StartMenuInternet\LibreWolf\Capabilities"
-	
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "" "LibreWolf Handler"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "AppUserModelId" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "AppUserModelId" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationName" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationDescription" "Start the LibreWolf Browser"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf Community"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$\"$INSTDIR\librewolf.exe$\" -osint -url $\"%1$\""
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities" "ApplicationDescription" "Snowfox"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities" "ApplicationIcon" "$INSTDIR\snowfox.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities" "ApplicationName" "Snowfox"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities\FileAssociations" ".htm" "SnowfoxHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities\FileAssociations" ".html" "SnowfoxHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities\FileAssociations" ".pdf" "SnowfoxHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities\Startmenu" "StartMenuInternet" "Snowfox"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities\URLAssociations" "http" "SnowfoxHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\Capabilities\URLAssociations" "https" "SnowfoxHTM"
+
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\DefaultIcon" "" "$INSTDIR\snowfox.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Snowfox\shell\open\command" "" "$INSTDIR\snowfox.exe"
+
+	WriteRegStr HKLM "Software\RegisteredApplications" "Snowfox" "Software\Clients\StartMenuInternet\Snowfox\Capabilities"
+
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM" "" "Snowfox Document"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM" "AppUserModelId" "Snowfox"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\Application" "AppUserModelId" "Snowfox"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\Application" "ApplicationIcon" "$INSTDIR\snowfox.exe,0"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\Application" "ApplicationName" "Snowfox"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\Application" "ApplicationDescription" "Start the Snowfox Browser"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\Application" "ApplicationCompany" "0h7z"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\DefaultIcon" "" "$INSTDIR\snowfox.exe,1"
+	WriteRegStr HKLM "Software\Classes\SnowfoxHTM\shell\open\command" "" "$\"$INSTDIR\snowfox.exe$\" -osint -url $\"%1$\""
 
 SectionEnd
 
@@ -144,7 +144,7 @@ SectionEnd
 # Uninstaller
 section "Uninstall"
 
-	# Kill LibreWolf if it is still running
+	# Kill Snowfox if it is still running
 	nsProcess::_FindProcess "${EXECUTABLE}"
 	Pop $R0
 	${If} $R0 = 0
@@ -158,19 +158,19 @@ section "Uninstall"
 	delete "$SMPROGRAMS\${COMPANYNAME}\Uninstall.lnk"
 	# Try to remove the Start Menu folder - this will only happen if it is empty
 	rmDir "$SMPROGRAMS\${COMPANYNAME}"
- 
+
 	# Remove files
 	rmDir /r $INSTDIR
 
 	# Remove uninstaller information from the registry
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
-	
+
 	#
 	# Windows default browser integration
 	#
-	
-	DeleteRegKey HKLM "Software\Clients\StartMenuInternet\LibreWolf"
+
+	DeleteRegKey HKLM "Software\Clients\StartMenuInternet\Snowfox"
 	DeleteRegKey HKLM "Software\RegisteredApplications"
-	DeleteRegKey HKLM "Software\Classes\LibreWolfHTM"
+	DeleteRegKey HKLM "Software\Classes\SnowfoxHTM"
 
 sectionEnd

@@ -4,21 +4,14 @@ export MOZBUILD=$HOME/.mozbuild
 ac_add_options --target=x86_64-pc-mingw32
 ac_add_options --enable-bootstrap
 
-# since v110.0 - liblowercase not needed anymore?
-#mk_add_options "export LD_PRELOAD=$MOZBUILD/liblowercase/liblowercase.so"
-#mk_add_options "export LOWERCASE_DIRS=$MOZBUILD/win-cross"
-# since v110.0 - extra variable?
 export WINSYSROOT="$MOZBUILD/win-cross/vs"
 
-# since v110.0 - no longer needed?
-#export WINDOWSSDKDIR="$MOZBUILD/win-cross/vs/windows kits/10"
+#export WINSYSROOT="$MOZBUILD/win-cross/vs"
 
-EXTRA_PATH="$MOZBUILD/win-cross/vs/vc/tools/msvc/14.29.30133/bin/hostx64/x64:"
-mk_add_options "export PATH=$EXTRA_PATH$PATH"
 export CC="$MOZBUILD/clang/bin/clang-cl"
 export CXX="$MOZBUILD/clang/bin/clang-cl"
-export HOST_CC="$MOZBUILD/clang/bin/clang"
-export HOST_CXX="$MOZBUILD/clang/bin/clang++"
+export HOST_CC="/bin/clang"
+export HOST_CXX="/bin/clang++"
 
 
 
@@ -54,20 +47,20 @@ ac_add_options --enable-optimize
 ac_add_options --enable-release
 ac_add_options --enable-rust-simd
 
-ac_add_options --with-app-name=firefox
-ac_add_options --with-branding=browser/branding/librewolf
+ac_add_options --with-app-name=snowfox
+ac_add_options --enable-update-channel=release
+ac_add_options --with-branding=browser/branding/snowfox
 
 ac_add_options --with-unsigned-addon-scopes=app,system
 
 # see issue # https://gitlab.com/librewolf-community/browser/arch/-/issues/49
-export MOZ_REQUIRE_SIGNING=
+export MOZ_REQUIRE_SIGNING=""
 
 mk_add_options MOZ_CRASHREPORTER=0
 mk_add_options MOZ_DATA_REPORTING=0
-mk_add_options MOZ_NORMANTY=0
 mk_add_options MOZ_SERVICES_HEALTHREPORT=0
 mk_add_options MOZ_TELEMETRY_REPORTING=0
-export WINE=wineconsole
+export WINE="$MOZBUILD/wine/bin/wine64"
 #
 # windows specific.
 #
@@ -80,7 +73,6 @@ ac_add_options --enable-strip
 # needed for windows/mac auto update ONLY. it's a security risk so other OSses don't need it
 # https://firefox-source-docs.mozilla.org/taskcluster/setting-up-an-update-server.html
 
-#ac_add_options --disable-verify-mar
 
 # Internationalization
 ac_add_options --with-l10n-base=$(pwd)/browser/locales/l10n
