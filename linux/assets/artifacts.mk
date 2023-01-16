@@ -38,7 +38,7 @@ artifacts :
 	( cd work && git clone "https://github.com/ltGuillaume/LibreWolf-Portable" )
 	( cd work && git clone "https://github.com/ltGuillaume/LibreWolf-WinUpdater" )
 	cp work/LibreWolf-Portable/LibreWolf-Portable.* work/LibreWolf-Portable/*.exe work/librewolf-$(full_version)
-	cp work/LibreWolf-WinUpdater/LibreWolf-WinUpdater.ahk work/LibreWolf-Portable/*.ico work/librewolf-$(full_version)
+	cp work/LibreWolf-WinUpdater/LibreWolf-WinUpdater.ahk work/LibreWolf-WinUpdater/*.ico work/librewolf-$(full_version)
 	wget -q -O work/ahk.zip "https://www.autohotkey.com/download/ahk.zip"
 	( mkdir work/ahk && cd work/ahk && unzip -q ../ahk.zip )
 	( cd work/librewolf-$(full_version) && wine64 ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico )
