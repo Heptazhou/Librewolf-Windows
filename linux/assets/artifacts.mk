@@ -50,6 +50,4 @@ artifacts :
 	wget -q -O ./vc_redist.x64-extracted.zip "https://gitlab.com/librewolf-community/browser/windows/uploads/7106b776dc663d985bb88eabeb4c5d7d/vc_redist.x64-extracted.zip" && \
 	unzip vc_redist.x64-extracted.zip && \
 	rm vc_redist.x64-extracted.zip )
-	echo "[Log]" > work/librewolf-$(full_version)/LibreWolf-WinUpdater.ini
-	echo "LastUpdateTo=$(full_version)" >> work/librewolf-$(full_version)/LibreWolf-WinUpdater.ini
 	( rm -f $(zipname) && cd work && zip -qr9 ../$(zipname) librewolf-$(full_version) )
