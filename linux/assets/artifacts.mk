@@ -43,9 +43,9 @@ artifacts :
 	cp work/LibreWolf-WinUpdater/LibreWolf-WinUpdater.ahk work/LibreWolf-WinUpdater/*.ico work/librewolf-$(full_version)
 	wget -q -O work/ahk.zip "https://www.autohotkey.com/download/ahk.zip"
 	( mkdir work/ahk && cd work/ahk && unzip -q ../ahk.zip )
-	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk /icon LibreWolf-Portable.ico )
+	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk )
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
-	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk /icon LibreWolf-WinUpdater.ico )
+	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
 # issue #224 - Consider including msvcp140 & vcruntime140 in portable package	
 	( cd work/librewolf-$(full_version)/LibreWolf && \
