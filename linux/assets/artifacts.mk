@@ -11,6 +11,7 @@ setupname=librewolf-$(full_version).en-US.win64-setup.exe
 zipname=librewolf-$(full_version).en-US.win64-portable.zip
 
 wine=~/.mozbuild/wine/bin/wineconsole
+wine=wineconsole
 
 artifacts :
 
