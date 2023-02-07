@@ -48,6 +48,13 @@ artifacts :
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
 	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
+
+# We do need to check if these executables are indeed
+# created, because we ignore the wine-autohotkey exit codes
+
+	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ]
+	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
+
 # issue #224 - Consider including msvcp140 & vcruntime140 in portable package	
 	( cd work/librewolf-$(full_version)/LibreWolf && \
 	wget -q -O ./vc_redist.x64-extracted.zip "https://gitlab.com/librewolf-community/browser/windows/uploads/7106b776dc663d985bb88eabeb4c5d7d/vc_redist.x64-extracted.zip" && \
