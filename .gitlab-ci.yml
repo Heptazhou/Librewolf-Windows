@@ -1,0 +1,9 @@
+stages:
+  - dummy
+
+Dummy run:
+  stage: dummy
+  only:
+    - master
+  script:
+    - echo "Hello, world!"
