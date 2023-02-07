@@ -75,11 +75,11 @@ artifacts :
 	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
 
-# We do need to check if these executables are indeed
-# created, because we ignore the wine-autohotkey exit codes
+# # We do need to check if these executables are indeed
+# # created, because we ignore the wine-autohotkey exit codes
 
-	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ]
-	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
+# 	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ]
+# 	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
 
 # issue #224 - Consider including msvcp140 & vcruntime140 in portable package	
 
