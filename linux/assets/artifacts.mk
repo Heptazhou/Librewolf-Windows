@@ -11,7 +11,8 @@ setupname=librewolf-$(full_version).en-US.win64-setup.exe
 zipname=librewolf-$(full_version).en-US.win64-portable.zip
 
 #wine=~/.mozbuild/wine/bin/wineconsole
-wine=wineconsole
+wine=wineconsole --backend=curses
+
 
 
 
@@ -66,20 +67,18 @@ artifacts :
 
 # now we can use wine32 to run autohotkey
 # tip from: https://forums.linuxmint.com/viewtopic.php?t=74356
+
 	rm -rf /root/.wine
 	winecfg
 
-	( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk )
+	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk )
+	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ] # because we ignored previous exit code
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
 
-	( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
+	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
+	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
 
-# # We do need to check if these executables are indeed
-# # created, because we ignore the wine-autohotkey exit codes
-
-# 	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ]
-# 	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
 
 # issue #224 - Consider including msvcp140 & vcruntime140 in portable package	
 
