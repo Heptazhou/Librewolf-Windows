@@ -72,11 +72,11 @@ artifacts :
 	winecfg
 
 	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk )
-	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ] # because we ignored previous exit code
+	-[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ] # because we ignored previous exit code
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
 
 	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
-	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
+	-[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
 	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
 
 
