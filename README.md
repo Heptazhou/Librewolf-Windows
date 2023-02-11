@@ -15,6 +15,10 @@ There are plugins that help update librewolf, which helps improve securitiy.
 
 Please note the distinction between the *task scheduler updater script* ([LibreWolf-WinUpdater](https://github.com/ltGuillaume/LibreWolf-WinUpdater)) and the *librewolf extension* ([LibreWolf Updater](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/)), in that the latter only checks for updates, but will not install them automatically, while the former does. There's quite a bit of confusion about that on Reddit, GitHub and Gitlab.
 
+Due to problems with the Gitlab CI, we _can't_ build the `ahk-tools` used in the portable 
+version directly from source while building the portable zip. The tools are instead precompiled and updated only when the `ahk-tools` source changes. Here is the most recent version of the `ahk-tools`:
+
+* ahk-tools: [librewolf-ahk-tools-2023-02-11.zip](https://gitlab.com/librewolf-community/browser/windows/uploads/fc5e0483707a1bafdfd8f10b7b6c50b1/librewolf-ahk-tools-2023-02-11.zip), signature: [librewolf-ahk-tools-2023-02-11.zip.sig](https://gitlab.com/librewolf-community/browser/windows/uploads/27a8f6dd6a33b8b54b47068ef7779132/librewolf-ahk-tools-2023-02-11.zip.sig).
 
 # LibreWolf for windows
 
