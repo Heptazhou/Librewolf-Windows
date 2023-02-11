@@ -1,4 +1,4 @@
-.PHONY: artifacts
+.PHONY: artifacts ahk-tools
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -65,20 +65,10 @@ artifacts :
 	wget -q -O work/ahk.zip "https://www.autohotkey.com/download/ahk.zip"
 	( mkdir work/ahk && cd work/ahk && unzip -q ../ahk.zip )
 
-# now we can use wine32 to run autohotkey
-# tip from: https://forums.linuxmint.com/viewtopic.php?t=74356
-
-	rm -rf /root/.wine
-	winecfg
-
-	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk )
-	-[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ] # because we ignored previous exit code
-	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
-
-	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
-	-[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
-	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
-
+	( cd work/librewolf-$(full_version) && \
+	  wget -q -O librewolf-ahk-tools-2023-02-11.zip https://gitlab.com/librewolf-community/browser/windows/uploads/fc5e0483707a1bafdfd8f10b7b6c50b1/librewolf-ahk-tools-2023-02-11.zip && \
+	  unzip librewolf-ahk-tools-2023-02-11.zip && \
+          rm librewolf-ahk-tools-2023-02-11.zip )
 
 # issue #224 - Consider including msvcp140 & vcruntime140 in portable package	
 
@@ -88,4 +78,20 @@ artifacts :
 	rm vc_redist.x64-extracted.zip )
 	( rm -f $(zipname) && cd work && zip -qr9 ../$(zipname) librewolf-$(full_version) )
 
+
+
+ahk-tools :
+# now we can use wine32 to run autohotkey
+# ---
+# tip from: https://forums.linuxmint.com/viewtopic.php?t=74356
+	rm -rf /root/.wine
+	winecfg
+
+	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-Portable.ahk )
+	[ -f work/librewolf-$(full_version)/LibreWolf-Portable.exe ] # because we ignored previous exit code
+	( cd work/librewolf-$(full_version) && rm -f LibreWolf-Portable.ahk LibreWolf-Portable.ico dejsonlz4.exe jsonlz4.exe )
+
+	-( cd work/librewolf-$(full_version) && $(wine) ../ahk/Compiler/Ahk2Exe.exe /in LibreWolf-WinUpdater.ahk )
+	[ -f work/librewolf-$(full_version)/LibreWolf-WinUpdater.exe ]
+	( cd work/librewolf-$(full_version) && rm -f LibreWolf-WinUpdater.ahk LibreWolf-WinUpdater*.ico )
 
