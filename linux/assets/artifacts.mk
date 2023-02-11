@@ -53,17 +53,7 @@ artifacts :
 
 	cp -r work/librewolf/* work/librewolf-$(full_version)/LibreWolf
 
-# clone autohotkey stuff
-
-	( cd work && \
-	  git clone "https://github.com/ltGuillaume/LibreWolf-Portable" && \
-	  git clone "https://github.com/ltGuillaume/LibreWolf-WinUpdater" )
-
-	cp work/LibreWolf-Portable/LibreWolf-Portable.* work/LibreWolf-Portable/*.exe work/librewolf-$(full_version)
-	cp work/LibreWolf-WinUpdater/LibreWolf-WinUpdater.ahk work/LibreWolf-WinUpdater/*.ico work/librewolf-$(full_version)
-
-	wget -q -O work/ahk.zip "https://www.autohotkey.com/download/ahk.zip"
-	( mkdir work/ahk && cd work/ahk && unzip -q ../ahk.zip )
+# we're using the latest ahk-tools here.
 
 	( cd work/librewolf-$(full_version) && \
 	  wget -q -O librewolf-ahk-tools-2023-02-11.zip https://gitlab.com/librewolf-community/browser/windows/uploads/fc5e0483707a1bafdfd8f10b7b6c50b1/librewolf-ahk-tools-2023-02-11.zip && \
@@ -81,6 +71,18 @@ artifacts :
 
 
 ahk-tools :
+# clone autohotkey stuff
+
+	( cd work && \
+	  git clone "https://github.com/ltGuillaume/LibreWolf-Portable" && \
+	  git clone "https://github.com/ltGuillaume/LibreWolf-WinUpdater" )
+
+	cp work/LibreWolf-Portable/LibreWolf-Portable.* work/LibreWolf-Portable/*.exe work/librewolf-$(full_version)
+	cp work/LibreWolf-WinUpdater/LibreWolf-WinUpdater.ahk work/LibreWolf-WinUpdater/*.ico work/librewolf-$(full_version)
+
+	wget -q -O work/ahk.zip "https://www.autohotkey.com/download/ahk.zip"
+	( mkdir work/ahk && cd work/ahk && unzip -q ../ahk.zip )
+
 # now we can use wine32 to run autohotkey
 # ---
 # tip from: https://forums.linuxmint.com/viewtopic.php?t=74356
