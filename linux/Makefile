@@ -1,4 +1,4 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -32,7 +32,7 @@ help :
 	@echo "  docker-prune - Delete ALL docker data: images, containers, networks, etc."
 	@echo ""
 
-all : build package artifacts
+all : build buildsymbols package artifacts
 
 fetch :
 	wget -q -O version "https://gitlab.com/librewolf-community/browser/source/-/raw/main/version"
@@ -52,6 +52,9 @@ veryclean : clean
 
 build : dir
 	(cd librewolf-$(full_version) && ./mach build)
+
+buildsymbols : dir
+	(cd librewolf-$(full_version) && ./mach buildsymbols)
 
 package : dir
 #	(cd librewolf-$(full_version) && ./mach package)
