@@ -1,7 +1,7 @@
 # mozconfig - crosscompile from Linux to Windows
 
 export MOZBUILD=$HOME/.mozbuild
-export WINDOWSSDKDIR="$MOZBUILD/win-cross/vs/windows kits/10"
+export WINDOWSSDKDIR="$MOZBUILD/win-cross/vs/Windows Kits/10"
 ac_add_options --target=x86_64-pc-mingw32
 mk_add_options "export LOWERCASE_DIRS=$MOZBUILD/win-cross"
 
