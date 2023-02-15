@@ -5,7 +5,7 @@ export WINDOWSSDKDIR="$MOZBUILD/win-cross/vs/Windows Kits/10"
 ac_add_options --target=x86_64-pc-mingw32
 mk_add_options "export LOWERCASE_DIRS=$MOZBUILD/win-cross"
 
-EXTRA_PATH="$MOZBUILD/win-cross/vs/vc/tools/msvc/14.29.30133/bin/hostx64/x64:"
+EXTRA_PATH="$MOZBUILD/win-cross/vs/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64:"
 mk_add_options "export PATH=$EXTRA_PATH$PATH"
 
 export CC="$MOZBUILD/clang/bin/clang-cl"
