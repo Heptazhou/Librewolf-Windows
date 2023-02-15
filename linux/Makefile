@@ -84,7 +84,6 @@ bootstrap : dir winsdk
 	  $$t/mach artifact toolchain --from-build linux64-cbindgen && \
 	  $$t/mach artifact toolchain --from-build linux64-clang && \
 	  $$t/mach artifact toolchain --from-build linux64-dump_syms && \
-	  $$t/mach artifact toolchain --from-build linux64-liblowercase && \
 	  $$t/mach artifact toolchain --from-build linux64-nasm && \
 	  $$t/mach artifact toolchain --from-build linux64-node && \
 	  $$t/mach artifact toolchain --from-build linux64-rust-cross && \
