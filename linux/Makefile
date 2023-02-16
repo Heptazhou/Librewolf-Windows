@@ -37,9 +37,7 @@ all : build buildsymbols package artifacts
 fetch :
 	wget -q -O version "https://gitlab.com/librewolf-community/browser/source/-/raw/main/version"
 	wget -q -O source_release "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
-#	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum?job=Build"
 	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
-	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" 
 	wget --progress=bar:force -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz"
 	cat "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
 	sha256sum -c "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
