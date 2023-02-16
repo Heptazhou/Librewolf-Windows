@@ -37,8 +37,8 @@ all : build buildsymbols package artifacts
 fetch :
 	wget -q -O version "https://gitlab.com/librewolf-community/browser/source/-/raw/main/version"
 	wget -q -O source_release "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
-	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
-	wget --progress=bar:force -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz"
+	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum?job=Build"
+	wget --progress=bar:force -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz" "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz?job=Build"
 	cat "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
 	sha256sum -c "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
 
@@ -84,6 +84,7 @@ bootstrap : dir winsdk
 	  $$t/mach artifact toolchain --from-build linux64-cbindgen && \
 	  $$t/mach artifact toolchain --from-build linux64-clang && \
 	  $$t/mach artifact toolchain --from-build linux64-dump_syms && \
+	  $$t/mach artifact toolchain --from-build linux64-liblowercase && \
 	  $$t/mach artifact toolchain --from-build linux64-nasm && \
 	  $$t/mach artifact toolchain --from-build linux64-node && \
 	  $$t/mach artifact toolchain --from-build linux64-rust-cross && \
