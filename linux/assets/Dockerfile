@@ -50,7 +50,7 @@ RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install \
       zstd 
 
 RUN git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git
-WORKDIR windows/submodules/windows/linux
+WORKDIR windows/linux
 RUN pwd && ls -l
 RUN make setup-debian
 RUN make fetch
