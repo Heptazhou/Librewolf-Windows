@@ -50,4 +50,8 @@ RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install \
       zstd 
 
 WORKDIR submodules/windows/linux
-RUN make setup-debian && make fetch && make bootstrap && make veryclean
+RUN pwd && ls -l
+RUN make setup-debian
+RUN make fetch
+RUN make bootstrap
+RUN make veryclean
