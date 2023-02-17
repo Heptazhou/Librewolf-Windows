@@ -216,6 +216,7 @@ def artifacts():
 def do_upload(filename,token):
     exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" > tmp.json'.format(token,filename), False)
     exec('echo $(cat tmp.json | jq .alt | cut -c 2- | sed \'s/.$//\') \'--->\' https://gitlab.com$(cat tmp.json | jq .full_path | cut -c 2- | sed \'s/.$//\') ')
+    exec('cat tmp.json')
     exec('echo "" && rm -f tmp.json')
 
 
