@@ -1,4 +1,4 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package patch-folder-arch winsdk-arch
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap old-style-bootstrap-arch old-style-bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package patch-folder-arch winsdk-arch
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -40,6 +40,7 @@ help :
 	@echo "  winsdk-arch - Extract the winsdk folder for cross-build."
 	@echo ""
 	@echo "  bootstrap-arch - Bootstrap the mozilla build environment."
+	@echo "  old-style-bootstrap-arch - Use old style bootstrapping."
 	@echo "  build-arch - Build it."
 	@echo "  buildsymbols-arch - Build symbols."
 	@echo "  package-arch - Package the target zip file."
@@ -47,7 +48,7 @@ help :
 all : build buildsymbols package artifacts
 
 #
-# Redo from scratch.
+# Redo from scratch. ---
 #
 
 upstream-update :
@@ -94,6 +95,32 @@ bootstrap-arch :
 bootstrap-arch-do-bootstrap :
 	./mach --no-interactive bootstrap --application-choice=browser
 
+# try old style bootstrapping...
+old-style-bootstrap-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
+	cp -v assets/mozconfig librewolf-$(full_version)/mozconfig
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile old-style-bootstrap-arch-do-bootstrap
+
+old-style-bootstrap-arch-do-bootstrap :
+	./mach --no-interactive bootstrap --application-choice=browser
+	~/.cargo/bin/rustup target add x86_64-pc-windows-msvc
+	( export t=$$(pwd) && \
+	  cd $(mozbuild) && \
+	  $$t/mach artifact toolchain --from-build linux64-binutils && \
+	  $$t/mach artifact toolchain --from-build linux64-cbindgen && \
+	  $$t/mach artifact toolchain --from-build linux64-clang && \
+	  $$t/mach artifact toolchain --from-build linux64-dump_syms && \
+	  $$t/mach artifact toolchain --from-build linux64-nasm && \
+	  $$t/mach artifact toolchain --from-build linux64-node && \
+	  $$t/mach artifact toolchain --from-build linux64-rust-cross && \
+	  $$t/mach artifact toolchain --from-build linux64-winchecksec && \
+	  $$t/mach artifact toolchain --from-build linux64-wine && \
+	  $$t/mach artifact toolchain --from-build nsis && \
+	  $$t/mach artifact toolchain --from-build sysroot-x86_64-linux-gnu && \
+	  true )
+
+
+
 build-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
 	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
@@ -111,7 +138,7 @@ package-arch-do-package :
 	@(echo 'Packaging... (output hidden)' && cat browser/locales/shipped-locales | xargs ./mach package-multi-locale --locales >/dev/null)
 
 #
-# End redo
+# End redo ---
 #
 
 fetch : upstream-update
