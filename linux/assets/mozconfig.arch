@@ -1,0 +1,5 @@
+. "./mozconfig.std"
+
+ac_add_options --target=x86_64-pc-mingw32
+MOZBUILD=~/.mozbuild
+export WINSYSROOT="$MOZBUILD/win-cross/vs"

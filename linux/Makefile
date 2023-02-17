@@ -1,4 +1,4 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -31,13 +31,83 @@ help :
 	@echo "  docker-clean - Remove" $(docker_image_name) "docker image."
 	@echo "  docker-prune - Delete ALL docker data: images, containers, networks, etc."
 	@echo ""
+	@echo "  upstream-update - Update and fetch 'version' and 'source_release'."
+	@echo "  fetch-archive - Fetch the archive from the internet and verify it."
+	@echo "  setup-arch - Install build dependencies."
+	@echo "  extract-arch, clean-arch - Extract/remove the source tree."
+	@echo "  bootstrap-arch - Bootstrap the mozilla build environment."
+	@echo "  build-arch - Build it."
+	@echo "  buildsymbols-arch - Build symbols."
+	@echo "  package-arch - Package the target zip file."
 
 all : build buildsymbols package artifacts
 
-fetch :
+#
+# Redo from scratch.
+#
+
+upstream-update :
+	rm -f version source_release
 	wget -q -O version "https://gitlab.com/librewolf-community/browser/source/-/raw/main/version"
 	wget -q -O source_release "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
-	wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
+	@echo "[notice] version =" "$$(cat version)"
+	@echo "[notice] source_release =" "$$(cat source_release)"
+	@echo "[notice] release =" "$$(cat release)"
+
+fetch-archive :
+	[ -f "version" ] && [ -f "source_release" ]
+	${MAKE} fetch
+
+arch-packages=git make gnupg python python-pip cabextract
+setup-arch :
+	[ -f "version" ] && [ -f "source_release" ]
+	pacman -S $(arch-packages)
+
+extract-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -f "librewolf-$(full_version).source.tar.gz" ]
+	${MAKE} clean-arch
+	tar xf "librewolf-$(full_version).source.tar.gz"
+# windows-specific modifications:
+	mv librewolf-$(full_version)/mozconfig librewolf-$(full_version)/mozconfig.std
+	cp -v assets/mozconfig.arch librewolf-$(full_version)/mozconfig
+	(cd librewolf-$(full_version) && patch -p1 -i ../assets/tryfix-reslink-fail.patch)
+	(cd librewolf-$(full_version) && patch -p1 -i ../assets/fix-l10n-package-cmd.patch)
+
+clean-arch :
+	[ -f "version" ] && [ -f "source_release" ]
+	rm -rf "librewolf-$(full_version)"
+
+bootstrap-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile bootstrap-arch-do-bootstrap
+	${MAKE} winsdk
+bootstrap-arch-do-bootstrap :
+	./mach --no-interactive bootstrap --application-choice=browser
+
+build-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
+build-arch-do-build :
+	./mach build
+buildsymbols-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
+buildsymbols-arch-do-buildsymbols :
+	./mach buildsymbols
+package-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
+package-arch-do-package :
+	@(echo 'Packaging... (output hidden)' && cat browser/locales/shipped-locales | xargs ./mach package-multi-locale --locales >/dev/null)
+
+#
+# End redo
+#
+
+fetch : upstream-update
+	rm -f "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
+	-wget -q -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
+	[ -f "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum" ]
 	wget --progress=bar:force -O "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$$(cat version)-$$(cat source_release)/librewolf-$$(cat version)-$$(cat source_release).source.tar.gz"
 	cat "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
 	sha256sum -c "librewolf-$$(cat version)-$$(cat source_release).source.tar.gz.sha256sum"
