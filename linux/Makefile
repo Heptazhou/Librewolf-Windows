@@ -1,4 +1,4 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package patch-folder-arch winsdk-arch
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -31,10 +31,14 @@ help :
 	@echo "  docker-clean - Remove" $(docker_image_name) "docker image."
 	@echo "  docker-prune - Delete ALL docker data: images, containers, networks, etc."
 	@echo ""
+	@echo "Building natively on arch:"
 	@echo "  upstream-update - Update and fetch 'version' and 'source_release'."
 	@echo "  fetch-archive - Fetch the archive from the internet and verify it."
 	@echo "  setup-arch - Install build dependencies."
 	@echo "  extract-arch, clean-arch - Extract/remove the source tree."
+	@echo "  patch-folder-arch - Patching it into a windows cross-build."
+	@echo "  winsdk-arch - Extract the winsdk folder for cross-build."
+	@echo ""
 	@echo "  bootstrap-arch - Bootstrap the mozilla build environment."
 	@echo "  build-arch - Build it."
 	@echo "  buildsymbols-arch - Build symbols."
@@ -67,11 +71,17 @@ extract-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -f "librewolf-$(full_version).source.tar.gz" ]
 	${MAKE} clean-arch
 	tar xf "librewolf-$(full_version).source.tar.gz"
+
 # windows-specific modifications:
+patch-folder-arch :
+	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
 	mv librewolf-$(full_version)/mozconfig librewolf-$(full_version)/mozconfig.std
 	cp -v assets/mozconfig.arch librewolf-$(full_version)/mozconfig
 	(cd librewolf-$(full_version) && patch -p1 -i ../assets/tryfix-reslink-fail.patch)
 	(cd librewolf-$(full_version) && patch -p1 -i ../assets/fix-l10n-package-cmd.patch)
+
+winsdk-arch :
+	${MAKE} winsdk
 
 clean-arch :
 	[ -f "version" ] && [ -f "source_release" ]
@@ -80,7 +90,7 @@ clean-arch :
 bootstrap-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
 	${MAKE} -C librewolf-$(full_version) -f ../Makefile bootstrap-arch-do-bootstrap
-	${MAKE} winsdk
+
 bootstrap-arch-do-bootstrap :
 	./mach --no-interactive bootstrap --application-choice=browser
 
