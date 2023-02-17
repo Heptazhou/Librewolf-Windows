@@ -1,4 +1,4 @@
-.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap old-style-bootstrap-arch old-style-bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package patch-folder-arch winsdk-arch
+.PHONY : help fetch all clean build artifacts dir bootstrap winsdk setup-debian setup-fedora veryclean docker-build docker-run docker-clean docker-prune docker-shell buildsymbols upstream-update setup-arch bootstrap-arch bootstrap-arch-do-bootstrap old-style-bootstrap-arch old-style-bootstrap-arch-do-bootstrap build-arch build-arch-do-build extract-arch clean-arch buildsymbols-arch build-symbols-arch-do-buildsymbols package-arch package-arch-do-package patch-folder-arch winsdk-arch grab-build-artifact-arch artifacts-arch
 
 version:=$(shell cat version)
 release:=$(shell cat release)
@@ -44,8 +44,15 @@ help :
 	@echo "  build-arch - Build it."
 	@echo "  buildsymbols-arch - Build symbols."
 	@echo "  package-arch - Package the target zip file."
+	@echo "  grab-build-artifact-arch - Grab the packaged zip file into this folder"
+	@echo "  artifacts-arch - build the target setup.exe and portable.zip"
 
-all : build buildsymbols package artifacts
+
+all :
+	@echo "[debug] Please don't run old-style 'all' when debugging."
+	${MAKE} build buildsymbols package artifacts
+	@echo "[debug] Please don't run old-style 'all' when debugging."
+
 
 #
 # Redo from scratch. ---
@@ -119,8 +126,6 @@ old-style-bootstrap-arch-do-bootstrap :
 	  $$t/mach artifact toolchain --from-build sysroot-x86_64-linux-gnu && \
 	  true )
 
-
-
 build-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
 	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
@@ -128,15 +133,20 @@ build-arch-do-build :
 	./mach build
 buildsymbols-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
-	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile buildsymbols-arch-do-buildsymbols
 buildsymbols-arch-do-buildsymbols :
 	./mach buildsymbols
 package-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
-	${MAKE} -C librewolf-$(full_version) -f ../Makefile build-arch-do-build
+	${MAKE} -C librewolf-$(full_version) -f ../Makefile package-arch-do-package
 package-arch-do-package :
 	@(echo 'Packaging... (output hidden)' && cat browser/locales/shipped-locales | xargs ./mach package-multi-locale --locales >/dev/null)
+grab-build-artifact-arch :
+	cp -v librewolf-$(full_version)/obj-x86_64-pc-mingw32/dist/firefox-$(version)-$(source_release).en-US.win64.zip .
 
+artifacts-arch :
+	${MAKE} grab-build-artifact-arch
+	${MAKE} -f assets/artifacts.mk artifacts
 #
 # End redo ---
 #
