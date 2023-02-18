@@ -213,8 +213,23 @@ def artifacts():
 
 
 # Utility function to upload() function.
-def do_upload(filename,token):
+def do_upload1(filename,token):
     exec('curl --request POST --header \"PRIVATE-TOKEN: {}\" --form \"file=@{}\" \"https://gitlab.com/api/v4/projects/13852981/uploads\" > tmp.json'.format(token,filename), False)
+    exec('echo $(cat tmp.json | jq .alt | cut -c 2- | sed \'s/.$//\') \'--->\' https://gitlab.com$(cat tmp.json | jq .full_path | cut -c 2- | sed \'s/.$//\') ')
+    exec('cat tmp.json')
+    exec('echo "" && rm -f tmp.json')
+
+
+# Utility function to upload() function.
+#
+#curl --request PUT \
+#  --upload-file whatever.tar.bz2  \
+#  --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" \
+#  https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/generic/librewolf/latest/whatever.tar.bz2
+#
+def do_upload2(filename,token):
+    project_id='13852981'
+    exec('curl --request PUT --upload-file "{}" --header "PRIVATE-TOKEN: {}" "https://gitlab.com/api/v4/projects/{}/packages/generic/librewolf/latest/{}" > tmp.json'.format(filename, token, project_id, filename), False)
     exec('echo $(cat tmp.json | jq .alt | cut -c 2- | sed \'s/.$//\') \'--->\' https://gitlab.com$(cat tmp.json | jq .full_path | cut -c 2- | sed \'s/.$//\') ')
     exec('cat tmp.json')
     exec('echo "" && rm -f tmp.json')
@@ -246,18 +261,23 @@ def upload(token):
             else:
                 exec('sha256sum {} {} > sha256sums.txt'.format(setup_filename,pazip_filename))
 
+            #
             # create signatures
+            #
+            
             exec('gpg --yes --detach-sign {}'.format(setup_filename))
             exec('echo "Press Control-D to continue (is this still needed?)..." ; cat > /dev/null')
             exec('gpg --yes --detach-sign {}'.format(pazip_filename))
 
+            #
             # upload everything
-            exec('rm -f upload.txt')
-            do_upload(setup_filename,token)
-            do_upload(pazip_filename,token)
-            do_upload('{}.sig'.format(setup_filename),token)
-            do_upload('{}.sig'.format(pazip_filename),token)
-            do_upload('sha256sums.txt',token)
+            #
+            
+            do_upload1('{}.sig'.format(setup_filename),token)
+            do_upload1('{}.sig'.format(pazip_filename),token)
+            do_upload1('sha256sums.txt',token)
+            do_upload2(setup_filename,token)
+            do_upload2(pazip_filename,token)
 
             
 #
