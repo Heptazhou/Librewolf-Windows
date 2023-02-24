@@ -2,6 +2,7 @@
 
 export MOZBUILD=$HOME/.mozbuild
 ac_add_options --target=x86_64-pc-mingw32
+ac_add_options --enable-bootstrap
 
 # since v110.0 - liblowercase not needed anymore?
 #mk_add_options "export LD_PRELOAD=$MOZBUILD/liblowercase/liblowercase.so"
@@ -22,7 +23,7 @@ export HOST_CXX="$MOZBUILD/clang/bin/clang++"
 
 
 
-export WINE=wineconsole
+#export WINE=wineconsole
 #export WINE="$MOZBUILD/wine/bin/wine64"
 #export MIDL="$MOZBUILD/wine/bin/widl"
 
