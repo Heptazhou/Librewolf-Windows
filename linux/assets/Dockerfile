@@ -1,4 +1,9 @@
 FROM ubuntu:jammy
+
+#
+# It's probably totally unnecesary to include all of these dependencies.
+#
+
 RUN apt-get -y update && apt-get -y upgrade && apt-get -y install make wget git patch bash vim mc screen automake autoconf libtool build-essential
 RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install \
       apt-utils \
@@ -49,11 +54,17 @@ RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install \
       zip \
       zstd 
 
+
+#
+# This is the interesting part of the Dockerfile
+#
+
 RUN git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git
 WORKDIR windows/linux
-RUN pwd && ls -l
+
 
 RUN make setup-debian
+RUN make upstream-update
 RUN make fetch-archive
 RUN make extract-arch
 RUN make old-style-bootstrap-arch
