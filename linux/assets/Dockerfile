@@ -4,9 +4,10 @@ FROM ubuntu:jammy
 # It's probably totally unnecesary to include all of these dependencies.
 #
 
-RUN apt-get -y update && apt-get -y upgrade && apt-get -y install make wget git patch build-essential
-
-
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get -y install make wget git patch build-essential && \
+    dpkg --add-architecture i386 && apt-get update && apt-get install wine32
 
 #
 #
