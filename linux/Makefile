@@ -83,11 +83,14 @@ extract-arch :
 # windows-specific modifications:
 patch-folder-arch :
 	[ -f "version" ] && [ -f "source_release" ] && [ -d "librewolf-$(full_version)" ]
-#	mv librewolf-$(full_version)/mozconfig librewolf-$(full_version)/mozconfig.std
-#	cp -v assets/mozconfig.arch librewolf-$(full_version)/mozconfig
 	cp -v assets/mozconfig librewolf-$(full_version)/mozconfig
 	(cd librewolf-$(full_version) && patch -p1 -i ../assets/tryfix-reslink-fail.patch)
 	(cd librewolf-$(full_version) && patch -p1 -i ../assets/fix-l10n-package-cmd.patch)
+
+patch-folder-arch-mozconfig-new-style :
+# this target is just a reminder how I would want it to work once WINE works
+#	mv librewolf-$(full_version)/mozconfig librewolf-$(full_version)/mozconfig.std
+#	cp -v assets/mozconfig.arch librewolf-$(full_version)/mozconfig
 
 winsdk-arch :
 	${MAKE} winsdk
