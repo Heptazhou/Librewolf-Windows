@@ -7,7 +7,7 @@ FROM ubuntu:jammy
 RUN apt-get -y update && \
     apt-get -y upgrade && \
     apt-get -y install make wget git patch build-essential && \
-    dpkg --add-architecture i386 && apt-get update && apt-get install wine32
+    dpkg --add-architecture i386 && apt-get -y update && apt-get -y install wine32
 
 #
 #
