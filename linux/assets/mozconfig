@@ -21,8 +21,11 @@ export HOST_CXX="$MOZBUILD/clang/bin/clang++"
 
 
 
-export WINE="$MOZBUILD/wine/bin/wine64"
-export MIDL="$MOZBUILD/wine/bin/widl"
+
+export WINE=wineconsole
+#export WINE="$MOZBUILD/wine/bin/wine64"
+#export MIDL="$MOZBUILD/wine/bin/widl"
+
 #export MIDL=midl
 #export MIDL=widl
 
@@ -30,7 +33,7 @@ export MIDL="$MOZBUILD/wine/bin/widl"
 # TODO : fixme
 #
 
-ac_add_options --without-wasm-sandboxed-libraries
+#ac_add_options --without-wasm-sandboxed-libraries
 
 ###
 # old config settings
