@@ -5,24 +5,21 @@
 * Or install via _winget_: `winget install librewolf`
 * Or install via _[scoop](https://scoop.sh)_: `scoop bucket add extras`, then `scoop install librewolf`
 
-# Update plugins
-There are plugins that help update librewolf, which helps improve securitiy.
+# Update tools
+There are several tools that can help you to keep LibreWolf up-to-date, which helps improve security.
 
+* @ltguillaume created an *automatic updater* that can either be run manually or be set up to automatically update via a scheduled task. It can be found [here on Codeberg](https://codeberg.org/ltguillaume/librewolf-winupdater) or [on GitHub](https://github.com/ltguillaume/librewolf-winupdater). 
+* Defkev created a LibreWolf *update checker extension*, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/). It will show a notification when an update is available and guide you to the download link.
 
+Please note the distinction between the *updater* ([LibreWolf WinUpdater](https://codeberg.org/ltguillaume/librewolf-winupdater)) and the *extension* ([LibreWolf Updater](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/)), in that the updater can _install_ updates automatically, while the extension can only _check_ for updates. There has been some confusion about that on Reddit, GitHub and Gitlab.
 
-* Guillaume created a windows *updater script* for the Task Scheduler. it can be found [here](https://github.com/ltGuillaume/LibreWolf-WinUpdater). 
-* Defkev created a LibreWolf *updater plugin*, which can be found [here](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/).
+Due to problems with the Gitlab CI, we _can't_ build the two `ahk-tools` ([AutoHotkey](https://www.autohotkey.com) scripts) used in the portable 
+version directly from source while building the portable zip. The tools are instead pre-built by @ltguillaume and downloaded from their respective project pages on Codeberg, [LibreWolf Portable](https://codeberg.org/ltguillaume/librewolf-portable/releases) and [LibreWolf WinUpdater](https://codeberg.org/ltguillaume/librewolf-winupdater/releases).
 
-Please note the distinction between the *task scheduler updater script* ([LibreWolf-WinUpdater](https://github.com/ltGuillaume/LibreWolf-WinUpdater)) and the *librewolf extension* ([LibreWolf Updater](https://addons.mozilla.org/en-US/firefox/addon/librewolf-updater/)), in that the latter only checks for updates, but will not install them automatically, while the former does. There's quite a bit of confusion about that on Reddit, GitHub and Gitlab.
+# LibreWolf for Windows
 
-Due to problems with the Gitlab CI, we _can't_ build the `ahk-tools` used in the portable 
-version directly from source while building the portable zip. The tools are instead precompiled and updated only when the `ahk-tools` source changes. Here is the most recent version of the `ahk-tools`:
-
-* ahk-tools: [librewolf-ahk-tools-2023-02-11.zip](https://gitlab.com/librewolf-community/browser/windows/uploads/fc5e0483707a1bafdfd8f10b7b6c50b1/librewolf-ahk-tools-2023-02-11.zip), signature: [librewolf-ahk-tools-2023-02-11.zip.sig](https://gitlab.com/librewolf-community/browser/windows/uploads/27a8f6dd6a33b8b54b47068ef7779132/librewolf-ahk-tools-2023-02-11.zip.sig).
-
-# LibreWolf for windows
-
-* The latest type of **.zip files** allows for a user profile inside the extracted folder. It is _self-contained_ and runs on removable storage. LibreWolf has many ui languages built-in, available in the settings.
+* LibreWolf has many UI languages built-in, available in the settings.
+* The latest **-portable.zip** release type is _self-contained_, can be moved around and (thus) be run on removable storage. It can be run next to an installed version of LibreWolf and supports (multiple) user profiles inside the extracted folder. Head to the [launcher's project page](https://codeberg.org/ltguillaume/librewolf-portable) to find out how this works.
 
 # Where to submit tickets
 
