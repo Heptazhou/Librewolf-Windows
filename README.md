@@ -1,4 +1,4 @@
-# [Download latest release](https://gitlab.com/librewolf-community/browser/windows/-/releases)
+# [Download latest release](https://gitlab.com/librewolf-community/browser/bsys6/-/releases)
 
 * Visit [the FAQ](https://librewolf.net/docs/faq/).
 * Install via _[chocolatey](https://community.chocolatey.org/packages/librewolf)_: `choco install librewolf`
