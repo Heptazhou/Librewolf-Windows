@@ -26,54 +26,6 @@ version directly from source while building the portable zip. The tools are inst
 * When you have problems with the Settings, or the Advanced Settings (`about:config`), please submit these issues to the [settings repository](https://gitlab.com/librewolf-community/settings/-/issues).
 * For all other problems, such as crashes/theme issues/graphics/speed problems, please submit them to [issues for windows repository](https://gitlab.com/librewolf-community/browser/windows/-/issues).
 
-# Linux builds
+# Building from source
 
-Tested on: fedora36, ubuntu22
-vm/vps minimal-ish specs:
-
-* 4 core cpu
-* 17gb RAM
-* 50gb storage
-
-On the commandline, it's mostly a matter of doing once:
-```
-## pick build type:
-# cd linux
-# cd linux-mar
-
-make fetch
-
-## pick your os:
-# sudo make setup-fedora
-# sudo make setup-debian
-
-make bootstrap
-```
-Then, to build:
-```
-make all
-```
-That should produce the (non-updating) setup.exe and the community portable zip. 
-
-There is a second directory `linux-mar` where you can build the so-called `.mar` version of LibreWolf. This is te version that will be auto-updating someday. It's great, but it's main drawback is theming bugs. 
-
-You can force a rebuild with `make clean all`. Please always use `make fetch` as a single make command, else there might be bugs in the version files. The `make fetch` command gets you the current latest version.
-
-# Compiling the windows version natively
-
-(With the arrival of the linux cross-compiled builds, this is no longer preferred.)
-
-This segment is for people who want to build LibreWolf for themselves. The build of the LibreWolf source tarball is in public CI, so you can use that. Given that you have followed the steps in the Mozilla setup guide:
-
-* [Building Firefox On Windows](https://firefox-source-docs.mozilla.org/setup/windows_build.html)
-
-Once that works, you can check out and compile LibreWolf like this:
-
-```
-git clone https://gitlab.com/librewolf-community/browser/windows.git
-cd windows/winbuild
-make all
-```
-
-This will produce the -setup.exe and portable .zip. Have fun!
-
+* Building from source is done using our `bsys` build system. It only supports cross-compiling from Linux to Windows. So building the windows version from within windows is not supported. Well, it's not tested but possible in principle.
